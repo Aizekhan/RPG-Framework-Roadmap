@@ -14,7 +14,7 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 - Epic: 01 — Full MythHunter Audit
 - Task: 1.8 — Final Audit Report
-- Current item: Dependency Map
+- Current item: Unnecessary Dependency List
 - Status: ACTIVE
 
 ## Sequential Execution Rule
