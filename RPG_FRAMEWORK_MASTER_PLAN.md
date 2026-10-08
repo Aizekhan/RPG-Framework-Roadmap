@@ -117,7 +117,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Events
 - [x] Networking
 - [x] Cloud
-- [ ] UI
+- [x] UI
 - [ ] Services
 - [ ] Utils
 
