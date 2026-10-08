@@ -1,6 +1,12 @@
 # Project Status
 
-Current repository: `Aizekhan/MythHunter`
+## Source Project
+
+This roadmap controls the architecture audit and refactoring of the source project **`Aizekhan/MythHunter`** (Unity RPG project, branch `dev`).
+
+All code audits and implementation work are performed against `Aizekhan/MythHunter` unless explicitly stated otherwise.
+
+Roadmap repository: `Aizekhan/RPG-Framework-Roadmap`
 
 Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
