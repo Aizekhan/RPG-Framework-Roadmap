@@ -14,7 +14,7 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 - Epic: 01 — Full MythHunter Audit
 - Task: 1.1 — Top-Level Structures
-- Current item: UI
+- Current item: Services
 - Status: ACTIVE
 
 ## Sequential Execution Rule
