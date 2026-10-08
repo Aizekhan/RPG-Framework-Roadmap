@@ -125,11 +125,11 @@ Fully understand the current architecture and separate reusable Framework from g
 
 - [x] ECS
 - [x] DI
-- [ ] Game
-- [ ] Installers
-- [ ] StateMachine
-- [ ] SceneManagement
-- [ ] Validation
+- [x] Game
+- [x] Installers
+- [x] StateMachine
+- [x] SceneManagement
+- [x] Validation
 
 ### TASK 1.3 — Components
 
@@ -142,19 +142,19 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ### TASK 1.4 — Entities
 
-- [ ] EntityFactory
-- [ ] Archetypes
-- [ ] Templates
-- [ ] Serialization Registry
+- [x] EntityFactory
+- [x] Archetypes
+- [x] Templates
+- [x] Serialization Registry
 
 ### TASK 1.5 — Systems
 
-- [ ] Core Systems
-- [ ] Gameplay Systems
-- [ ] Hero Systems
-- [ ] Lobby Systems
-- [ ] Phase Systems
-- [ ] System Groups
+- [x] Core Systems
+- [x] Gameplay Systems
+- [x] Hero Systems
+- [x] Lobby Systems
+- [x] Phase Systems
+- [x] System Groups
 
 ### TASK 1.6 — Events
 
