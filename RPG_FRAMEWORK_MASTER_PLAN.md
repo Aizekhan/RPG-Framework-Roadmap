@@ -110,7 +110,7 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ### TASK 1.1 — Top-Level Structures
 
-- [ ] Core
+- [x] Core
 - [ ] Components
 - [ ] Entities
 - [ ] Systems
