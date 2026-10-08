@@ -69,12 +69,29 @@ Create a universal modular RPG Framework that does not depend on any specific ga
 ## Working Rules
 
 1. Work strictly from top to bottom.
-2. Do not move to the next task until the current task is completed.
-3. Every audited item must have a conclusion.
-4. Do the audit first, refactor second.
-5. Keep all decisions documented.
-6. Use separate audit documents for detailed findings.
-7. The plan is the source of truth for project order.
+2. Exactly one item may be ACTIVE at any time.
+3. Do not start the next item until the current ACTIVE item is completed.
+4. Every completed item must have a documented conclusion.
+5. Complete the audit first, refactor second.
+6. Keep all architectural decisions documented.
+7. Use separate audit documents for detailed findings.
+8. The master plan records completion with checkboxes.
+9. STATUS.md is the execution pointer and always identifies the single current ACTIVE item.
+10. When an item is completed, mark its checkbox here, then advance STATUS.md to the next item in strict order.
+11. When the last item of a task is completed, check the task itself and advance to the next task.
+12. When the last task of an Epic is completed, mark the Epic complete and advance to the next Epic.
+13. Never skip ahead, even when a later item appears easier or more important.
+
+## Sequential Execution Model
+
+Epic
+→ Task
+→ Item
+→ File
+
+At every moment there is one and only one ACTIVE Item.
+All later items are LOCKED until the current item is completed.
+STATUS.md must always point to the exact ACTIVE Item.
 
 # EPIC 01 — Full MythHunter Audit
 
