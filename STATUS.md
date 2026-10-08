@@ -12,10 +12,10 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 ## Current Position
 
-- Epic: 01 — Full MythHunter Audit
-- Task: 1.8 — Final Audit Report
-- Current item: DONE
-- Status: COMPLETE
+- Epic: 02 — Clean Core Boundaries
+- Task: Epic 02
+- Current item: Extract Framework Core
+- Status: ACTIVE
 
 ## Sequential Execution Rule
 
