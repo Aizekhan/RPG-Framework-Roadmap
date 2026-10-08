@@ -115,7 +115,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Entities
 - [x] Systems
 - [x] Events
-- [ ] Networking
+- [x] Networking
 - [ ] Cloud
 - [ ] UI
 - [ ] Services
