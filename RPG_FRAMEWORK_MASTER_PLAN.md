@@ -112,7 +112,7 @@ Fully understand the current architecture and separate reusable Framework from g
 
 - [x] Core
 - [x] Components
-- [ ] Entities
+- [x] Entities
 - [ ] Systems
 - [ ] Events
 - [ ] Networking
