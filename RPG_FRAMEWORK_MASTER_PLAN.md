@@ -206,7 +206,7 @@ Known candidates to verify by file audit:
 Strictly separate the reusable Framework from the Game Layer.
 
 - [x] Extract Framework Core
-- [ ] Extract Game Layer
+- [x] Extract Game Layer
 - [ ] Remove cyclic dependencies
 - [ ] Remove unnecessary dependencies
 - [ ] Define dependency rules
