@@ -123,7 +123,7 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ### TASK 1.2 — Core
 
-- [ ] ECS
+- [x] ECS
 - [ ] DI
 - [ ] Game
 - [ ] Installers
