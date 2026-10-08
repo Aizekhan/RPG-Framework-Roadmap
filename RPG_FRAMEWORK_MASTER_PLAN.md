@@ -161,7 +161,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] EventBus
 - [x] Event Types
 - [x] Event Pipeline
-- [ ] Middleware
+- [x] Middleware
 - [ ] Network Events
 
 ### TASK 1.7 — Networking
