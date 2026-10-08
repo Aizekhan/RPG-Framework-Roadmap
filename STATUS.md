@@ -12,9 +12,9 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 ## Current Position
 
-- Epic: 01.5 — Audit Completeness Check
-- Task: Epic 01.5
-- Current item: Replay
+- Epic: 02 — Architecture Rebuild
+- Task: Architecture Rebuild
+- Current item: Freeze Framework/Game boundary
 - Status: ACTIVE
 
 ## Sequential Execution Rule
