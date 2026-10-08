@@ -2,7 +2,7 @@
 
 ## Source Project
 
-This roadmap controls the architecture audit and refactoring of the source project **`Aizekhan/MythHunter`** (Unity RPG project, branch `dev`).
+This roadmap controls the architecture audit and refactoring of the source project **Aizekhan/MythHunter** (Unity RPG project, branch `dev`).
 
 All code audits and implementation work are performed against `Aizekhan/MythHunter` unless explicitly stated otherwise.
 
@@ -13,30 +13,15 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 ## Current Position
 
 - Epic: 01 — Full MythHunter Audit
-- Task: 1.1 — Top-Level Structures
-- Epic: 01 — Full MythHunter Audit
-- Task: 1.3 — Components
-- Current item: Components
+- Task: 1.4 — Entities
+- Current item: EntityFactory
 - Status: ACTIVE
 
 ## Sequential Execution Rule
 
 Only one item may be ACTIVE at a time.
 
-Execution order for TASK 1.1:
-
-1. Core
-2. Components
-3. Entities
-4. Systems
-5. Events
-6. Networking
-7. Cloud
-8. UI
-9. Services
-10. Utils
-
-The next item is LOCKED until the current item is completed.
+Later items remain LOCKED until the current item is completed.
 
 ## Completion Rule
 
