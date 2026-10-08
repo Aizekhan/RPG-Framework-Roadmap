@@ -14,7 +14,7 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 - Epic: 02 — Clean Core Boundaries
 - Task: Epic 02
-- Current item: Extract Game Layer
+- Current item: Extract Framework Core
 - Status: ACTIVE
 
 ## Sequential Execution Rule
