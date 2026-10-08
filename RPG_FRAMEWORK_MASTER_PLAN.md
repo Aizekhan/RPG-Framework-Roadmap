@@ -160,7 +160,7 @@ Fully understand the current architecture and separate reusable Framework from g
 
 - [x] EventBus
 - [x] Event Types
-- [ ] Event Pipeline
+- [x] Event Pipeline
 - [ ] Middleware
 - [ ] Network Events
 
