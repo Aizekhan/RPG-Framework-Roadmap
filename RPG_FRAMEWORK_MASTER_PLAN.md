@@ -179,7 +179,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Technical Debt List
 - [x] Dependency Map
 - [x] Unnecessary Dependency List
-- [ ] Refactoring Candidates
+- [x] Refactoring Candidates
 
 Known candidates to verify by file audit:
 
