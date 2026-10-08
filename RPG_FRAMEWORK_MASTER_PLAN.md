@@ -118,7 +118,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Networking
 - [x] Cloud
 - [x] UI
-- [ ] Services
+- [x] Services
 - [ ] Utils
 
 ### TASK 1.2 — Core
