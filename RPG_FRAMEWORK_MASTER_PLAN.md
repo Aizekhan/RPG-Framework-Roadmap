@@ -207,7 +207,7 @@ Strictly separate the reusable Framework from the Game Layer.
 
 - [x] Extract Framework Core
 - [x] Extract Game Layer
-- [ ] Remove cyclic dependencies
+- [x] Remove cyclic dependencies
 - [ ] Remove unnecessary dependencies
 - [ ] Define dependency rules
 - [ ] Validate all modules against the rules
