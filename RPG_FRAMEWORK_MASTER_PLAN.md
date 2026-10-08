@@ -158,8 +158,8 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ### TASK 1.6 — Events
 
-- [ ] EventBus
-- [ ] Event Types
+- [x] EventBus
+- [x] Event Types
 - [ ] Event Pipeline
 - [ ] Middleware
 - [ ] Network Events
