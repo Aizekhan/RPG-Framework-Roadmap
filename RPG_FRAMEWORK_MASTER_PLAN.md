@@ -99,13 +99,13 @@ Status: COMPLETE
 
 Verify that no major top-level system outside the original audit matrix was omitted from the architecture model.
 
-- [ ] Replay
-- [ ] Resources / Preload / Pool
-- [ ] Cloud / External Services
-- [ ] Debug / Developer Tools
-- [ ] Authoring / Editor Tooling
-- [ ] Utils / Logging / Validation
-- [ ] Final completeness verdict
+- [x] Replay
+- [x] Resources / Preload / Pool
+- [x] Cloud / External Services
+- [x] Debug / Developer Tools
+- [x] Authoring / Editor Tooling
+- [x] Utils / Logging / Validation
+- [x] Final completeness verdict
 
 # EPIC 02 — Architecture Rebuild
 
