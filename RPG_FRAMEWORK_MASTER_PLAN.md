@@ -96,7 +96,6 @@ Status: COMPLETE
 # EPIC 01.5 — Audit Completeness Check
 
 ## Goal
-
 Verify that no major top-level system outside the original audit matrix was omitted from the architecture model.
 
 - [x] Replay
@@ -110,10 +109,9 @@ Verify that no major top-level system outside the original audit matrix was omit
 # EPIC 02 — Architecture Rebuild
 
 ## Goal
-
 Rebuild the roadmap from the actual audit findings before implementation begins.
 
-- [ ] Freeze Framework/Game boundary
+- [x] Freeze Framework/Game boundary
 - [ ] Define target module map
 - [ ] Define assembly/package boundaries
 - [ ] Define allowed dependency direction
@@ -125,7 +123,6 @@ Rebuild the roadmap from the actual audit findings before implementation begins.
 # EPIC 03 — Framework Extraction
 
 ## Goal
-
 Physically extract the reusable Framework without changing gameplay behavior unnecessarily.
 
 - [ ] Framework contracts
@@ -142,7 +139,6 @@ Physically extract the reusable Framework without changing gameplay behavior unn
 # EPIC 04 — Game Layer Extraction
 
 ## Goal
-
 Move MythHunter-specific application, domain, gameplay and presentation ownership into a clean Game Layer.
 
 - [ ] Application/Game Flow
@@ -160,7 +156,6 @@ Move MythHunter-specific application, domain, gameplay and presentation ownershi
 # EPIC 05 — Dependency Cleanup
 
 ## Goal
-
 Remove architectural coupling revealed by the audit.
 
 - [ ] Remove cyclic dependencies
@@ -176,7 +171,6 @@ Remove architectural coupling revealed by the audit.
 # EPIC 06 — ECS Completion
 
 ## Goal
-
 Make ECS predictable, reusable and suitable as Framework infrastructure.
 
 - [ ] Entity lifecycle
@@ -194,7 +188,6 @@ Make ECS predictable, reusable and suitable as Framework infrastructure.
 # EPIC 07 — Infrastructure Hardening
 
 ## Goal
-
 Make generic infrastructure reliable enough to serve multiple RPGs.
 
 - [ ] DI lifecycle/scopes
@@ -209,7 +202,6 @@ Make generic infrastructure reliable enough to serve multiple RPGs.
 # EPIC 08 — Resource & Runtime Services
 
 ## Goal
-
 Extract optional reusable runtime services discovered in the source project.
 
 - [ ] Resource abstraction
@@ -225,7 +217,6 @@ Extract optional reusable runtime services discovered in the source project.
 # EPIC 09 — RPG Foundation
 
 ## Goal
-
 Build universal RPG domain modules.
 
 - [ ] Stats
@@ -240,7 +231,6 @@ Build universal RPG domain modules.
 # EPIC 10 — Gameplay Modules
 
 ## Goal
-
 Build reusable RPG gameplay modules.
 
 - [ ] Inventory
@@ -255,7 +245,6 @@ Build reusable RPG gameplay modules.
 # EPIC 11 — Persistence
 
 ## Goal
-
 Build universal persistence.
 
 - [ ] Save
@@ -268,7 +257,6 @@ Build universal persistence.
 # EPIC 12 — Networking
 
 ## Goal
-
 Build networking as an independent optional Framework module.
 
 - [ ] Transport
@@ -284,7 +272,6 @@ Build networking as an independent optional Framework module.
 # EPIC 13 — Tools
 
 ## Goal
-
 Build tooling around the Framework.
 
 - [ ] Entity Inspector
@@ -299,7 +286,6 @@ Build tooling around the Framework.
 # EPIC 14 — Framework Release
 
 ## Goal
-
 Make the Framework usable to create new RPG projects.
 
 - [ ] Documentation
