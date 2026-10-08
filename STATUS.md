@@ -12,9 +12,9 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 ## Current Position
 
-- Epic: 02 — Clean Core Boundaries
-- Task: Epic 02
-- Current item: Remove unnecessary dependencies
+- Epic: 01.5 — Audit Completeness Check
+- Task: Epic 01.5
+- Current item: Replay
 - Status: ACTIVE
 
 ## Sequential Execution Rule
