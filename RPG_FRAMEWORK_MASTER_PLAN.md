@@ -178,7 +178,7 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Game Layer Modules
 - [x] Technical Debt List
 - [x] Dependency Map
-- [ ] Unnecessary Dependency List
+- [x] Unnecessary Dependency List
 - [ ] Refactoring Candidates
 
 Known candidates to verify by file audit:
