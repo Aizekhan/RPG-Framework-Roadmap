@@ -133,12 +133,12 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ### TASK 1.3 — Components
 
-- [ ] Core
-- [ ] Character
-- [ ] Combat
-- [ ] Movement
-- [ ] Lobby
-- [ ] Other components
+- [x] Core
+- [x] Character
+- [x] Combat
+- [x] Movement
+- [x] Lobby
+- [x] Other components
 
 ### TASK 1.4 — Entities
 
