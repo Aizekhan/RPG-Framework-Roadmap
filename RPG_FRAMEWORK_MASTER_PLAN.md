@@ -108,6 +108,15 @@ Fully understand the current architecture and separate reusable Framework from g
 - [x] Framework / Game boundary defined
 - [x] Dependency map created
 
+## Definition of Done
+
+- [x] All large modules analyzed
+- [x] Dependencies documented
+- [x] Unnecessary dependencies identified
+- [x] Technical debt identified
+- [x] Framework / Game boundary defined
+- [x] Dependency map created
+
 ### TASK 1.1 — Top-Level Structures
 
 - [x] Core
@@ -183,12 +192,12 @@ Fully understand the current architecture and separate reusable Framework from g
 
 Known candidates to verify by file audit:
 
-- [ ] Core/Game
-- [ ] Gameplay Installers
-- [ ] Phase Systems
-- [ ] CombatSystem
-- [ ] ComponentCache
-- [ ] EntityManager Storage Layer
+- [x] Core/Game
+- [x] Gameplay Installers
+- [x] Phase Systems
+- [x] CombatSystem
+- [x] ComponentCache
+- [x] EntityManager Storage Layer
 
 # EPIC 02 — Clean Core Boundaries
 
