@@ -124,7 +124,7 @@ Fully understand the current architecture and separate reusable Framework from g
 ### TASK 1.2 — Core
 
 - [x] ECS
-- [ ] DI
+- [x] DI
 - [ ] Game
 - [ ] Installers
 - [ ] StateMachine
