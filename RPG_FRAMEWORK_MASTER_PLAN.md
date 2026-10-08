@@ -176,7 +176,7 @@ Fully understand the current architecture and separate reusable Framework from g
 
 - [x] Framework Modules
 - [x] Game Layer Modules
-- [ ] Technical Debt List
+- [x] Technical Debt List
 - [ ] Dependency Map
 - [ ] Unnecessary Dependency List
 - [ ] Refactoring Candidates
