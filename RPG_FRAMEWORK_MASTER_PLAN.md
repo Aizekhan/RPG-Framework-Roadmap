@@ -101,12 +101,12 @@ Fully understand the current architecture and separate reusable Framework from g
 
 ## Definition of Done
 
-- [ ] All large modules analyzed
-- [ ] Dependencies documented
-- [ ] Unnecessary dependencies identified
-- [ ] Technical debt identified
-- [ ] Framework / Game boundary defined
-- [ ] Dependency map created
+- [x] All large modules analyzed
+- [x] Dependencies documented
+- [x] Unnecessary dependencies identified
+- [x] Technical debt identified
+- [x] Framework / Game boundary defined
+- [x] Dependency map created
 
 ### TASK 1.1 — Top-Level Structures
 
