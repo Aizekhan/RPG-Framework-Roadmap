@@ -117,7 +117,7 @@ Rebuild the roadmap from the actual audit findings before implementation begins.
 - [x] Define allowed dependency direction
 - [x] Define forbidden dependencies
 - [x] Define composition-root strategy
-- [ ] Define migration strategy
+- [x] Define migration strategy
 - [ ] Final architecture baseline
 
 # EPIC 03 — Framework Extraction
