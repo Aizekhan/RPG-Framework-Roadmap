@@ -113,7 +113,7 @@ Rebuild the roadmap from the actual audit findings before implementation begins.
 
 - [x] Freeze Framework/Game boundary
 - [x] Define target module map
-- [ ] Define assembly/package boundaries
+- [x] Define assembly/package boundaries
 - [ ] Define allowed dependency direction
 - [ ] Define forbidden dependencies
 - [ ] Define composition-root strategy
