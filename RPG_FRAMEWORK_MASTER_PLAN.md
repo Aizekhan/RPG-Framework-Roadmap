@@ -112,7 +112,7 @@ Verify that no major top-level system outside the original audit matrix was omit
 Rebuild the roadmap from the actual audit findings before implementation begins.
 
 - [x] Freeze Framework/Game boundary
-- [ ] Define target module map
+- [x] Define target module map
 - [ ] Define assembly/package boundaries
 - [ ] Define allowed dependency direction
 - [ ] Define forbidden dependencies
