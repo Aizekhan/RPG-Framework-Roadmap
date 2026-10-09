@@ -12,9 +12,9 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 ## Current Position
 
-- Epic: 02 — Architecture Rebuild
-- Task: Architecture Rebuild
-- Current item: Final architecture baseline
+- Epic: 03 — Framework Extraction
+- Task: Framework Extraction
+- Current item: Framework contracts
 - Status: ACTIVE
 
 ## Sequential Execution Rule
