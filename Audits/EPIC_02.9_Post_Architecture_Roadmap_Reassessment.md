@@ -1,65 +1,65 @@
 # EPIC 02.9 — Post-Architecture Roadmap Reassessment
 
 ## Status
-ACTIVE — planning-only review
+COMPLETE — roadmap restructured
 
 ## Purpose
-Reassess the remaining Master Plan after EPIC 02 established the target architecture. This task must happen before further source extraction so that the implementation sequence follows actual dependency and validation constraints rather than treating the existing EPIC 03–14 ordering as immutable.
+Reassess EPIC 03–14 after the target architecture was consolidated in EPIC 02, and replace the old phase ordering where it obscured prerequisites, repeated work, or mixed core and optional capabilities.
 
 ## Decision
-The current plan remains a useful inventory of outcomes, but EPIC 03–14 must not be executed blindly in their current order. Their scopes overlap and some foundational decisions must be validated before later epics can be meaningfully sequenced.
+The former epic sequence was useful as an inventory, but not sufficiently precise as an execution order. The Master Plan has been rewritten to:
+- put source/build baseline and an enforceable boundary before contract extraction;
+- stabilize shared contracts before runtime module extraction;
+- resolve ECS identity/storage decisions before ECS migration;
+- separate serialization foundation from persistence and networking protocols;
+- move concrete MythHunter ownership through a single Game Composition Root;
+- separate dependency-debt work from extraction while explicitly avoiding duplicate work;
+- keep resources, pooling, replay, cloud, networking, and tools optional;
+- add exit gates and compile/test requirements to each phase.
 
-No source code is changed by this reassessment.
+The revised plan is a sequencing proposal grounded in the existing audit and EPIC 02 architecture baseline. It does not claim implementation or compile validation has occurred.
 
-## Required review
-- [ ] Map every remaining epic/task to the target architecture zones and intended owner.
-- [ ] Identify duplicates and overlaps between Framework Extraction, Dependency Cleanup, ECS Completion, and Infrastructure Hardening.
-- [ ] Separate prerequisite decisions from implementation tasks.
-- [ ] Introduce validation gates that require Unity compile/tests and dependency checks after each cohesive migration step.
-- [ ] Decide the minimal first compiling slice using actual source references and Unity assembly constraints.
-- [ ] Re-sequence Game Layer extraction and composition-root work around stabilized Framework contracts.
-- [ ] Keep optional modules (Resources, Pooling, Replay, Cloud, Networking, Tools) from blocking the minimal reusable Framework Core unless proven necessary for the first game path.
-- [ ] Keep Persistence and Networking serialization concerns separate.
-- [ ] Update RPG_FRAMEWORK_MASTER_PLAN.md and STATUS.md only after the revised sequence is reviewed and internally consistent.
+## Source-derived scope reconciliation
+1. **EPIC 03 and old contract/runtime extraction:** split into baseline/boundary, contracts, and runtime modules. The source's Unity baseline must be known before the first change.
+2. **Old EPIC 05 dependency cleanup:** split by ownership. EventBus and ComponentCache problems are handled alongside the modules that own them; remaining cross-cutting cleanup follows Game integration.
+3. **Old EPIC 06 ECS completion:** its storage/identity decisions are prerequisites within the new ECS runtime task, not a free-standing implementation phase after extraction.
+4. **Old EPIC 07 infrastructure hardening:** DI/events/lifecycle tests now live within their relevant module tasks. Cross-cutting graph and async cleanup remain later debt work.
+5. **Old EPIC 08 services:** explicitly optional and divided into platform-neutral abstractions, game-owned configuration, Unity/provider adapters and tools.
+6. **Old EPIC 11 persistence vs old EPIC 12 networking:** the plan defines separate epics and forbids networking from owning persistence schema or implementation details.
+7. **Game Layer extraction:** placed after a stable selected Framework core and composed through one authoritative Game Composition Root.
+8. **Release/tools:** release readiness requires a sample project that consumes Framework public APIs without MythHunter game-specific code.
 
-## Initial findings from existing roadmap
-1. EPIC 03 (Framework Extraction) says to extract contracts and runtime modules.
-2. EPIC 05 (Dependency Cleanup) contains work that may be prerequisite to, or inseparable from, safe extraction (cycles, duplicated EventBus, serialization coupling, reflection, async lifecycle).
-3. EPIC 06 (ECS Completion) includes architectural decisions and validation which EPIC 03 says must be made before ECS extraction (storage and identity), so the ownership/order needs to be reconciled.
-4. EPIC 07 (Infrastructure Hardening) repeats work in DI, events, logging, validation, lifecycle and tests already listed in EPIC 03/05.
-5. EPIC 08 has both reusable abstractions and optional modules/adapters, which should not automatically be part of Core extraction.
-6. EPIC 11 (Persistence) and EPIC 12 (Networking) need independent schemas/protocol responsibilities and must not be prematurely coupled to the initial Framework extraction.
-7. The migration strategy already prescribes small, compiling checkpoints and explicitly allows re-baselining when source constraints differ from the proposal.
+## Revised execution order
+- **EPIC 02.9:** roadmap reassessment (this task); complete.
+- **EPIC 03:** source baseline and first enforceable boundary.
+- **EPIC 04:** Framework Core contracts and shared primitives.
+- **EPIC 05:** Framework runtime modules: logging/validation, DI, event dispatch, systems lifecycle, ECS.
+- **EPIC 06:** serialization foundation, explicitly separated from persistence and networking.
+- **EPIC 07:** MythHunter Game Layer and authoritative composition.
+- **EPIC 08:** residual dependency debt/lifecycle stabilization without duplicating resolved module tasks.
+- **EPIC 09:** optional runtime services and adapters.
+- **EPIC 10:** RPG foundation domain modules.
+- **EPIC 11:** reusable gameplay modules.
+- **EPIC 12:** persistence.
+- **EPIC 13:** optional networking.
+- **EPIC 14:** tools, sample and release.
 
-These are roadmap-level observations from current planning documents, not proof that any implementation is already complete.
+This order is not permission to skip task exit gates. Actual source dependencies may require a documented adjustment.
 
-## Proposed reassessment approach
-### Step A — Build a traceable task matrix
-For every remaining task, record: goal, target owner/zone, dependencies, source evidence needed, compile/test gate, and whether it belongs in the first usable Framework milestone or a later optional milestone.
+## Milestones
+- M0 — Baseline: EPIC 03.1.
+- M1 — Enforceable boundary: EPIC 03.2–03.3.
+- M2 — Reusable Core: EPIC 04–06 for the explicitly selected scope.
+- M3 — MythHunter integration: EPIC 07–08 with a working game path.
+- M4 — Optional capabilities: EPIC 09, 12 and 13 as selected.
+- M5 — RPG modules and adoption: EPIC 10–11 and 14 for intended release scope.
 
-### Step B — Resolve order conflicts
-Reconcile EPIC 03/05/06/07 into one dependency-ordered sequence instead of treating them as fully independent large phases. Preserve distinct outcomes, but avoid duplicate tasks.
-
-### Step C — Define milestones
-- **M0 — Baseline:** known Unity compile/test state, source commit, working-tree state, assembly and package inventory.
-- **M1 — Enforce boundary:** first minimal Framework-owned assembly boundary with no Framework → MythHunter reference.
-- **M2 — Minimal reusable core:** extract only contracts/runtime proven to be necessary and independently buildable.
-- **M3 — Game integration:** one explicit Game composition path that consumes the Framework without changing gameplay behavior.
-- **M4 — Optional capabilities:** adapters and optional runtime modules, each only when selected and independently validated.
-- **M5 — RPG modules/tools/release:** universal gameplay modules, authoring tools, sample project and release validation.
-
-These milestones are a proposal pending the task matrix and source/build evidence.
-
-## Gate for completion
-This reassessment can be marked DONE only when:
-- every remaining Master Plan task is mapped and sequenced;
-- overlapping scopes are merged or explicitly differentiated;
-- prerequisites and exit criteria are visible;
-- the updated Master Plan and STATUS.md agree;
-- no active execution task is skipped or marked complete without evidence.
-
-## Current blocker
-The roadmap documents state that Unity compilation/test baseline has not yet been established. That evidence must be obtained before choosing the exact first source-code migration slice. The reassessment can clarify sequence and gates now, but must not pretend to verify compilation or source dependencies it has not tested.
+## Validation and limitations
+- Master Plan and STATUS pointer must agree at all times.
+- Source migration requires a recoverable checkpoint, Unity compilation and relevant tests after each cohesive step.
+- Current source notes identify Unity 6000.0.45f1 and sparse assembly definitions, but no verified local compile/test baseline has been recorded.
+- GitHub connector operations do not run Unity compilation. Exact source migration boundaries must be validated in the local Unity project.
+- No MythHunter source code was changed by this reassessment.
 
 ## Conclusion
-Reassess the remaining roadmap now, before continuing extraction. Keep the architecture baseline as a target, validate it against the real Unity project, then execute a smaller dependency-ordered plan with enforced build/test gates.
+The roadmap has been re-sequenced to make prerequisites explicit, reduce overlap, and keep Framework Core small. The next active task is EPIC 03.1 — Source baseline. Do not extract `IComponent` or any other contract until this baseline and the first boundary review have passed their gates.
