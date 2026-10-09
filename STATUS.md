@@ -1,54 +1,44 @@
 # Project Status
 
 ## Source Project
+This roadmap controls the architecture audit and refactoring of source project **Aizekhan/MythHunter**, Unity project on branch `dev`.
 
-This roadmap controls the architecture audit and refactoring of the source project **Aizekhan/MythHunter** (Unity RPG project, branch `dev`).
-
-All code audits and implementation work are performed against `Aizekhan/MythHunter` unless explicitly stated otherwise.
-
-Roadmap repository: `Aizekhan/RPG-Framework-Roadmap`
-
-Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
+- Roadmap repository: `Aizekhan/RPG-Framework-Roadmap`
+- Master plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
+- Architecture baseline: `Audits/EPIC_02.8_Final_Architecture_Baseline.md`
+- Roadmap reassessment: `Audits/EPIC_02.9_Post_Architecture_Roadmap_Reassessment.md`
 
 ## Current Position
-
-- Epic: 03 — Framework Extraction
-- Task: Framework Extraction
-- Current item: Framework contracts
+- Epic: 03 — Baseline and Enforceable Boundary
+- Task: 3.1 — Source baseline
+- Current item: Record MythHunter source branch/commit, working tree, Unity/package/assembly state, compile and tests
 - Status: ACTIVE
+- Gate: no source-code migration until the baseline and rollback point are documented.
+
+## Why this is active
+The architecture target is documented, but the available roadmap evidence does not contain a verified local Unity compile/test baseline. A GitHub source snapshot or a no-op CI workflow is not a substitute for opening the actual project in Unity.
 
 ## Sequential Execution Rule
-
-Only one item may be ACTIVE at a time.
-
-Later items remain LOCKED until the current item is completed.
+Exactly one roadmap item may be ACTIVE. Later items remain LOCKED until the current item passes its exit gate and this file and the Master Plan are updated together.
 
 ## Completion Rule
+A roadmap item is complete only when:
+- evidence and findings are documented;
+- ownership and relevant dependencies are stated;
+- applicable compile/test or validation results are recorded;
+- regressions are distinguished from pre-existing failures;
+- a rollback point exists for source changes;
+- its Master Plan checkbox and this status pointer agree.
 
-An item is complete only when:
+## Current Blocker
+Unity compilation and tests have not been verified from the connected GitHub workflow. The local project must be opened in its declared Unity version, and baseline results/working-tree state must be supplied or otherwise directly verified before source migration can proceed.
 
-- Its audit is documented using `AUDIT_TEMPLATE.md`.
-- A conclusion is recorded.
-- Framework / Game Layer classification is recorded.
-- Technical debt and refactoring needs are recorded.
-- The corresponding checkbox in `RPG_FRAMEWORK_MASTER_PLAN.md` is checked.
-
-## Status Transition Rule
-
-When the current item is completed:
-
-1. Mark the completed item as DONE.
-2. Check its checkbox in `RPG_FRAMEWORK_MASTER_PLAN.md`.
-3. Move `Current item` to the next item in strict order.
-4. Set the new item to ACTIVE.
-5. Keep all later items LOCKED.
-6. If the current task has no remaining items, mark the task DONE, check the task checkbox in the master plan, and move to the next task.
-7. If the current Epic has no remaining tasks, mark the Epic DONE and move to the next Epic.
+## Next action
+Complete EPIC 03.1 Source baseline. Record exact source commit, working-tree state, Unity version, package and assembly inventory, then compilation and test results. If compilation cannot be run, record the blocker and do not start an extraction.
 
 ## Source of Truth
+- `RPG_FRAMEWORK_MASTER_PLAN.md`: execution order and checkboxes.
+- `STATUS.md`: exact active task.
+- `Audits/*`: evidence and architectural conclusions.
 
-`RPG_FRAMEWORK_MASTER_PLAN.md` is the master order.
-`STATUS.md` is the current execution pointer.
-Detailed audit documents contain the evidence and decisions.
-
-Never start a later item before the current ACTIVE item is completed and the status is advanced.
+Do not mark implementation complete merely because documentation changed or files moved.
