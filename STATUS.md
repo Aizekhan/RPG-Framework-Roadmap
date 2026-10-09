@@ -14,7 +14,7 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 - Epic: 02 — Architecture Rebuild
 - Task: Architecture Rebuild
-- Current item: Define composition-root strategy
+- Current item: Define migration strategy
 - Status: ACTIVE
 
 ## Sequential Execution Rule
