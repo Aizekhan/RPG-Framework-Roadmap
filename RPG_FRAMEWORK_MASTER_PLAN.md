@@ -115,7 +115,7 @@ Rebuild the roadmap from the actual audit findings before implementation begins.
 - [x] Define target module map
 - [x] Define assembly/package boundaries
 - [x] Define allowed dependency direction
-- [ ] Define forbidden dependencies
+- [x] Define forbidden dependencies
 - [ ] Define composition-root strategy
 - [ ] Define migration strategy
 - [ ] Final architecture baseline
