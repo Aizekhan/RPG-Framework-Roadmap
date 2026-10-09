@@ -105,6 +105,23 @@ If the local compile cannot validate this patch, do not mark it complete; first 
 - `IEventBus` extraction before sync/async/priority contract and behavior tests.
 - `ISerializable` extraction before persistence/network ownership is disentangled.
 
+## Additional source-search validation
+
+A second code search for `IComponent` and `using MythHunter.Core.ECS` confirmed that the marker is referenced from ECS helpers, concrete game components, archetype/template builders and serialization registries. Examples include:
+- `Core/ECS/IComponentFactory.cs`
+- `Core/ECS/IComponentCacheRegistry.cs`
+- `Entities/IComponentSerializerRegistry.cs`
+- `Data/Serialization/IComponentSerializer.cs`
+- `Entities/Archetypes/EntityArchetypeBase.cs`
+- `Entities/Archetypes/ArchetypeTemplateBuilder.cs`
+- `Components/Combat/HealthComponent.cs`
+- `Components/Combat/TeamComponent.cs`
+- `Components/Movement/PathComponent.cs`
+- `Components/Character/StatsComponent.cs`
+- `Editor/Wizards/MythHunterCodeGenerator.cs`
+
+This confirms the type is a cross-cutting generic constraint, not just an implementation detail local to the ECS folder. Moving it requires a canonical type identity and coordinated source-wide references, including authoring/code-generation templates. The source search does not provide a complete formal graph, so local checkout analysis remains necessary.
+
 ## Verification and limitations
 - Source declaration and example consumers were verified by file retrieval and code-search results.
 - No Unity compile or automated test was executed through the GitHub connector.
