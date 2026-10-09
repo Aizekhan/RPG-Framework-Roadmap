@@ -14,7 +14,7 @@ Current plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 
 - Epic: 02 — Architecture Rebuild
 - Task: Architecture Rebuild
-- Current item: Define allowed dependency direction
+- Current item: Define forbidden dependencies
 - Status: ACTIVE
 
 ## Sequential Execution Rule
