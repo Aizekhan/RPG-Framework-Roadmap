@@ -75,8 +75,16 @@ Conclusion: do not spend additional time on baseline investigation unless a spec
 
 Conclusion: usage map and API constraints recorded. Proceed to EPIC 03.3. Unity is not required for design or GitHub source inspection; it is required only when validating source/assembly integration.
 
-## 3.3 — First enforceable boundary
-**Status: ACTIVE — integration design checkpoint**
+## 3.3 — Assembly boundary reassessment
+**Status: COMPLETE — original two-interface extraction approach rejected as incomplete**
+- [x] Identify that the existing predefined assembly cannot directly reference the new user asmdef
+- [x] Identify that the MythHunter tree mixes UnityEngine runtime code and Editor-specific files/direct imports
+- [x] Record correction in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`
+
+Conclusion: do not merge the current draft as a completed extraction. The assembly plan needs a source-backed map of runtime/editor compilation boundaries before the first integrated assembly is added.
+
+## 3.4 — Compile-time dependency map and minimal assembly cut
+**Status: ACTIVE**
 - [ ] Prepare an isolated source branch or equivalent checkpoint without discarding local changes
 - [ ] Add the minimal Framework-owned assembly for neutral ECS contracts
 - [ ] Move, do not copy, the canonical `IComponent` and `IEntityManager` definitions; preserve the existing namespace initially if necessary to reduce migration churn
