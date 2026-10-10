@@ -18,11 +18,8 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 
 # EPIC 01 — Full MythHunter Audit
 **Status: COMPLETE**
-
-Goal: Understand the actual source architecture and identify Framework/Game ownership.
 - [x] Audit top-level structures: Core, Components, Entities, Systems, Events, Networking, Cloud, UI, Services, Utils
 - [x] Audit Core: ECS, DI, Game, Installers, StateMachine, SceneManagement, Validation
-- [x] Audit Components, Entities, Archetypes/Templates, Systems, Events and Networking
 - [x] Record Framework/Game candidates, technical debt, dependencies and unnecessary coupling
 
 # EPIC 01.5 — Audit Completeness Check
@@ -37,8 +34,8 @@ Goal: Understand the actual source architecture and identify Framework/Game owne
 
 # EPIC 02 — Architecture Rebuild
 **Status: COMPLETE**
-- [x] Framework/Game boundary
-- [x] Target module map and assembly/package boundary principles
+- [x] Framework/Game boundary and target module map
+- [x] Assembly/package boundary principles
 - [x] Dependency direction and forbidden references
 - [x] Composition-root and migration strategy
 - [x] Final architecture baseline
@@ -67,40 +64,37 @@ Goal: Understand the actual source architecture and identify Framework/Game owne
 Conclusion: do not spend additional time on baseline investigation unless a specific error blocks the next bounded code change. Compile and create focused tests during implementation. Preserve local changes and do not reset the worktree.
 
 ## 3.2 — First Framework slice decision and usage map
-**Status: ACTIVE**
-- [x] Review current ECS contracts and their immediate dependencies
+**Status: EVIDENCE RECORDED — READY TO START FIRST SOURCE CHANGE**
+- [x] Review current ECS contracts and immediate dependencies
 - [x] Record first-slice decision in `Audits/EPIC_03.2_First_Framework_Slice_Decision.md`
-- [ ] Map all usages of `Entity`, raw entity IDs, `IComponent`, `IEntityManager`, `IEcsWorld`, and `ISystemRegistry`
-- [ ] Record current behavior and all compatibility constraints
-- [ ] Decide canonical entity identity, ID validity/reuse, component type constraints, and missing-component behavior
-- [ ] Define the smallest Framework-owned ECS contracts with no MythHunter dependency
-- [ ] Specify one bounded implementation step, focused tests, compile validation and rollback
+- [x] Map observed usages of `Entity`, raw entity IDs, `IComponent`, `IEntityManager`, `IEcsWorld`, and `ISystemRegistry`
+- [x] Record current behavior and compatibility constraints
+- [x] Decide initial identity strategy: preserve integer IDs; defer any Entity value-type migration
+- [x] Define first slice: canonical `IComponent` + `IEntityManager` contracts, no game/system/runtime implementation
+- [x] Specify compile/test/rollback acceptance criteria in `Audits/EPIC_03.2_ECS_Contract_Usage_Map.md`
 
-**Exit gate:** source-backed usage map and explicit API decisions exist. No source code moves in this task.
+Conclusion: usage map and API constraints recorded. Proceed to EPIC 03.3. Unity is not required for design or GitHub source inspection; it is required only when validating source/assembly integration.
 
 ## 3.3 — First enforceable boundary
-- [ ] Establish/confirm a usable local recovery point without discarding existing changes
-- [ ] Add only the assembly boundary required by the agreed first slice
-- [ ] Keep `EcsWorld` / system-registry integration on the Game side unless the dependency is inverted cleanly
-- [ ] Add focused tests for the extracted behavior
-- [ ] Run Unity compilation and relevant tests; record exact outcomes
-- [ ] Verify Framework-owned code has no MythHunter dependency
-- [ ] Document resulting commit/checkpoint and rollback instructions
+**Status: ACTIVE**
+- [ ] Prepare an isolated source branch or equivalent checkpoint without discarding local changes
+- [ ] Add the minimal Framework-owned assembly for neutral ECS contracts
+- [ ] Move, do not copy, the canonical `IComponent` and `IEntityManager` definitions; preserve the existing namespace initially if necessary to reduce migration churn
+- [ ] Keep `EntityManager`, caches, archetypes, serializers, factories, components and `EcsWorld` outside the new assembly for this step
+- [ ] Add focused tests for entity creation/destruction and component add/remove/has/get semantics; tests must document current behavior and any approved changes
+- [ ] Verify Framework-owned contracts have no MythHunter, UnityEngine/UnityEditor, logger, DI, system-registry or provider dependency
+- [ ] Run Unity compilation and relevant tests; record actual results and failures
+- [ ] Preserve unrelated changes and document exact rollback steps
 
-**Exit gate:** the selected slice compiles, focused tests exercise it, and the dependency direction is enforceable.
+**Exit gate:** the slice compiles, focused tests exercise the contract seam, no duplicate interface types exist, and Framework does not reference MythHunter.
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
-**Goal:** Extract only stable, genuinely reusable, low-dependency contracts.
-- [ ] Establish canonical ownership and all callers before moving or renaming types
+- [ ] Establish canonical ownership and callers before moving or renaming types
 - [ ] Keep UnityEditor, game phases, MythHunter types, concrete game events and providers out of neutral contracts
 - [ ] Avoid duplicate CLR types and update consumers coherently
 - [ ] Add compile/test/forbidden-reference validation
 
-**Exit gate:** contracts compile in their intended owner and no duplicate-type or assembly-cycle problem is introduced.
-
 # EPIC 05 — Framework Runtime Modules
-**Goal:** Extract runtime implementations only after the relevant contracts and dependencies are stable.
-
 ## 5.1 — Logging and validation
 - [ ] Separate neutral abstractions from MythHunter/Unity implementations
 - [ ] Choose owners and contracts from actual consumers
@@ -125,12 +119,9 @@ Conclusion: do not spend additional time on baseline investigation unless a spec
 
 ## 5.5 — ECS runtime
 - [ ] Decide identity, lifecycle, storage, archetype and query model before extraction
-- [ ] Map callers and cache/registry behavior
 - [ ] Resolve ComponentCache ownership with evidence
 - [ ] Extract cohesive slices with correctness tests
 - [ ] Evaluate performance only after API correctness and stability
-
-**Exit gate:** each selected runtime module has explicit ownership, dependencies, focused tests and a successful compiling checkpoint.
 
 # EPIC 06 — Serialization Foundation
 - [ ] Audit component/entity/versioned/delta/network serialization separately
@@ -194,7 +185,7 @@ Conclusion: do not spend additional time on baseline investigation unless a spec
 
 ## Milestone map
 - **M0 — Baseline evidence:** EPIC 03.1 recorded; no additional diagnostic loop.
-- **M1 — First reusable boundary:** EPIC 03.2–03.3.
+- **M1 — First reusable boundary:** EPIC 03.2 recorded, EPIC 03.3 active.
 - **M2 — Reusable Core:** EPIC 04–06 for selected scope.
 - **M3 — MythHunter integration:** EPIC 07–08.
 - **M4 — Optional capabilities:** EPIC 09, 12 and 13 as selected.
