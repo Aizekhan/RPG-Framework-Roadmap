@@ -1,7 +1,7 @@
 # EPIC 05.1 — Neutral Logging Contract and MythHunter Adapter
 
 ## Status
-**LOGGING SLICE MERGED AND VALIDATED; VALIDATION API AUDIT IN PROGRESS.** PR #20: https://github.com/Aizekhan/MythHunter/pull/20; merge commit `ec967a2944ba83db69655d4415d416f49a2ce122`. CI on source head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary/GUID checks passed, 9 .NET tests passed, 0 failed/skipped, no compiler warnings. Unity `6000.0.45f1` EditMode XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: 10 passed, 0 failed, 0 skipped; the Logging contract test was discovered and passed. User confirmed full-project compile/Console and game bootstrap smoke clean.
+**EPIC COMPLETE — logging merged and validated; validation candidate audit concluded no extraction is justified by current evidence.** PR #20: https://github.com/Aizekhan/MythHunter/pull/20; merge commit `ec967a2944ba83db69655d4415d416f49a2ce122`. CI on source head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary/GUID checks passed, 9 .NET tests passed, 0 failed/skipped, no compiler warnings. Unity `6000.0.45f1` EditMode XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: 10 passed, 0 failed, 0 skipped; the Logging contract test was discovered and passed. User confirmed full-project compile/Console and game bootstrap smoke clean.
 
 ## Parent
 - EPIC 05 — Framework Runtime Modules
@@ -35,12 +35,11 @@
 ## Rollback
 Revert only this feature branch/PR. The MythHunter-facing API remains intact, so rollback must not require mass caller edits. Do not reset/clean the user's local worktree.
 
-## Validation API audit — evidence so far
-- `IValidator<T>` declaration: `Assets/_MythHunter/Code/Utils/Validation/IValidator.cs`; it returns `ValidationResult`.
-- Concrete `Validator<T>` in `Assets/_MythHunter/Code/Utils/Validation/Validator.cs` accumulates rule errors and short-circuits on `IsCritical`. `ValidationResult` exposes a mutable `List<string> Errors` and `Success`, `Error`, `Critical` factories.
-- Repository search finds no explicit direct callers of `IValidator<T>` outside its declaration. Separate domain/config `Validate()` methods do not establish cross-module contract usage.
-- Do not extract `IValidator<T>` alone: its return type and the current mutable/error-critical semantics are coupled. First finish inventory of concrete `Validator<T>` construction and all `ValidationResult` references.
-- If no real generic API consumers exist, record a no-extraction decision instead of inventing a Framework module. If consumers exist, define a cohesive neutral contract and result semantics, compatibility adapter, focused tests and rollback before coding.
+## Validation API audit — decision
+See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
+- Repository search found no actual production consumers of the generic `IValidator<T>` / `Validator<T>` builder outside its own implementation.
+- `ValidationResult` is mutable and includes game-specific critical short-circuit behavior; moving the interface alone would be incomplete.
+- Decision: keep existing validation files untouched. Do not introduce a neutral Framework validation assembly until real consumer demand and requirements justify it.
 
-## Rollback
-Logging is merged in PR #20. Any future validation extraction must be an independent bounded PR; preserve `ValidationResult`/validator callers until migration is validated. Do not reset/clean local worktree changes.
+## Outcome
+EPIC 05.1 is complete. The next active item is EPIC 05.2 — Dependency Injection audit/design.
