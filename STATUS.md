@@ -11,7 +11,7 @@ This roadmap controls the architecture audit and refactoring of **Aizekhan/MythH
 - First slice decision: `Audits/EPIC_03.2_First_Framework_Slice_Decision.md`
 
 ## Current Position
-- Epic: 03 — Baseline and First Framework Slice
+- Epic: 03 — First Reusable Framework Slice
 - Active task: 3.2 — First Framework slice decision and usage map
 - Status: ACTIVE
 - Next deliverable: source-backed usage map for entity identity and ECS contracts, followed by target API decision.
