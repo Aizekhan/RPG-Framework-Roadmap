@@ -17,10 +17,10 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.5 — Implement and validate first Framework ECS runtime**
 - Status: ACTIVE — Unity test gate passed on source commit `3917e6a48344d4469fd95a2049b1a2e60d983223`: test assembly discovered, 8 ECS tests passed; total EditMode run 9 passed, 0 failed, 0 skipped. README/PR description was updated in documentation-only commit `4385e0f23729f37749344c7ad33d2861e2003125`; both CI workflows on this latest PR head now passed.
-- PR: [#18 — Draft: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
+- PR: [#18 — EPIC 03.5: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Current PR head: `4385e0f23729f37749344c7ad33d2861e2003125`.
 - Current-head workflows: [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498), both success.
-- PR #18 has no submitted reviews/inline threads, is ready-for-review, and remains unmerged.
+- PR #18 title is aligned with its ready-for-review state; it has no submitted reviews/inline threads and remains unmerged.
 - Stacked preparation branch: `feature/epic-03-6-ecs-consumer-migration`; draft PR [#19](https://github.com/Aizekhan/MythHunter/pull/19) is temporarily based on `feature/framework-ecs-contracts` so its diff isolates the consumer migration. Latest branch CI [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972) passed the static boundary/import checks and .NET ECS tests.
 - EPIC 03.6 implementation preparation is underway, but its integration/merge gate remains dependent on PR #18 landing first. Full MythHunter Unity compilation and game bootstrap/ECS smoke validation have not yet been run on the migrated branch.
 
