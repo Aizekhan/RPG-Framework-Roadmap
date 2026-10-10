@@ -96,7 +96,7 @@ Conclusion: keep the initial Framework module dependency-free and do not move th
 Conclusion: static dependency mapping is sufficient to start the isolated runtime module. The source migration and Unity compile are tracked separately below.
 
 ## 3.5 — Implement and validate first Framework ECS runtime
-**Status: ACTIVE**
+**Status: VALIDATION COMPLETE — awaiting formal PR review/merge**
 - [x] Add `RPGFramework.ECS.Runtime.asmdef` with no references and `noEngineReferences: true`.
 - [x] Add initial `IComponent`, `IEntityManager` and `EntityManager` implementation in namespace `RPGFramework.ECS`.
 - [x] Add eight focused NUnit tests for entity identity, component add/query/get/remove, destroy, missing components, and rejecting invalid entity IDs.
@@ -114,8 +114,8 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Run Unity CLI EditMode invocation and inspect XML: the run passed but discovered only `AddressableAssets.DocExampleCode.TestStub.RequiredTest` (1 passed). This is unrelated to Framework ECS and does not satisfy the ECS Unity test gate by itself.
 - [x] Run Unity CLI full EditMode tests on exact PR head `3917e6a48344d4469fd95a2049b1a2e60d983223` using Unity `6000.0.45f1`; XML `D:\\MythHunter-Git\\FrameworkECS-TestResults.xml` reports total 9 passed, 0 failed, 0 skipped.
 - [x] Confirm `RPGFramework.ECS.Runtime.Tests.dll` was discovered and all eight `RPGFramework.ECS.Tests.EntityManagerTests` passed.
-- [ ] Complete final review of changed files and current PR CI state; keep PR draft until review is complete.
-- [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
+- [x] Complete final changed-file review: 20 files, limited to new Framework runtime/tests/CI/harness/validator and legacy metadata/newline normalization; no legacy ECS behavior cutover.
+- [x] Document Unity EditMode results and follow-up migration in README/PR description; current PR-head CI runs #19 and #236 pass.
 
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
