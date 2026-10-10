@@ -172,9 +172,16 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 **Outcome:** EPIC 05.1 is closed. Proceed to EPIC 05.2.
 
 ## 5.2 — Dependency injection
-- [ ] Specify registration, lifetime, scope, resolution, disposal and async lifecycle
-- [ ] Remove concrete game/logger dependencies from neutral surfaces
-- [ ] Extract runtime module and test lifecycle/error cases
+**Status: ACTIVE — source audit recorded; characterization tests are next**
+- [x] Map the current public surface and coupled concepts (`IDIContainer`, `DIScope`, `LazyDependency<T>`, `IDIInstaller`, lifecycle manager).
+- [x] Record source risks: scoped resolution path, Type-based resolution/registration checks, scope hierarchy, disposal ownership, and current-scope concurrency.
+- [x] Define bounded execution/acceptance criteria in `Tasks/EPIC_05.2_DI_Behavior_Characterization.md`.
+- [ ] Add characterization/regression tests for singleton, transient, scoped, lazy and Type-based API behavior.
+- [ ] Confirm defects with tests and fix the smallest set while preserving current MythHunter-facing APIs.
+- [ ] Define lifetime, scope, disposal, injection and failure semantics before creating a neutral Framework DI module.
+- [ ] Extract and migrate only after tests, compile, Unity EditMode and bootstrap validation pass.
+
+Audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
 
 ## 5.3 — Event dispatch
 - [ ] Separate generic event contracts from concrete MythHunter events
