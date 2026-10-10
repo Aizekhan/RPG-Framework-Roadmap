@@ -156,21 +156,20 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 
 # EPIC 05 — Framework Runtime Modules
 ## 5.1 — Logging and validation
-**Status: ACTIVE — neutral logging slice merged; validation API candidate audit now in progress**
+**Status: COMPLETE — logging extracted and merged; generic validation extraction deliberately deferred by source audit**
 - [x] Map `IMythLogger`, `MythLogger`, composition-root binding and consumer compatibility requirements.
 - [x] Add `RPGFramework.Logging.ILogger` and `LogSeverity` as a separate no-engine-reference assembly.
 - [x] Keep `IMythLogger` source-compatible; map severity/exception behavior in the adapter; bind the same logger instance under both interfaces.
 - [x] Add focused Framework logging test; extend .NET harness, static boundary/GUID validator and CI path filters.
 - [x] CI on source head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 asset GUIDs checked; .NET 9 passed, 0 failed, 0 skipped; no compiler warnings.
-- [x] Unity CLI EditMode `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`, Unity `6000.0.45f1`: total 10 passed, 0 failed, 0 skipped; `LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException` passed.
+- [x] Unity CLI EditMode `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`, Unity `6000.0.45f1`: 10 passed, 0 failed, 0 skipped; `LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException` passed.
 - [x] User confirmed full project compile/Console and game bootstrap smoke are clean.
 - [x] Merge PR #20 to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
-- [x] Audit interface declaration: repository search finds no direct callers of `IValidator<T>` outside its definition.
-- [ ] Search concrete `Validator<T>` construction and all `ValidationResult` consumers; decide whether this API is used enough and is genuinely platform-neutral.
-- [ ] If justified by source evidence, design one cohesive validation contract/result API with explicit immutability, error and criticality semantics; otherwise record why it remains Game Layer.
-- [ ] Make no source changes until the caller inventory and design decision are recorded.
+- [x] Audit `IValidator<T>`, `Validator<T>`, and `ValidationResult`; see `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
+- [x] Decision: no Framework Validation extraction yet. Source search finds no real external production callers/construction sites; other validation helpers have different semantics. Do not create an unused module or migrate existing files.
+- [x] Preserve a reopen condition: concrete caller demand, cross-module reuse, and explicit error/criticality/immutability semantics must be demonstrated first.
 
-Detailed task: `Tasks/EPIC_05.1_Logging_Validation.md`.
+**Outcome:** EPIC 05.1 is closed. Proceed to EPIC 05.2.
 
 ## 5.2 — Dependency injection
 - [ ] Specify registration, lifetime, scope, resolution, disposal and async lifecycle
