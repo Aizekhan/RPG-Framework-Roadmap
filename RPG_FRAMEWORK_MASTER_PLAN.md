@@ -96,7 +96,7 @@ Conclusion: keep the initial Framework module dependency-free and do not move th
 Conclusion: static dependency mapping is sufficient to start the isolated runtime module. The source migration and Unity compile are tracked separately below.
 
 ## 3.5 — Implement and validate first Framework ECS runtime
-**Status: VALIDATION COMPLETE — awaiting formal PR review/merge**
+**Status: MERGED to `dev` — PR #18, merge commit `b6e046895938d2dd72026827c4f72fd44ced1fdf`**
 - [x] Add `RPGFramework.ECS.Runtime.asmdef` with no references and `noEngineReferences: true`.
 - [x] Add initial `IComponent`, `IEntityManager` and `EntityManager` implementation in namespace `RPGFramework.ECS`.
 - [x] Add eight focused NUnit tests for entity identity, component add/query/get/remove, destroy, missing components, and rejecting invalid entity IDs.
@@ -120,7 +120,7 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
 ## 3.6 — Migrate MythHunter ECS consumers to Framework runtime
-**Status: IMPLEMENTATION PREPARED — Unity EditMode PASS; integration smoke pending**
+**Status: SOURCE/UNITY VALIDATION COMPLETE — refreshed aligned-head CI pending before PR #19 merge**
 - [x] Create a dedicated migration branch and stacked draft PR #19 based on the 3.5 branch.
 - [x] Move identified ECS consumers to import the Framework contract and manager APIs.
 - [x] Change the MythHunter composition root to bind the Framework manager; remove duplicate legacy interface/manager source files on the migration branch.
@@ -135,15 +135,15 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Update PR #19 description with current scope and validation gaps.
 - [x] Inspect pre-cleanup `EPIC-03-6-EditMode.xml`: Framework ECS test assembly discovered; 8 ECS tests passed; total EditMode 9 passed, 0 failed, 0 skipped. This file is timestamped 17:36Z, before later source cleanup commits.
 - [x] Rerun Unity EditMode on latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1`: `EPIC-03-6-EditMode-latest.xml` at `2026-10-10 18:12:11Z`, total 9 passed, 0 failed, 0 skipped; all 8 Framework ECS tests discovered and passed.
-- [ ] Confirm full MythHunter compilation separately in Unity Editor/Console (EditMode test execution alone does not prove a clean full-project compile).
-- [ ] Run a game bootstrap/ECS smoke check.
-- [ ] Fix any Unity compile/import errors found; run Unity EditMode tests on the migrated branch.
-- [ ] Run a game bootstrap/ECS smoke check and explicitly validate the changed invalid-entity-ID behavior.
-- [ ] After EPIC 03.5 review/merge and migration validation, retarget/rebase the migration PR as needed; do not merge this stacked PR first.
+- [x] User confirmed full MythHunter compilation/Unity Console is clean.
+- [x] User confirmed game bootstrap/ECS smoke check is OK.
+- [x] No reported Unity compile/import errors; latest-head EditMode passed.
+- [x] Game bootstrap/ECS smoke reported OK; test suite covers unknown/destroyed-ID rejection.
+- [x] After PR #18 merged, retarget PR #19 to `dev` and align branch ancestry in `fde1beba9940dc6647ac18244ee78fa973c8d31c` without changing the source tree.
 - [ ] Update the usage map and verify no legacy ECS references remain, including editor/generator/reflection/serialization paths.
-- [ ] Record evidence in `STATUS.md` before activating the next epic.
+- [ ] Wait for refreshed aligned-head CI to pass, merge PR #19, and record EPIC 03.6 complete in `STATUS.md` before activating EPIC 04.
 
-**Dependency rule:** PR #19 depends on PR #18. Do not merge PR #19 before #18 lands.
+**Dependency rule:** PR #18 has merged. PR #19 targets `dev`; do not merge until refreshed aligned-head CI passes.
 Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Consumer_Migration.md`](Tasks/EPIC_03.6_ECS_Consumer_Migration.md).
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
