@@ -120,7 +120,7 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
 ## 3.6 — Migrate MythHunter ECS consumers to Framework runtime
-**Status: IMPLEMENTATION PREPARED — VALIDATION BLOCKED**
+**Status: IMPLEMENTATION PREPARED — Unity EditMode PASS; integration smoke pending**
 - [x] Create a dedicated migration branch and stacked draft PR #19 based on the 3.5 branch.
 - [x] Move identified ECS consumers to import the Framework contract and manager APIs.
 - [x] Change the MythHunter composition root to bind the Framework manager; remove duplicate legacy interface/manager source files on the migration branch.
@@ -134,8 +134,8 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Run CI on latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1` ([run #35](https://github.com/Aizekhan/MythHunter/actions/runs/38073513821)): static boundary/import checks and .NET ECS tests passed.
 - [x] Update PR #19 description with current scope and validation gaps.
 - [x] Inspect pre-cleanup `EPIC-03-6-EditMode.xml`: Framework ECS test assembly discovered; 8 ECS tests passed; total EditMode 9 passed, 0 failed, 0 skipped. This file is timestamped 17:36Z, before later source cleanup commits.
-- [ ] Rerun Unity EditMode on latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1` and inspect the new XML.
-- [ ] Confirm full MythHunter compilation separately in Unity Editor/Console.
+- [x] Rerun Unity EditMode on latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1`: `EPIC-03-6-EditMode-latest.xml` at `2026-10-10 18:12:11Z`, total 9 passed, 0 failed, 0 skipped; all 8 Framework ECS tests discovered and passed.
+- [ ] Confirm full MythHunter compilation separately in Unity Editor/Console (EditMode test execution alone does not prove a clean full-project compile).
 - [ ] Run a game bootstrap/ECS smoke check.
 - [ ] Fix any Unity compile/import errors found; run Unity EditMode tests on the migrated branch.
 - [ ] Run a game bootstrap/ECS smoke check and explicitly validate the changed invalid-entity-ID behavior.
