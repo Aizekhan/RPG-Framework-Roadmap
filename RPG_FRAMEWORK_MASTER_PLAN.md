@@ -117,6 +117,21 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
+## 3.6 — Migrate MythHunter ECS consumers to Framework runtime
+**Status: BLOCKED — queued behind the Unity validation and merge gate for 3.5**
+- [ ] Refresh the source usage map against the post-3.5 merged branch.
+- [ ] Establish a single canonical CLR identity for `IComponent` and `IEntityManager`; do not retain duplicate interfaces or add wrappers that create a second identity.
+- [ ] Bind exactly one Framework `EntityManager` from the MythHunter composition root.
+- [ ] Migrate consumers in small batches: cache/registry, factories, archetype/template code, serializers, systems and installers.
+- [ ] Keep `IEcsWorld`, `EcsWorld` and `ISystemRegistry` in the MythHunter/Game Layer; Framework must not depend on them.
+- [ ] Verify all legacy references, including editor/generator/reflection paths, are removed before deleting old contracts/runtime.
+- [ ] Test and explicitly assess the behavior difference for `AddComponent` with unknown/destroyed IDs.
+- [ ] Run .NET tests, static boundary checks, Unity full compile/EditMode tests and a game bootstrap/ECS smoke check.
+- [ ] Remove the legacy `EntityManager` and contract definitions only after every consumer is migrated and validation passes.
+- [ ] Record evidence and update `STATUS.md` before activating another task.
+
+Detailed scope, implementation slices, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Consumer_Migration.md`](Tasks/EPIC_03.6_ECS_Consumer_Migration.md).
+
 # EPIC 04 — Framework Core Contracts and Shared Primitives
 - [ ] Establish canonical ownership and callers before moving or renaming types
 - [ ] Keep UnityEditor, game phases, MythHunter types, concrete game events and providers out of neutral contracts
