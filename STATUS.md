@@ -30,8 +30,8 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - A small set of Editor/runtime portability changes is included in PR #18 and must be reviewed as part of its diff.
 
 ## Latest CI evidence
-- Workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38049344539)
-- Tested commit: `1360e564eb5d1fa5ea0f39cb4e499faaa14b35b6`.
+- Workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38049497156)
+- Tested commit: `be362f9df6910b3027f05f5b742b65bc3dc65182`.
 - Static assembly boundary check: **OK**.
 - Static scan: 3 runtime C# files, 1 test C# file, 7 Framework/test asset GUIDs checked.
 - .NET compile and NUnit result: **8 passed, 0 failed, 0 skipped**.
