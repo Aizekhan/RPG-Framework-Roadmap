@@ -8,14 +8,13 @@
 - EPIC 04 candidate audit: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`
 
 ## Current position
-- **Active task: EPIC 05.1 — Logging and validation; first slice: neutral Logging contract + MythHunter adapter.**
-- Implementation branch: `feature/epic-05-1-logging-contract`
-- Draft PR #20: https://github.com/Aizekhan/MythHunter/pull/20
-- Current head: `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`
-- CI #41: https://github.com/Aizekhan/MythHunter/actions/runs/38075878947 — success.
-- Static boundary/GUID validation: OK; 5 Framework runtime C# files and 2 test C# files; 13 Framework/test asset GUIDs checked.
-- .NET tests: 9 passed, 0 failed, 0 skipped (8 ECS + 1 Logging contract). Latest run has no C# compiler warnings after nullable annotations were fixed.
-- **Still required:** Unity Editor import/full-project compile, confirm `RPGFramework.Logging.Runtime.Tests.dll` is discovered and its EditMode test passes, then game bootstrap smoke check. PR #20 remains draft and must not be merged before these checks.
+- **Active task: EPIC 05.1 — validation API candidate audit.** Logging slice is merged and validated.
+- Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
+- Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
+- CI on pre-merge head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 Framework/Test asset GUIDs checked; .NET tests 9 passed, 0 failed, 0 skipped; no C# compiler warnings.
+- Unity CLI EditMode, Unity `6000.0.45f1`, XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: **10 passed, 0 failed, 0 skipped**. Logging test discovered and passed: `RPGFramework.Logging.Tests.LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException`.
+- User confirmed Unity full-project compile/Console and game bootstrap smoke are clean; source inspection verifies same logger instance bound under both `IMythLogger` and `RPGFramework.Logging.ILogger`.
+- Validation source audit: `IValidator<T>` has only its declaration found in search; concrete `Validator<T>` and mutable `ValidationResult` currently live in MythHunter Utils. No Framework-neutral extraction until callers/contracts have defined value semantics.
 
 ## Completed roadmap work
 ### EPIC 03.5 — Standalone Framework ECS runtime
@@ -37,14 +36,20 @@
 - Decision: do not create a speculative empty `RPGFramework.Contracts` assembly. ECS contracts already have a single canonical owner; other candidates have game-specific coupling or lack demonstrated cross-module use.
 - First implementation slice selected from evidence: neutral logging API with MythHunter compatibility facade, under EPIC 05.1.
 
-## Current EPIC 05.1 implementation
-- Added `Assets/_Framework/Logging/Runtime/ILogger.cs`, `LogSeverity.cs`, and `RPGFramework.Logging.Runtime.asmdef` (no assembly refs, no Unity engine refs).
-- Existing `IMythLogger` extends Framework `ILogger`; legacy API is preserved.
-- `MythLogger` maps Framework severities/exceptions to existing MythHunter logging behavior.
-- `GameBootstrapper` binds the exact same logger object as both `IMythLogger` and `RPGFramework.Logging.ILogger`.
-- Added Editor-only Unity test assembly and a .NET harness test; extended static boundary/GUID checks and CI workflow paths.
-- Task definition: `Tasks/EPIC_05.1_Logging_Validation.md`
-- Scope is intentionally narrow: no mass call-site migration, no DI extraction, no validation-contract source change yet.
+## Completed EPIC 05.1 logging slice
+- Added Framework `RPGFramework.Logging.Runtime` with `ILogger`, `LogSeverity`, and an assembly definition with no refs and `noEngineReferences: true`.
+- `IMythLogger` extends the neutral contract while retaining legacy methods.
+- `MythLogger` maps neutral severities/exceptions to existing MythHunter behavior.
+- `GameBootstrapper` binds the same logger object under both interfaces.
+- CI: static boundary/GUID validation passed; .NET 9/9. Unity EditMode: 10/10; Logging contract test passed. User confirmed compile and bootstrap smoke.
+- PR #20 merged to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
+
+## Validation contract audit (current focus)
+- `IValidator<T>` is declared in `Assets/_MythHunter/Code/Utils/Validation/IValidator.cs` and returns `ValidationResult`.
+- `Validator<T>` is a concrete builder that aggregates rule errors and short-circuits on `IsCritical`; `ValidationResult.Errors` is a mutable `List<string>`.
+- Repository search found no explicit users of `IValidator<T>` outside its declaration; avoid extracting the interface alone from its current result type.
+- Direct validation-style methods exist in game/resource code (e.g. `StaticData.Validate()`, `PreloadSceneConfig.ValidateConfig()`); these are separate APIs and do not yet establish that generic `IValidator<T>` needs Framework ownership.
+- Next: enumerate concrete `Validator<T>` instantiations and `ValidationResult` references, determine whether this generic API is used at all, and record decision before any source migration.
 
 ## Rules
 1. One active roadmap item at a time.
