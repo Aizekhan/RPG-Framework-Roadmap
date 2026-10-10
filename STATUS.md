@@ -16,7 +16,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.5 — Implement and validate first Framework ECS runtime**
-- Status: ACTIVE — current-head headless CI passes; Unity integration gate is NOT PASSED. The attempted Unity CLI EditMode run executed only an unrelated Addressables stub test; Framework ECS tests were not discovered.
+- Status: ACTIVE — headless CI passes; Unity integration gate is NOT PASSED. General EditMode run found only an unrelated Addressables stub. Targeted run filtered for `RPGFramework.ECS.Tests.EntityManagerTests` returned zero tests.
 - PR: [#18 — Draft: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Current PR head: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - Current-head workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38067838447).
@@ -36,10 +36,9 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - Current-head workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38067838447
 - Tested PR head: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - GitHub Actions: success; static boundary validation passed; .NET compile/NUnit: 8 passed, 0 failed, 0 skipped.
-- Local Unity CLI invocation completed and produced `D:\MythHunter-Git\TestResults.xml`.
-- XML summary: Passed, Total 1, Failed 0, Skipped 0.
-- The only discovered test was `AddressableAssets.DocExampleCode.TestStub.RequiredTest`; this is an unrelated Addressables stub, not the Framework ECS test suite.
-- Consequently, Unity Test Runner discovery/execution of the eight Framework tests and full MythHunter project compilation remain UNVERIFIED.
+- Local Unity CLI general EditMode run: XML `D:\MythHunter-Git\TestResults.xml`, Passed, Total 1, Failed 0, Skipped 0; only `AddressableAssets.DocExampleCode.TestStub.RequiredTest` ran.
+- Targeted Unity CLI run filtered for `RPGFramework.ECS.Tests.EntityManagerTests`: Passed, Total 0, Failed 0, Skipped 0.
+- These results do not validate the Framework test assembly, and do not prove full Unity project compilation. Investigate test assembly discovery/compile/import; do not treat a zero-test run as success.
 
 ## Rules
 1. Do not reset, clean or discard user's local worktree changes.
@@ -50,7 +49,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 6. Track one active roadmap task at a time.
 
 ## Next Action
-Identify and use the Unity CLI-supported mechanism to target the `RPGFramework.ECS.Runtime.Tests` assembly or test filter, without another generic all-tests run. Verify that the local checkout is the PR head `3917e6a48344d4469fd95a2049b1a2e60d983223`, then execute the eight Framework ECS tests and capture full Unity compile/import evidence. Keep PR #18 as draft until successful. Once the gate passes, finish final review and merge; then activate task 3.6 to migrate MythHunter consumers and remove legacy ECS duplication coherently.
+Investigate why `RPGFramework.ECS.Runtime.Tests` is not discovered: first inspect Unity Editor compilation/import errors and the actual test assembly state, using Unity CLI's supported commands rather than repeating generic test runs or guessing filters. The asmdef exists in the PR and declares `TestAssemblies`, Editor platform, and a reference to `RPGFramework.ECS.Runtime`. Keep PR #18 as draft until Unity imports/compiles the exact PR head and executes all eight ECS tests. Once the gate passes, finish final review and merge; then activate task 3.6 to migrate MythHunter consumers and remove legacy ECS duplication coherently.
 
 ## Source of Truth
 - Master Plan: ordering and checklist.
