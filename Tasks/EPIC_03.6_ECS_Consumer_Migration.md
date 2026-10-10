@@ -16,7 +16,7 @@ BLOCKED FOR INTEGRATION/MERGE — PR #18 must merge first. Preliminary migration
 - Completed source slice: added Framework imports to identified consumers (component cache/factory, world, systems, archetype/template code, serializers and entity factories); switched the composition-root binding to the Framework manager by removing the legacy class; removed duplicate `MythHunter.Core.ECS.IComponent` and `IEntityManager` definitions.
 - Updated the Editor code generator to emit `using RPGFramework.ECS;`.
 - Static validator now checks for duplicate legacy contract/runtime files, orphaned legacy metadata, explicit legacy contract references, and missing Framework imports in ECS consumers.
-- CI run [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972): static checks and .NET ECS tests passed.
+- CI run [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972) passed static checks and .NET ECS tests on earlier head `aef44c3d9b393219eb299b4a1fb4870520e65131`. A follow-up code review found stale `using MythHunter.Core.ECS;` imports conflicting with the intended cutover; these were removed in focused cleanup commits through `c74392cd34230324d961286b2cd64f0850cc6d4f`. CI has not yet been observed for that newest head.
 - Local check update: Unity CLI EditMode invocation was run on `feature/epic-03-6-ecs-consumer-migration` and produced `EPIC-03-6-EditMode.xml`; its test counts/failure details have not yet been inspected. Still required before merging PR #19: inspect that XML, confirm the full project compile outcome, and run a game bootstrap/ECS smoke check. The Framework `AddComponent` behavior difference for invalid IDs remains a specific compatibility risk.
 
 ## Current source facts
