@@ -1,7 +1,7 @@
 # EPIC 03.6 — Migrate MythHunter ECS consumers to Framework runtime
 
 ## Status
-PR #18 merged to `dev` as `b6e046895938d2dd72026827c4f72fd44ced1fdf`. User confirmed full Unity compilation/Console and game bootstrap/ECS smoke are OK. Latest-head Unity CLI EditMode: 9 passed, 0 failed, 0 skipped. PR #19 now targets `dev`; ancestry-alignment commit `fde1beba9940dc6647ac18244ee78fa973c8d31c` changes history only, not source tree. Awaiting refreshed CI on that head before merge.
+**COMPLETE.** PR #18 and PR #19 have both merged to `dev`; PR #19 merge commit `d3b81484f42d084cae150b5b60fc64185cfb70c2`. Refreshed migration CI #37/#238 and post-merge CI #38/#239 passed. Unity CLI EditMode on migration source `21d8d89938bc4c165aa485ae3abf96e003744cc1`, Unity `6000.0.45f1`: 9 passed, 0 failed, 0 skipped. User confirmed full Unity Console/project compile and game bootstrap/ECS smoke are OK. Historical source checks below remain as evidence.
 
 ## Parent and target
 - Parent: EPIC 03 — First Reusable Framework Slice
