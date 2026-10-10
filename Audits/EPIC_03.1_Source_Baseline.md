@@ -1,60 +1,34 @@
 # EPIC 03.1 — Source Baseline
 
 ## Status
-PARTIAL — source metadata inventoried; local Unity compile/test baseline NOT VERIFIED
+EVIDENCE RECORDED — PARTIAL; not a clean-build certification. Further baseline diagnosis is not the current work item.
 
 ## Source identity
 - Repository: `Aizekhan/MythHunter`
-- Branch: `dev`
-- Observed branch head: `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`
-- Head commit message: `docs: add RPG framework architecture and rules`
-- Head commit timestamp: `2026-10-08T12:24:43Z`
-- Unity editor declared in `ProjectSettings/ProjectVersion.txt`: `6000.0.45f1` (revision `d91bd3d4e081`)
-- `Packages/manifest.json` and `Packages/packages-lock.json` exist in the source tree.
+- Branch and locally reported commit: `dev`, `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`
+- Declared / locally registered Unity editor: `6000.0.45f1`
+- Local Unity project: `D:\MythHunter-Git`
+- Local recovery bundle: `D:\RPG-Framework-Baseline`
 
-## Assembly definitions observed
-The recursive source tree contained six `.asmdef` files, all under `Assets/Plugins/UniTask/`:
-- `Assets/Plugins/UniTask/Editor/UniTask.Editor.asmdef`
-- `Assets/Plugins/UniTask/Runtime/External/Addressables/UniTask.Addressables.asmdef`
-- `Assets/Plugins/UniTask/Runtime/External/DOTween/UniTask.DOTween.asmdef`
-- `Assets/Plugins/UniTask/Runtime/External/TextMeshPro/UniTask.TextMeshPro.asmdef`
-- `Assets/Plugins/UniTask/Runtime/Linq/UniTask.Linq.asmdef`
-- `Assets/Plugins/UniTask/Runtime/UniTask.asmdef`
+## Assembly definitions and tests
+The local recursive scan reported six `.asmdef` files, all under `Assets/Plugins/UniTask/`, and none under `Assets/_MythHunter/`. The local recursive scan did not find any test C# files beneath `Assets`. `Assets/_MythHunter/Tests.meta` exists but is only a folder metadata file.
 
-No `.asmdef` file was found under `Assets/_MythHunter/Code/` in the inspected branch tree. This is a source-tree observation, not proof of the Unity Editor's complete compilation state.
+The remote tree inventory had earlier reported Editor/Runtime test directory nodes. The local file scan takes precedence for current on-disk contents: no MythHunter test source file was found in the local project scan. The discrepancy is not silently reconciled.
 
-## Tests discovered
-The source tree includes `Assets/_MythHunter/Tests/Editor` and `Assets/_MythHunter/Tests/Runtime`, including Runtime Integration and Performance folders. This inventory does not establish that tests currently compile or pass.
+## Local Unity results
+| Check | Observed result | Interpretation |
+|---|---|---|
+| Unity CLI recompile | “Script recompilation was not required.” | Not a forced clean compilation; cannot certify clean compile |
+| Editor.log query | One script compilation timing entry; no matching `error CS####` or “Compilation failed” in selected output | Limited log query, not proof of all-clear |
+| EditMode | 1 passed, 0 failed | Sole test is `AddressableAssets.DocExampleCode.TestStub.RequiredTest`; third-party stub, not MythHunter coverage |
+| PlayMode | 0 test cases, 0 passed, 0 failed | No MythHunter PlayMode behavior was tested |
+| Source code changes | No tracked changes under `Assets` reported by the user's earlier diff check | No MythHunter source change made during this audit |
+
+## Working tree and recovery materials
+The user recorded local branch/commit/status/diff summaries and copied test XML outputs, a patch and VS Code configuration into `D:\RPG-Framework-Baseline`. The recovery bundle is partial: it is not a full repository backup. The local working tree includes Unity/CLI setup changes, including a pipeline package addition, project settings and generated/config files. Those changes must be preserved; do not reset or discard them.
 
 ## CI assessment
-The checked-in `.github/workflows/ci.yml` defines a `noop` job which runs only `echo "CI is delegated to Unity Cloud Build 🚀"`. This workflow does not compile the Unity project or execute its tests.
-
-## Baseline evidence table
-| Check | Result | Evidence / limitation |
-|---|---|---|
-| Source branch and commit | RECORDED | `dev`, `66f83dbf6a3ab87cc7584c098dd481a38c5279e2` |
-| Declared Unity version | RECORDED | `ProjectSettings/ProjectVersion.txt`: `6000.0.45f1` |
-| Package manifests | PRESENT | `Packages/manifest.json`, `Packages/packages-lock.json`; package contents still need local verification if migration requires them |
-| Existing assembly definitions | INVENTORIED | Six UniTask `.asmdef` files; none observed under `Assets/_MythHunter/Code/` |
-| Test directories | DISCOVERED | Editor and Runtime test directories exist |
-| Unity compilation | NOT VERIFIED | GitHub connector cannot run Unity Editor compilation; no local Editor result supplied |
-| Test execution | NOT VERIFIED | The CI workflow is a no-op and does not run tests |
-| Working-tree state | NOT VERIFIED | Remote GitHub tree does not reveal the user's local uncommitted changes |
-| Recoverable local checkpoint | NOT VERIFIED | Must be confirmed in the local checkout before source edits |
-
-## Important interpretation
-- The source commit above is the remote branch head observed during this audit. It is not confirmation that the user's local checkout is at that commit.
-- Repository tree inventory is not a replacement for importing the project in Unity, compiling scripts, or running EditMode/PlayMode tests.
-- The baseline must not be marked fully complete until local working-tree state, Unity compilation, test results and rollback checkpoint are recorded.
-
-## Required local completion steps
-- [ ] Open the local `MythHunter` checkout in Unity `6000.0.45f1`.
-- [ ] Confirm the local branch and commit; preserve unrelated changes.
-- [ ] Record working-tree status and create/confirm a recoverable Git checkpoint.
-- [ ] Wait for script compilation and record all compile errors/warnings relevant to the baseline.
-- [ ] Run available EditMode tests and record results.
-- [ ] Run available PlayMode tests where supported and record results.
-- [ ] Distinguish pre-existing failures from regressions; do not begin extraction if the baseline is unknown.
+The checked-in `.github/workflows/ci.yml` is a no-op and does not compile Unity scripts or run project tests.
 
 ## Conclusion
-The remote source inventory is recorded, but EPIC 03.1 remains BLOCKED/PARTIAL until local Unity compile/test and working-tree evidence are available. No MythHunter source code was changed during this audit.
+The available evidence is enough to stop the repeated diagnostic loop and proceed with a small, well-isolated implementation plan, but not enough to claim a clean compile/test baseline. The first source change must preserve local changes, have a practical rollback plan, and be validated with a Unity compile and newly added focused tests. No MythHunter source code was changed during this audit.
