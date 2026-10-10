@@ -1,30 +1,34 @@
 # EPIC 03.3 — Assembly Boundary Reassessment
 
 ## Status
-COMPLETE — assembly-reference direction verified; no broad MythHunter assembly migration required for the first slice.
+COMPLETE — the initial module boundary and the Unity reference direction are recorded.
 
 ## Verified Unity assembly behavior
-Unity's assembly-definition documentation states that predefined assemblies reference project assemblies created with Assembly Definition assets by default when their `Auto Referenced` option is enabled. The initial Framework assembly is auto-referenced, so existing predefined-assembly code can reference it without introducing one large MythHunter runtime asmdef. Source: Unity Manual, https://docs.unity.cn/Manual/ScriptCompilationAssemblyDefinitionFiles.html
+Unity's predefined assemblies reference project asmdef assemblies by default when `Auto Referenced` is enabled. A custom asmdef must not depend on types from Unity's predefined `Assembly-CSharp`. The initial Framework assembly is therefore isolated and depends on no MythHunter types.
+Source: Unity Manual, https://docs.unity.cn/Manual/ScriptCompilationAssemblyDefinitionFiles.html
 
-The reverse direction remains important: a custom asmdef assembly cannot depend on types compiled into Unity's predefined `Assembly-CSharp` assembly. Therefore Framework code must not depend on MythHunter runtime types.
-
-## Source constraints
-- No `.asmdef` or `.asmref` currently exists under `Assets/_MythHunter` on `dev`.
-- `IComponent` and `IEntityManager` have many consumers in the current MythHunter predefined assembly.
-- `EcsWorld` depends on `MythHunter.Systems.Core.ISystemRegistry`; keep that integration on the MythHunter side.
-- Some Editor-specific imports exist in runtime-looking files. These require guarded imports/Editor-only method bodies, but do not force a whole-project assembly migration for a pure .NET Framework module.
-- Keep the six existing UniTask asmdefs outside this first step.
+## Source constraints observed
+- No `.asmdef` or `.asmref` exists under `Assets/_MythHunter` on `dev`.
+- Current MythHunter ECS contracts have broad consumers in the predefined assembly.
+- `EcsWorld` depends on `MythHunter.Systems.Core.ISystemRegistry` and remains game-owned.
+- UnityEngine/UI/content/editor tooling remain outside the Framework runtime.
 
 ## Decision
-The first reusable slice is now staged as `RPGFramework.ECS.Runtime` under `Assets/_Framework/ECS/Runtime`. It contains the framework-facing contracts and an initial standalone entity manager with no Unity or MythHunter dependencies. A separate EditMode test assembly exercises it.
+Use a standalone pure .NET module at `Assets/_Framework/ECS/Runtime`; it is a new canonical Framework API, not a file move of the old MythHunter contracts. Keep legacy MythHunter interfaces and implementation intact while the first slice is independently developed and tested.
 
-Legacy `MythHunter.Core.ECS` contracts/runtime remain in place during this first step. This temporary coexistence makes the new module independently testable without a risky game-wide rename. It is explicitly transitional: a later task must migrate consumers to the Framework APIs and remove the duplicate legacy ECS implementation.
+The new API uses namespace `RPGFramework.ECS`, and the new assembly has no project-assembly references and disables Unity engine references. This allows existing predefined-assembly code to reference it when needed, while ensuring the Framework doesn't depend on MythHunter.
 
-## Validation and current PR
-- Draft PR: https://github.com/Aizekhan/MythHunter/pull/18
-- Pure .NET GitHub Actions test run: https://github.com/Aizekhan/MythHunter/actions/runs/38048892361
-- Latest reported result: 7 passed, 0 failed, 0 skipped.
-- Unity import/compilation for this branch has not yet been demonstrated.
+## Corrections to the earlier draft
+An earlier contract-only draft under `Assets/_MythHunter/Code/Core/ECS/Contracts` was a false start because the coexistence of the new and legacy interfaces was not clearly bounded and the old declarations risked confusing the source of truth. PR #18 now instead stages the standalone `RPGFramework.ECS.Runtime` under `Assets/_Framework/ECS/Runtime`, preserves the legacy files/GUIDs, and explicitly tracks consumer migration as future work.
+
+The PR also contains Editor/runtime portability edits. They need a scoped review before merge; do not silently treat them as necessary for the ECS API.
+
+## Validation evidence
+- Pure .NET and NUnit workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38049497156
+- Tested commit: `be362f9df6910b3027f05f5b742b65bc3dc65182`
+- Static boundary/GUID validation passed.
+- 8 tests passed, 0 failed, 0 skipped.
+- Unity editor import/compilation and Unity Test Runner have not yet been demonstrated for this branch.
 
 ## Conclusion
-Do not create a broad `MythHunter.Runtime.asmdef` for this step. Keep the Framework module pure .NET, test it independently, preserve current MythHunter operation, and do not merge PR #18 until the local Unity import/compile/test gate passes.
+The pure Framework ECS runtime is the initial reusable slice. Do not add a broad MythHunter runtime asmdef for it. Do not merge PR #18 until Unity validation runs against the feature branch and unrelated Editor/runtime fixes have been reviewed.
