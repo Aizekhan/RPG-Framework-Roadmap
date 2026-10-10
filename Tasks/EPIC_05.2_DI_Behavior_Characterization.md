@@ -9,6 +9,14 @@ Make DI behavior explicit and testable before introducing a platform-neutral Fra
 ## Scope for first implementation PR
 Add focused tests and fix only verified DI correctness defects in the existing Game Layer implementation. Do not create a Framework DI assembly in the first PR, do not change all consumers, and do not move Unity/installer policy.
 
+## Current implementation
+- Draft PR #21: https://github.com/Aizekhan/MythHunter/pull/21
+- Branch/head: `feature/epic-05-2-di-characterization` / `d5ab5f5fe4101f0e3d6b111b347649d8e07f4272`.
+- Eight EditMode tests were added under `Assets/_MythHunter/Tests/DI`.
+- Bounded fixes change scoped cache key to the requested service type, make `Resolve(Type)` return an instance, and align `IsRegistered(Type)` with the generic API for registered instances/lazies.
+- CI #44 passes Framework/static/.NET checks; #242 is a successful no-op. These do not validate the Unity DI assembly.
+- **Next gate:** run Unity EditMode on this branch, inspect each named test in XML, verify full project compile/Console and bootstrap smoke before marking PR ready/merging.
+
 ## Test matrix
 1. Generic singleton registration: repeated resolution returns the same reference.
 2. Transient registration: each resolution returns a distinct reference.
