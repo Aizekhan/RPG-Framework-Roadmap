@@ -99,11 +99,13 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 **Status: ACTIVE**
 - [x] Add `RPGFramework.ECS.Runtime.asmdef` with no references and `noEngineReferences: true`.
 - [x] Add initial `IComponent`, `IEntityManager` and `EntityManager` implementation in namespace `RPGFramework.ECS`.
-- [x] Add seven focused NUnit tests for entity identity, component add/query/get/remove, destroy, and missing-component behavior.
+- [x] Add eight focused NUnit tests for entity identity, component add/query/get/remove, destroy, missing components, and rejecting invalid entity IDs.
 - [x] Add a .NET 8 test project that compiles the pure runtime/tests without loading Unity.
 - [x] Add a GitHub Actions workflow for the framework runtime.
 - [x] Preserve the original MythHunter interface files and their Unity GUIDs; assign distinct GUIDs to new Framework assets.
-- [x] Run .NET CI after nullable cleanup: 7 passed, 0 failed, no compiler warnings in the latest run.
+- [x] Run .NET CI after nullable cleanup: 7 passed, 0 failed, no compiler warnings.
+- [x] Harden the new Framework EntityManager so AddComponent rejects unknown/destroyed IDs instead of creating phantom entities; add focused regression test.
+- [x] Re-run .NET CI after the behavior fix: 8 passed, 0 failed, 0 skipped.
 - [ ] Run Unity import/compile and execute the Unity test assembly against this exact feature branch.
 - [ ] Review the additional Editor/runtime portability fixes in the PR and keep the migration scope explicit.
 - [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
