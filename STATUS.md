@@ -16,7 +16,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.5 — Implement and validate first Framework ECS runtime**
-- Status: ACTIVE — headless CI passes; Unity integration gate is NOT PASSED. General EditMode run found only an unrelated Addressables stub. Targeted run filtered for `RPGFramework.ECS.Tests.EntityManagerTests` returned zero tests.
+- Status: ACTIVE — headless CI passes; Unity integration gate now PASSES for assembly discovery and focused tests. Full EditMode run on the exact PR head discovered `RPGFramework.ECS.Runtime.Tests.dll`: 8 ECS tests passed; total project tests 9 passed, 0 failed, 0 skipped. Full project compilation evidence is limited to this successful test invocation.
 - PR: [#18 — Draft: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Current PR head: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - Current-head workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38067838447).
@@ -49,7 +49,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 6. Track one active roadmap task at a time.
 
 ## Next Action
-Investigate why `RPGFramework.ECS.Runtime.Tests` is not discovered: first inspect Unity Editor compilation/import errors and the actual test assembly state, using Unity CLI's supported commands rather than repeating generic test runs or guessing filters. The asmdef exists in the PR and declares `TestAssemblies`, Editor platform, and a reference to `RPGFramework.ECS.Runtime`. Keep PR #18 as draft until Unity imports/compiles the exact PR head and executes all eight ECS tests. Once the gate passes, finish final review and merge; then activate task 3.6 to migrate MythHunter consumers and remove legacy ECS duplication coherently.
+Unity CLI has now discovered and executed the test assembly successfully on the exact PR head: 8 ECS tests passed and the full EditMode run passed 9/9 tests. Next: verify the final changed-file list and PR CI/review state, then update the Unity gate evidence and prepare PR #18 for final review. Do not activate task 3.6 until PR #18 is reviewed/merged; then migrate MythHunter consumers and remove legacy ECS duplication coherently.
 
 ## Source of Truth
 - Master Plan: ordering and checklist.
