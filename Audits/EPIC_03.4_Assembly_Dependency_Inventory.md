@@ -36,8 +36,8 @@ The Framework runtime is pure .NET, has no asmdef references, and sets `noEngine
 The GitHub Actions workflow compiled the pure .NET source and ran the NUnit suite. Two nullable warnings were corrected with an explicit default-return annotation and a setup-initialized test fixture field. A subsequent behavior review found that adding a component to an unknown or destroyed ID could create a phantom entity; the new Framework implementation now throws `ArgumentException`, and a regression test covers that case.
 
 Latest run:
-- Workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38049344539
-- Commit: `1360e564eb5d1fa5ea0f39cb4e499faaa14b35b6`
+- Workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38049497156
+- Commit: `be362f9df6910b3027f05f5b742b65bc3dc65182`
 - Static boundary validator: OK; it checked the runtime asmdef, forbidden source references, metadata presence, and uniqueness of 7 Framework/test GUIDs.
 - Result: 8 passed, 0 failed, 0 skipped; no C# compiler warnings detected in the latest job log.
 
