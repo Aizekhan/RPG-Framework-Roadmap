@@ -36,8 +36,9 @@ The Framework runtime is pure .NET, has no asmdef references, and sets `noEngine
 The GitHub Actions workflow compiled the pure .NET source and ran the NUnit suite. Two nullable warnings were corrected with an explicit default-return annotation and a setup-initialized test fixture field. A subsequent behavior review found that adding a component to an unknown or destroyed ID could create a phantom entity; the new Framework implementation now throws `ArgumentException`, and a regression test covers that case.
 
 Latest run:
-- Workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38049093863
-- Commit: `cd3d34633ba8d656347cfbaf8f85848b3810a790`
+- Workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38049344539
+- Commit: `1360e564eb5d1fa5ea0f39cb4e499faaa14b35b6`
+- Static boundary validator: OK; it checked the runtime asmdef, forbidden source references, metadata presence, and uniqueness of 7 Framework/test GUIDs.
 - Result: 8 passed, 0 failed, 0 skipped; no C# compiler warnings detected in the latest job log.
 
 This validates the pure .NET files linked by the harness only. It does not prove Unity asmdef import, full MythHunter compilation or Unity Test Runner results.
@@ -48,4 +49,4 @@ This validates the pure .NET files linked by the harness only. It does not prove
 - Confirm the full project compiles without new errors.
 - Run the eight focused tests in Unity's Test Runner.
 - Preserve local user changes; do not reset the local worktree.
-- Keep PR #18 draft until the validation result is recorded.
+- Keep PR #18 draft until the Unity validation result is recorded.
