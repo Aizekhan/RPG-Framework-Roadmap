@@ -1,29 +1,48 @@
 # EPIC 03.4 — Assembly Dependency Inventory
 
 ## Status
-PARTIAL INVENTORY — enough to keep the initial Framework contract slice narrow; detailed mapping continues only if a specific dependency requires it.
+PARTIAL — contract assembly is plausible, but source changes need targeted hygiene before Unity validation.
 
 ## Current compilation shape
-No `.asmdef` or `.asmref` exists under `Assets/_MythHunter`. Most MythHunter source participates in Unity's predefined assembly layout, apart from package/plugin asmdefs.
+- No .asmdef or .asmref under Assets/_MythHunter on dev.
+- Existing MythHunter source mostly compiles in Unity's predefined assembly layout.
+- The staged Framework.ECS.Contracts.asmdef uses autoReferenced: true; predefined assemblies can reference this assembly by default. A giant MythHunter.Runtime.asmdef is not required merely to reference the contracts.
+- The dependency direction remains strict: Framework contracts may not reference predefined MythHunter types.
 
-Unity's documented default behavior is that predefined assemblies reference all project asmdef assemblies with `Auto Referenced` enabled. The proposed `Framework.ECS.Contracts.asmdef` sets `autoReferenced: true`. Therefore existing predefined-assembly consumers can reference the contract assembly by default. The opposite dependency must be forbidden: the contracts assembly cannot reference types from predefined MythHunter assemblies.
+## Confirmed consumer clusters
+- IComponent: concrete component structs, ECS caches/storage/factories, archetype/template code, serialization contracts and implementations, generated code.
+- IEntityManager: storage, component factories/cache, archetype/template code, gameplay systems, entity/hero factories, installers and ECS world.
+- EcsWorld depends on MythHunter.Systems.Core.ISystemRegistry and remains on the predefined/Game side.
+- The six UniTask asmdefs remain outside this task.
+- UnityEngine-dependent components/UI/debug/settings/services do not need to move to a named assembly for this first contracts-only boundary.
 
-## Confirmed boundary constraints
-- `IComponent` is referenced by components, storage/cache, factories, archetype/template code and serializers.
-- `IEntityManager` is referenced by ECS runtime, EntityFactory/HeroFactory, archetypes/templates, gameplay systems, installers and caches.
-- `EcsWorld` directly depends on `MythHunter.Systems.Core.ISystemRegistry`; it is not a neutral contract and must stay outside the contracts assembly.
-- UnityEngine-dependent UI, debug, settings and utility files exist. They do not need to move to make the auto-referenced contracts assembly available.
-- Editor-sensitive files under runtime-looking paths deserve targeted cleanup, but should not expand this first contract extraction into a broad assembly migration.
-- Keep the six existing UniTask asmdefs untouched for this task.
+## Specific source defect to address
+Assets/_MythHunter/Code/Events/EventBus.cs contains a top-level using UnityEditor while the file is in runtime source. This is not a dependency of the contract assembly and must not expand this extraction, but it is a real portability/build defect to fix separately or when a runtime asmdef would otherwise expose it.
 
-## Immediate conclusion
-Do not create one large `MythHunter.Runtime.asmdef` for this work. The initial two-interface contracts assembly is a reasonable small boundary if it remains dependency-free and passes the consumer compile/test validation.
+Other Editor references found by search are either in Editor directories or guarded by UNITY_EDITOR in inspected excerpts. Verify each actual file before moving it into a named runtime assembly.
 
-## Next bounded action
-1. Preserve asset GUIDs while moving `IComponent` and `IEntityManager`.
-2. Confirm existing files compile against the canonical types without duplicate declarations.
-3. Add focused tests for the existing `EntityManager` behavior or at the appropriate test seam.
-4. Validate the Unity assembly import/compile on the feature branch.
+## Required source review of draft PR #18
+The current draft stages IComponent and IEntityManager under Contracts, empties their original source files, and adds an asmdef. The contract-only boundary may be valid because it is auto-referenced, but no compile may be claimed until Unity confirms it.
 
-## Validation rule
-The current CI workflow does not run Unity compilation. PR #18 remains draft until the integration is locally compiled and relevant tests pass.
+Check:
+- the old script GUIDs are preserved by the new asset meta files;
+- only one declaration of each interface exists across the project;
+- the Contracts assembly has no non-BCL dependency;
+- all current predefined-assembly callers resolve the contracts after Unity imports the branch;
+- the PR diff contains no unrelated edits;
+- no Entity wrapper or runtime storage migration was added.
+
+## Smallest next action
+1. Keep PR #18 draft and dev unchanged.
+2. Complete static PR hygiene: GUID preservation, single declarations, asmdef validation and changed-file review.
+3. Add focused test source in a test assembly for a testable seam. Do not represent an unrun test as passed.
+4. Validate once in local Unity against this exact branch. No more setup diagnostics unless a concrete compile error blocks the task.
+5. Update the plan only if validation reveals a design-changing constraint.
+
+## Acceptance criteria
+- Canonical declarations exist once.
+- Existing Unity consumers compile against them.
+- Framework contracts have no MythHunter dependency.
+- Focused tests exercise relevant behavior.
+- Unity compile outcome is recorded; no merge without it.
+- User-local uncommitted changes remain intact.
