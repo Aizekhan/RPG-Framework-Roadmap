@@ -15,7 +15,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 - Epic: 03 — First Reusable Framework Slice
 - Active task: 3.4 — Compile-time dependency map and minimal assembly cut
 - Status: ACTIVE
-- Objective: identify the smallest acyclic Unity assembly layout that permits Framework contracts to be consumed without pulling Editor/game dependencies into Framework Core.
+- Objective: complete the file-level dependency map and choose a minimal acyclic assembly layout that Unity can actually compile.
 - Unity use: not needed for further architecture/source inspection on GitHub. Needed when the new assembly/source integration is validated locally.
 - Source experiment is isolated in [draft PR #18](https://github.com/Aizekhan/MythHunter/pull/18). It is intentionally not merge-ready: the predefined assembly cannot directly reference the newly introduced asmdef, and no Unity compile was run against the branch.
 
@@ -24,6 +24,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 - Unity version: `6000.0.45f1`.
 - Six assembly definitions under `Assets/Plugins/UniTask`; none found under `Assets/_MythHunter`.
 - No test C# files found under `Assets`; existing Unity results were one unrelated Addressables stub test passing and zero PlayMode test cases.
+- Source search confirmed broad consumers of `IComponent` / `IEntityManager` and Editor references within runtime-looking folders; see `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`.
 - Unity CLI reported “script recompilation was not required”; this is not a forced clean compile.
 - Local worktree contains Unity/CLI setup changes. A patch/test-result/status bundle is saved under `D:\RPG-Framework-Baseline`; it is a partial recovery bundle and must be preserved.
 
