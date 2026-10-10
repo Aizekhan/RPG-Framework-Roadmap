@@ -16,10 +16,10 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.5 — Implement and validate first Framework ECS runtime**
-- Status: ACTIVE — Unity test gate passed on source commit `3917e6a48344d4469fd95a2049b1a2e60d983223`: test assembly discovered, 8 ECS tests passed; total EditMode run 9 passed, 0 failed, 0 skipped. README/PR description was then updated in a documentation-only commit `4385e0f23729f37749344c7ad33d2861e2003125`; CI is now queued for that new PR head and must pass before the review gate is complete.
+- Status: ACTIVE — Unity test gate passed on source commit `3917e6a48344d4469fd95a2049b1a2e60d983223`: test assembly discovered, 8 ECS tests passed; total EditMode run 9 passed, 0 failed, 0 skipped. README/PR description was updated in documentation-only commit `4385e0f23729f37749344c7ad33d2861e2003125`; both CI workflows on this latest PR head now passed.
 - PR: [#18 — Draft: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Current PR head: `4385e0f23729f37749344c7ad33d2861e2003125`.
-- Current-head workflows: [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498), both queued at last check.
+- Current-head workflows: [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498), both success.
 - No review submissions or inline review threads are recorded. PR remains Draft and unmerged.
 
 ## Implemented on the feature branch
@@ -36,7 +36,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - Tested source commit: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - GitHub Actions on that source commit: success; static boundary validation passed; .NET compile/NUnit 8 passed, 0 failed, 0 skipped.
 - Unity CLI on that source commit, Unity `6000.0.45f1`: `RPGFramework.ECS.Runtime.Tests.dll` discovered; all 8 `RPGFramework.ECS.Tests.EntityManagerTests` passed; total EditMode run 9 passed, 0 failed, 0 skipped.
-- Latest PR-head documentation-only commit: `4385e0f23729f37749344c7ad33d2861e2003125`; its CI runs were queued at last check. Re-verify final workflow state before marking 3.5 ready for merge.
+- Latest PR-head documentation-only commit: `4385e0f23729f37749344c7ad33d2861e2003125`; [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498) are complete and successful.
 
 ## Rules
 1. Do not reset, clean or discard user's local worktree changes.
@@ -47,7 +47,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 6. Track one active roadmap task at a time.
 
 ## Next Action
-Check both CI workflows for PR head `4385e0f23729f37749344c7ad33d2861e2003125`. If both pass, finish final review and prepare PR #18 for review/merge. Do not activate task 3.6 until PR #18 is reviewed/merged; then migrate MythHunter consumers and remove legacy ECS duplication coherently.
+CI and Unity validation gates pass. Finish formal PR review and merge decision for PR #18. Do not activate task 3.6 until PR #18 is reviewed/merged; then migrate MythHunter consumers and remove legacy ECS duplication coherently.
 
 ## Source of Truth
 - Master Plan: ordering and checklist.
