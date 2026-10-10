@@ -76,24 +76,39 @@ Conclusion: do not spend additional time on baseline investigation unless a spec
 Conclusion: usage map and API constraints recorded. Proceed to EPIC 03.3. Unity is not required for design or GitHub source inspection; it is required only when validating source/assembly integration.
 
 ## 3.3 — Assembly boundary reassessment
-**Status: COMPLETE — original two-interface extraction approach rejected as incomplete**
-- [x] Identify that the existing predefined assembly cannot directly reference the new user asmdef
-- [x] Identify that the MythHunter tree mixes UnityEngine runtime code and Editor-specific files/direct imports
-- [x] Record correction in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`
+**Status: COMPLETE — assembly-reference direction verified**
+- [x] Verify that predefined Unity assemblies can reference project asmdef assemblies when Auto Referenced is enabled.
+- [x] Record the reverse restriction: an asmdef assembly cannot depend on types in Unity's predefined Assembly-CSharp.
+- [x] Confirm that a broad MythHunter.Runtime.asmdef is not needed simply to introduce a pure Framework assembly.
+- [x] Record the corrected rule in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`.
 
-Conclusion: do not merge the current draft as a completed extraction. The assembly plan needs a source-backed map of runtime/editor compilation boundaries before the first integrated assembly is added.
+Conclusion: keep the initial Framework module dependency-free and do not move the entire MythHunter tree just to reference it.
 
 ## 3.4 — Compile-time dependency map and minimal assembly cut
-**Status: ACTIVE**
-- [x] Keep the initial extraction isolated in draft PR #18; do not merge it
-- [x] Record the assembly-reference limitation and Editor/runtime contamination in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`
-- [x] Record current dependency clusters and known Editor crossings in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`
-- [x] Record a partial source-backed inventory of cross-boundary dependencies in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`
-- [ ] Complete the file-level runtime/editor assembly inventory and choose the smallest acyclic layout that existing consumers can actually reference
-- [ ] Replace the contract-only PR #18 staging experiment with the selected integrated assembly cut; preserve source asset GUIDs and related metadata
-- [ ] Add focused tests; confirm a real compile in Unity before merge
+**Status: COMPLETE — static map and first slice selected**
+- [x] Map current IComponent/IEntityManager consumer clusters and the EcsWorld-to-ISystemRegistry game dependency.
+- [x] Review the current source layout: MythHunter has no asmdef; Editor-sensitive files are mixed into runtime-looking folders.
+- [x] Choose a standalone, pure .NET Framework ECS runtime under `Assets/_Framework/ECS/Runtime`, not a premature whole-game assembly migration.
+- [x] Define a separate Editor-only test assembly under `Assets/_Framework/ECS/Tests`.
+- [x] Record the transitional policy: legacy MythHunter ECS remains intact until a later consumer migration, then its duplicate implementation must be removed.
+- [x] Record dependency inventory and boundary rationale in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`.
 
-**Exit gate:** there is a valid, documented assembly dependency graph; the proposed source moves form a coherent slice and can be verified in Unity.
+Conclusion: static dependency mapping is sufficient to start the isolated runtime module. The source migration and Unity compile are tracked separately below.
+
+## 3.5 — Implement and validate first Framework ECS runtime
+**Status: ACTIVE**
+- [x] Add `RPGFramework.ECS.Runtime.asmdef` with no references and `noEngineReferences: true`.
+- [x] Add initial `IComponent`, `IEntityManager` and `EntityManager` implementation in namespace `RPGFramework.ECS`.
+- [x] Add seven focused NUnit tests for entity identity, component add/query/get/remove, destroy, and missing-component behavior.
+- [x] Add a .NET 8 test project that compiles the pure runtime/tests without loading Unity.
+- [x] Add a GitHub Actions workflow for the framework runtime.
+- [x] Preserve the original MythHunter interface files and their Unity GUIDs; assign distinct GUIDs to new Framework assets.
+- [x] Run .NET CI after nullable cleanup: 7 passed, 0 failed, no compiler warnings in the latest run.
+- [ ] Run Unity import/compile and execute the Unity test assembly against this exact feature branch.
+- [ ] Review the additional Editor/runtime portability fixes in the PR and keep the migration scope explicit.
+- [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
+
+**Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
 - [ ] Establish canonical ownership and callers before moving or renaming types
@@ -192,7 +207,7 @@ Conclusion: do not merge the current draft as a completed extraction. The assemb
 
 ## Milestone map
 - **M0 — Baseline evidence:** EPIC 03.1 recorded; no additional diagnostic loop.
-- **M1 — First reusable boundary:** EPIC 03.2 recorded, EPIC 03.3 active.
+- **M1 — First reusable boundary:** EPIC 03.2–03.4 complete; EPIC 03.5 validation active.
 - **M2 — Reusable Core:** EPIC 04–06 for selected scope.
 - **M3 — MythHunter integration:** EPIC 07–08.
 - **M4 — Optional capabilities:** EPIC 09, 12 and 13 as selected.
