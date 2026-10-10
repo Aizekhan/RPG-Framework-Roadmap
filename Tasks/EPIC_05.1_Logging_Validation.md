@@ -1,7 +1,7 @@
 # EPIC 05.1 — Neutral Logging Contract and MythHunter Adapter
 
 ## Status
-IMPLEMENTATION IN PROGRESS on `feature/epic-05-1-logging-contract`. The first source slice adds a platform-neutral logging contract and preserves MythHunter behavior behind its existing API. CI is running; do not mark complete until CI and Unity validation pass.
+**SOURCE SLICE IMPLEMENTED — .NET/static CI PASS; Unity validation pending.** Branch: `feature/epic-05-1-logging-contract`; current head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`. Draft PR #20: https://github.com/Aizekhan/MythHunter/pull/20. CI #41 succeeded: static boundary OK, 13 Framework/Test asset GUIDs checked, 9 .NET tests passed (8 ECS + 1 Logging), 0 failed, 0 skipped; nullable compiler warnings were fixed and the latest run has no C# compiler warnings. Do not merge until Unity import/compile, logging EditMode test, and bootstrap smoke are verified.
 
 ## Parent
 - EPIC 05 — Framework Runtime Modules
@@ -36,4 +36,4 @@ IMPLEMENTATION IN PROGRESS on `feature/epic-05-1-logging-contract`. The first so
 Revert only this feature branch/PR. The MythHunter-facing API remains intact, so rollback must not require mass caller edits. Do not reset/clean the user's local worktree.
 
 ## Next step
-Review the current PR diff and wait for CI. If CI passes, run Unity EditMode/Console validation on the branch, fix only observed errors, then proceed to the validation contract portion of EPIC 05.1.
+Run Unity EditMode on `feature/epic-05-1-logging-contract`, inspect `RPGFramework.Logging.Runtime.Tests.dll` and confirm the one logger contract test passes. Check Unity Console/full project compile and confirm bootstrap registers the same logger under both interfaces. Then update this record with the XML evidence and merge PR #20. Afterward, audit actual callers of `IValidator<T>` / `ValidationResult` before choosing whether to extract a neutral validation contract.
