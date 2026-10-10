@@ -133,7 +133,8 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Include `Assets/_MythHunter/**` in both push and pull-request workflow path filters.
 - [x] Run CI on latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1` ([run #35](https://github.com/Aizekhan/MythHunter/actions/runs/38073513821)): static boundary/import checks and .NET ECS tests passed.
 - [x] Update PR #19 description with current scope and validation gaps.
-- [ ] Inspect migration branch Unity EditMode XML; confirm compile outcome and test discovery.
+- [x] Inspect `EPIC-03-6-EditMode.xml` on the migration branch: Framework ECS test assembly discovered; 8 ECS tests passed; total EditMode 9 passed, 0 failed, 0 skipped.
+- [ ] Confirm full MythHunter compilation separately in Unity Editor/Console.
 - [ ] Run a game bootstrap/ECS smoke check.
 - [ ] Inspect the local Unity EditMode XML result from the migration branch and determine whether the Framework assembly/tests were discovered.
 - [ ] Fix any Unity compile/import errors found; run Unity EditMode tests on the migrated branch.
