@@ -85,16 +85,15 @@ Conclusion: do not merge the current draft as a completed extraction. The assemb
 
 ## 3.4 — Compile-time dependency map and minimal assembly cut
 **Status: ACTIVE**
-- [ ] Prepare an isolated source branch or equivalent checkpoint without discarding local changes
-- [ ] Add the minimal Framework-owned assembly for neutral ECS contracts
-- [ ] Move, do not copy, the canonical `IComponent` and `IEntityManager` definitions; preserve the existing namespace initially if necessary to reduce migration churn
-- [ ] Keep `EntityManager`, caches, archetypes, serializers, factories, components and `EcsWorld` outside the new assembly for this step
-- [ ] Add focused tests for entity creation/destruction and component add/remove/has/get semantics; tests must document current behavior and any approved changes
-- [ ] Verify Framework-owned contracts have no MythHunter, UnityEngine/UnityEditor, logger, DI, system-registry or provider dependency
-- [ ] Run Unity compilation and relevant tests; record actual results and failures
-- [ ] Preserve unrelated changes and document exact rollback steps
+- [x] Keep the initial extraction isolated in draft PR #18; do not merge it
+- [x] Record the assembly-reference limitation and Editor/runtime contamination in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`
+- [x] Record current dependency clusters and known Editor crossings in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`
+- [ ] Complete a source-backed inventory of candidate runtime/editor assembly contents and cross-boundary dependencies
+- [ ] Choose the smallest acyclic layout that existing consumers can actually reference
+- [ ] Amend or replace PR #18 to implement that layout and preserve metadata
+- [ ] Add focused tests; confirm a real compile in Unity before merge
 
-**Exit gate:** the slice compiles, focused tests exercise the contract seam, no duplicate interface types exist, and Framework does not reference MythHunter.
+**Exit gate:** there is a valid, documented assembly dependency graph; the proposed source moves form a coherent slice and can be verified in Unity.
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
 - [ ] Establish canonical ownership and callers before moving or renaming types
