@@ -126,9 +126,10 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Change the MythHunter composition root to bind the Framework manager; remove duplicate legacy interface/manager source files on the migration branch.
 - [x] Update editor code generation and static boundary validation for the new canonical namespace.
 - [x] Run migration CI on preliminary head `aef44c3d9b393219eb299b4a1fb4870520e65131`: static boundary/import checks and .NET ECS tests passed.
-- [x] Review compiler-facing references and remove stale legacy namespace imports from the composition root, component factory implementation/contracts, and serializer registry contract in follow-up commits through `c74392cd34230324d961286b2cd64f0850cc6d4f`.
+- [x] Review compiler-facing references and remove legacy namespace imports only where unused, preserving imports for game-layer types.
+- [x] Update the plain-component code-generation template to emit `using RPGFramework.ECS;` without the removed legacy component namespace.
 - [x] Expand the ECS workflow path filters to include `Assets/_MythHunter/**` on the migration branch.
-- [x] Re-run CI on migration head `cfb2ce14c2df06e7fb66ca11d29b386b1db1af95`: static boundary/import checks and .NET ECS tests passed.
+- [x] Run CI on latest migration head `f5ed3325a930c61eeab90e287898eb87355d886f` ([run #34](https://github.com/Aizekhan/MythHunter/actions/runs/38073434986)): static boundary/import checks and .NET ECS tests passed.
 - [ ] Inspect migration branch Unity EditMode XML; confirm compile outcome and test discovery.
 - [ ] Run a game bootstrap/ECS smoke check.
 - [ ] Inspect the local Unity EditMode XML result from the migration branch and determine whether the Framework assembly/tests were discovered.
