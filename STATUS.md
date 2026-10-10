@@ -1,52 +1,48 @@
 # Project Status
 
 ## Source Project
-This roadmap controls the architecture audit and refactoring of source project **Aizekhan/MythHunter**, Unity project on branch `dev`.
+This roadmap controls the architecture audit and refactoring of **Aizekhan/MythHunter**, Unity project on branch `dev`.
 
 - Roadmap repository: `Aizekhan/RPG-Framework-Roadmap`
 - Master plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
 - Architecture baseline: `Audits/EPIC_02.8_Final_Architecture_Baseline.md`
 - Roadmap reassessment: `Audits/EPIC_02.9_Post_Architecture_Roadmap_Reassessment.md`
-- Source baseline audit: `Audits/EPIC_03.1_Source_Baseline.md`
+- Source baseline: `Audits/EPIC_03.1_Source_Baseline.md`
+- First slice decision: `Audits/EPIC_03.2_First_Framework_Slice_Decision.md`
 
 ## Current Position
-- Epic: 03 — Baseline and Enforceable Boundary
-- Task: 3.1 — Source baseline
-- Current item: Local Unity compile/test baseline and local working-tree/checkpoint verification
-- Status: ACTIVE — PARTIAL/BLOCKED pending local evidence
-- Gate: no source-code migration until baseline compile/test state and rollback point are documented.
+- Epic: 03 — Baseline and First Framework Slice
+- Active task: 3.2 — First Framework slice decision and usage map
+- Status: ACTIVE
+- Next deliverable: source-backed usage map for entity identity and ECS contracts, followed by target API decision.
+- Source migration gate: do not move/add assemblies or change source until the affected callers are mapped and a recoverable local checkpoint is established.
 
-## Evidence already recorded
-- Remote source branch observed: `dev`
-- Remote source head observed: `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`
-- Declared Unity version: `6000.0.45f1`
-- Six assembly definitions found under UniTask; no `.asmdef` observed under `Assets/_MythHunter/Code/` in the inspected tree.
-- Editor and Runtime test directories exist.
-- Current GitHub Actions workflow is a no-op and does not compile or run tests.
+## Confirmed local evidence
+- Source branch/commit reported locally: `dev` / `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`.
+- Unity version: `6000.0.45f1`.
+- Six assembly definitions under `Assets/Plugins/UniTask`; none observed under `Assets/_MythHunter`.
+- No test C# files found under `Assets`; `Assets/_MythHunter/Tests.meta` exists but is only folder metadata.
+- EditMode: 1 passed test from `AddressableAssets.DocExampleCode.Editor.Tests`; it is not a MythHunter test.
+- PlayMode: 0 test cases discovered.
+- Unity CLI returned “script recompilation was not required”; no forced clean compile was demonstrated.
+- Local worktree contains Unity/CLI setup changes and generated files. User preserved a patch, XML test reports, status/diff summaries and VS Code files under `D:\RPG-Framework-Baseline`; this is a partial recovery bundle, not a full repository backup.
+- No MythHunter source code has been changed by this work.
 
-See `Audits/EPIC_03.1_Source_Baseline.md` for the complete evidence and limitations.
+## Execution rule
+Exactly one roadmap item may be ACTIVE. Update this file and the Master Plan together when the active task changes. Do not ask for more diagnostics unless the result changes a concrete implementation decision.
 
-## Sequential Execution Rule
-Exactly one roadmap item may be ACTIVE. Later items remain LOCKED until the current item passes its exit gate and this file and the Master Plan are updated together.
-
-## Completion Rule
-A roadmap item is complete only when:
-- evidence and findings are documented;
-- ownership and relevant dependencies are stated;
-- applicable compile/test or validation results are recorded;
-- regressions are distinguished from pre-existing failures;
-- a rollback point exists for source changes;
-- its Master Plan checkbox and this status pointer agree.
-
-## Current Blocker
-The GitHub source inventory is complete enough to document metadata, but it does not prove the local project's compile/test state or working-tree status. The available CI workflow does not perform Unity compilation or tests. Local Unity results and a rollback checkpoint are still required before source migration.
+## Current risks/constraints
+1. A clean compilation is not yet independently demonstrated; compile validation is required after the first bounded source change.
+2. No existing MythHunter tests were discovered. Relevant tests need to be authored as part of implementation rather than treating third-party package tests as project coverage.
+3. Do not discard the local Unity/CLI setup changes or reset the working tree. Preserve them while implementing the framework.
+4. Avoid adding speculative empty assemblies or rewriting the entire ECS. Start with the smallest reusable, source-backed ECS contract slice.
 
 ## Next action
-Open the local project in Unity `6000.0.45f1`. Confirm the local branch/commit and working-tree state, preserve unrelated changes, create or confirm a recoverable checkpoint, wait for script compilation, run available EditMode/PlayMode tests and report the results. If compilation or tests fail before any source change, record those failures as baseline failures.
+Map all usages of `Entity`, entity IDs, `IComponent`, `IEntityManager`, `IEcsWorld` and `ISystemRegistry` to identify a safe Framework-owned ECS contract boundary. The observed `EcsWorld` currently depends on `MythHunter.Systems.Core.ISystemRegistry`, so it is excluded from the first slice until that dependency is inverted or kept in the Game Layer.
 
-## Source of Truth
-- `RPG_FRAMEWORK_MASTER_PLAN.md`: execution order and checkboxes.
+## Source of truth
+- `RPG_FRAMEWORK_MASTER_PLAN.md`: execution order and checklist.
 - `STATUS.md`: exact active task.
-- `Audits/*`: evidence and architectural conclusions.
+- `Audits/*`: evidence and recorded decisions.
 
-Do not mark implementation complete merely because documentation changed or files moved.
+Do not mark implementation complete based only on document edits or file moves.
