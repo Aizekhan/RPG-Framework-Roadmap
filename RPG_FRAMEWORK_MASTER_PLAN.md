@@ -76,7 +76,7 @@ Conclusion: do not spend additional time on baseline investigation unless a spec
 Conclusion: usage map and API constraints recorded. Proceed to EPIC 03.3. Unity is not required for design or GitHub source inspection; it is required only when validating source/assembly integration.
 
 ## 3.3 — First enforceable boundary
-**Status: ACTIVE**
+**Status: ACTIVE — integration design checkpoint**
 - [ ] Prepare an isolated source branch or equivalent checkpoint without discarding local changes
 - [ ] Add the minimal Framework-owned assembly for neutral ECS contracts
 - [ ] Move, do not copy, the canonical `IComponent` and `IEntityManager` definitions; preserve the existing namespace initially if necessary to reduce migration churn
