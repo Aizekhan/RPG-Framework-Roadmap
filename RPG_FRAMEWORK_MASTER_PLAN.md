@@ -156,19 +156,21 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 
 # EPIC 05 — Framework Runtime Modules
 ## 5.1 — Logging and validation
-**Status: ACTIVE — logging contract first slice in PR #20; Unity validation pending**
-- [x] Map current `IMythLogger`, concrete `MythLogger`, its composition-root binding, and broad consumer reach.
-- [x] Add neutral `RPGFramework.Logging.ILogger` and `LogSeverity` in a separate no-engine-reference assembly.
-- [x] Keep MythHunter's existing `IMythLogger` API as a compatibility facade; adapt severity and bind same logger instance in `GameBootstrapper`.
-- [x] Add focused contract test, include it in .NET harness, extend static boundary/GUID validator and CI path filters.
-- [x] Run CI after nullable fixes: static boundary OK, 13 Framework/Test asset GUIDs checked, .NET 9 passed / 0 failed / 0 skipped, no C# compiler warnings. Run #41: https://github.com/Aizekhan/MythHunter/actions/runs/38075878947
-- [ ] Unity Editor import/full project compile, confirm `RPGFramework.Logging.Runtime.Tests.dll` discovery and EditMode test pass.
-- [ ] Confirm game bootstrap logs through both legacy and Framework logger registrations.
-- [ ] Review the validation contract candidate (`IValidator<T>` / `ValidationResult`) against actual callers before deciding whether to extract it.
-- [ ] Merge PR #20 only after Unity checks pass, then update `STATUS.md` with Unity report and move to validation API work.
+**Status: ACTIVE — neutral logging slice merged; validation API candidate audit now in progress**
+- [x] Map `IMythLogger`, `MythLogger`, composition-root binding and consumer compatibility requirements.
+- [x] Add `RPGFramework.Logging.ILogger` and `LogSeverity` as a separate no-engine-reference assembly.
+- [x] Keep `IMythLogger` source-compatible; map severity/exception behavior in the adapter; bind the same logger instance under both interfaces.
+- [x] Add focused Framework logging test; extend .NET harness, static boundary/GUID validator and CI path filters.
+- [x] CI on source head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 asset GUIDs checked; .NET 9 passed, 0 failed, 0 skipped; no compiler warnings.
+- [x] Unity CLI EditMode `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`, Unity `6000.0.45f1`: total 10 passed, 0 failed, 0 skipped; `LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException` passed.
+- [x] User confirmed full project compile/Console and game bootstrap smoke are clean.
+- [x] Merge PR #20 to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
+- [x] Audit interface declaration: repository search finds no direct callers of `IValidator<T>` outside its definition.
+- [ ] Search concrete `Validator<T>` construction and all `ValidationResult` consumers; decide whether this API is used enough and is genuinely platform-neutral.
+- [ ] If justified by source evidence, design one cohesive validation contract/result API with explicit immutability, error and criticality semantics; otherwise record why it remains Game Layer.
+- [ ] Make no source changes until the caller inventory and design decision are recorded.
 
 Detailed task: `Tasks/EPIC_05.1_Logging_Validation.md`.
-
 
 ## 5.2 — Dependency injection
 - [ ] Specify registration, lifetime, scope, resolution, disposal and async lifecycle
