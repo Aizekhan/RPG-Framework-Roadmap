@@ -120,19 +120,21 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
 ## 3.6 — Migrate MythHunter ECS consumers to Framework runtime
-**Status: BLOCKED — queued behind the Unity validation and merge gate for 3.5**
-- [ ] Refresh the source usage map against the post-3.5 merged branch.
-- [ ] Establish a single canonical CLR identity for `IComponent` and `IEntityManager`; do not retain duplicate interfaces or add wrappers that create a second identity.
-- [ ] Bind exactly one Framework `EntityManager` from the MythHunter composition root.
-- [ ] Migrate consumers in small batches: cache/registry, factories, archetype/template code, serializers, systems and installers.
-- [ ] Keep `IEcsWorld`, `EcsWorld` and `ISystemRegistry` in the MythHunter/Game Layer; Framework must not depend on them.
-- [ ] Verify all legacy references, including editor/generator/reflection paths, are removed before deleting old contracts/runtime.
-- [ ] Test and explicitly assess the behavior difference for `AddComponent` with unknown/destroyed IDs.
-- [ ] Run .NET tests, static boundary checks, Unity full compile/EditMode tests and a game bootstrap/ECS smoke check.
-- [ ] Remove the legacy `EntityManager` and contract definitions only after every consumer is migrated and validation passes.
-- [ ] Record evidence and update `STATUS.md` before activating another task.
+**Status: IMPLEMENTATION PREPARED — VALIDATION BLOCKED**
+- [x] Create a dedicated migration branch and stacked draft PR #19 based on the 3.5 branch.
+- [x] Move identified ECS consumers to import the Framework contract and manager APIs.
+- [x] Change the MythHunter composition root to bind the Framework manager; remove duplicate legacy interface/manager source files on the migration branch.
+- [x] Update editor code generation and static boundary validation for the new canonical namespace.
+- [x] Run migration CI: static boundary/import checks and .NET ECS tests passed.
+- [ ] Inspect the local Unity EditMode XML result from the migration branch and determine whether the Framework assembly/tests were discovered.
+- [ ] Fix any Unity compile/import errors found; run Unity EditMode tests on the migrated branch.
+- [ ] Run a game bootstrap/ECS smoke check and explicitly validate the changed invalid-entity-ID behavior.
+- [ ] After EPIC 03.5 review/merge and migration validation, retarget/rebase the migration PR as needed; do not merge this stacked PR first.
+- [ ] Update the usage map and verify no legacy ECS references remain, including editor/generator/reflection/serialization paths.
+- [ ] Record evidence in `STATUS.md` before activating the next epic.
 
-Detailed scope, implementation slices, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Consumer_Migration.md`](Tasks/EPIC_03.6_ECS_Consumer_Migration.md).
+**Dependency rule:** PR #19 depends on PR #18. Do not merge PR #19 before #18 lands.
+Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Consumer_Migration.md`](Tasks/EPIC_03.6_ECS_Consumer_Migration.md).
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
 - [ ] Establish canonical ownership and callers before moving or renaming types
