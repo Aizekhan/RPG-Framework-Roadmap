@@ -1,48 +1,51 @@
 # EPIC 03.4 — Assembly Dependency Inventory
 
 ## Status
-PARTIAL — contract assembly is plausible, but source changes need targeted hygiene before Unity validation.
+COMPLETE — static dependency map and first assembly cut are recorded. Unity-specific validation is tracked in EPIC 03.5.
 
-## Current compilation shape
-- No .asmdef or .asmref under Assets/_MythHunter on dev.
-- Existing MythHunter source mostly compiles in Unity's predefined assembly layout.
-- The staged Framework.ECS.Contracts.asmdef uses autoReferenced: true; predefined assemblies can reference this assembly by default. A giant MythHunter.Runtime.asmdef is not required merely to reference the contracts.
-- The dependency direction remains strict: Framework contracts may not reference predefined MythHunter types.
+## Existing compilation shape
+- No .asmdef or .asmref currently exists under Assets/_MythHunter on dev.
+- Most MythHunter source is compiled in Unity's predefined assembly layout.
+- Unity predefined assemblies can reference user asmdef assemblies when Auto Referenced is enabled; the Framework module does not need a large MythHunter.Runtime.asmdef merely to be available.
+- Framework asmdef assemblies must not reference types in predefined MythHunter assemblies.
 
 ## Confirmed consumer clusters
-- IComponent: concrete component structs, ECS caches/storage/factories, archetype/template code, serialization contracts and implementations, generated code.
-- IEntityManager: storage, component factories/cache, archetype/template code, gameplay systems, entity/hero factories, installers and ECS world.
-- EcsWorld depends on MythHunter.Systems.Core.ISystemRegistry and remains on the predefined/Game side.
-- The six UniTask asmdefs remain outside this task.
-- UnityEngine-dependent components/UI/debug/settings/services do not need to move to a named assembly for this first contracts-only boundary.
+- `IComponent`: concrete component structs, ECS caches/storage/factories, archetype/template code, serialization contracts/implementations, generated code.
+- `IEntityManager`: storage, component factories/cache, archetype/template code, gameplay systems, entity/hero factories, installers and ECS world.
+- `EcsWorld` depends on `MythHunter.Systems.Core.ISystemRegistry`; it remains game-owned.
+- The six UniTask asmdefs remain unchanged in this slice.
+- UnityEngine-dependent components, UI, debug, settings and services remain outside Framework runtime.
 
-## Specific source defect to address
-Assets/_MythHunter/Code/Events/EventBus.cs contains a top-level using UnityEditor while the file is in runtime source. This is not a dependency of the contract assembly and must not expand this extraction, but it is a real portability/build defect to fix separately or when a runtime asmdef would otherwise expose it.
+## Selected first cut
+- Runtime: `Assets/_Framework/ECS/Runtime/RPGFramework.ECS.Runtime.asmdef`
+- Public surface: `RPGFramework.ECS.IComponent`, `RPGFramework.ECS.IEntityManager`
+- Initial implementation: `RPGFramework.ECS.EntityManager`
+- Unity test assembly: `Assets/_Framework/ECS/Tests/RPGFramework.ECS.Runtime.Tests.asmdef`
+- Headless test harness: `Build/RPGFramework.ECS.Tests/RPGFramework.ECS.Tests.csproj`
+- CI: `.github/workflows/rpg-framework-ecs.yml`
 
-Other Editor references found by search are either in Editor directories or guarded by UNITY_EDITOR in inspected excerpts. Verify each actual file before moving it into a named runtime assembly.
+The Framework runtime is pure .NET, has no asmdef references, and sets `noEngineReferences: true`. It is intentionally independent of MythHunter and Unity. The current MythHunter contracts/runtime are preserved during this step; consumer migration and legacy removal are explicitly later work, so this interim duplication must not become the final state.
 
-## Required source review of draft PR #18
-The current draft stages IComponent and IEntityManager under Contracts, empties their original source files, and adds an asmdef. The contract-only boundary may be valid because it is auto-referenced, but no compile may be claimed until Unity confirms it.
+## Source cleanup in the draft
+- Preserved legacy MythHunter interface asset GUIDs.
+- Assigned unique GUIDs to new Framework script assets; static scan found no duplicate GUIDs among changed .meta files.
+- Kept a few Editor/runtime portability changes in PR #18: guarded Editor-only references in preload/prefab tooling, removed the direct Editor import from EventBus, and corrected a preprocessor directive. Review their scope separately from the ECS runtime.
+- Did not add a broad runtime asmdef to the existing MythHunter source.
 
-Check:
-- the old script GUIDs are preserved by the new asset meta files;
-- only one declaration of each interface exists across the project;
-- the Contracts assembly has no non-BCL dependency;
-- all current predefined-assembly callers resolve the contracts after Unity imports the branch;
-- the PR diff contains no unrelated edits;
-- no Entity wrapper or runtime storage migration was added.
+## Test evidence
+The first GitHub Actions run compiled the pure .NET source and passed all seven NUnit tests. Two nullable warnings were then corrected with an explicit default-return annotation and a setup-initialized test fixture field.
 
-## Smallest next action
-1. Keep PR #18 draft and dev unchanged.
-2. Complete static PR hygiene: GUID preservation, single declarations, asmdef validation and changed-file review.
-3. Add focused test source in a test assembly for a testable seam. Do not represent an unrun test as passed.
-4. Validate once in local Unity against this exact branch. No more setup diagnostics unless a concrete compile error blocks the task.
-5. Update the plan only if validation reveals a design-changing constraint.
+Latest run:
+- Workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38048892361
+- Commit: `f1acc9eb5dc934c1f36a173c37a53bfb1df34452`
+- Result: 7 passed, 0 failed, 0 skipped; no C# compiler warnings detected in the latest job log.
 
-## Acceptance criteria
-- Canonical declarations exist once.
-- Existing Unity consumers compile against them.
-- Framework contracts have no MythHunter dependency.
-- Focused tests exercise relevant behavior.
-- Unity compile outcome is recorded; no merge without it.
-- User-local uncommitted changes remain intact.
+This validates the pure .NET files linked by the harness only. It does not prove Unity asmdef import, full MythHunter compilation or Unity Test Runner results.
+
+## Remaining EPIC 03.5 gate
+- Import the feature branch in local Unity.
+- Confirm the Framework runtime and test asmdefs are recognized correctly.
+- Confirm the full project compiles without new errors.
+- Run the seven focused tests in Unity's Test Runner.
+- Preserve local user changes; do not reset the local worktree.
+- Keep PR #18 draft until the validation result is recorded.
