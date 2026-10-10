@@ -16,13 +16,13 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.6 — Migrate MythHunter ECS consumers to Framework runtime (validation checkpoint)**
-- Status: latest-head Unity CLI EditMode run on migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1` completed at `2026-10-10 18:12:11Z`: Framework test assembly discovered, 8 ECS tests passed; full EditMode run 9 passed / 0 failed / 0 skipped. This closes the latest-head EditMode rerun. Unity Editor full compilation/Console confirmation and a game bootstrap/ECS smoke test remain unconfirmed. PR #18 still awaits formal review/merge; PR #19 remains stacked on PR #18. The original 3.5 Unity test gate passed on source commit `3917e6a48344d4469fd95a2049b1a2e60d983223`: test assembly discovered, 8 ECS tests passed; total EditMode run 9 passed, 0 failed, 0 skipped. README/PR description was updated in documentation-only commit `4385e0f23729f37749344c7ad33d2861e2003125`; both CI workflows on this latest PR head now passed.
+- Status: EPIC 03.5 merged to `dev` as `b6e046895938d2dd72026827c4f72fd44ced1fdf` ([PR #18](https://github.com/Aizekhan/MythHunter/pull/18)). Unity CLI EditMode on migration source `21d8d89938bc4c165aa485ae3abf96e003744cc1`: 9 passed, 0 failed, 0 skipped (8 Framework ECS tests + 1 Addressables stub). User confirmed Unity Console/full project compilation and game bootstrap/ECS smoke are OK. PR #19 now targets `dev`; merge-history alignment commit `fde1beba9940dc6647ac18244ee78fa973c8d31c` changed ancestry only, not the source tree. Refreshed CI is running; do not merge PR #19 until both workflows pass.
 - PR: [#18 — EPIC 03.5: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
-- Current PR head: `4385e0f23729f37749344c7ad33d2861e2003125`.
+- Merged PR #18 head: `4385e0f23729f37749344c7ad33d2861e2003125`; merge commit: `b6e046895938d2dd72026827c4f72fd44ced1fdf`.
 - Current-head workflows: [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498), both success.
-- PR #18 title is aligned with its ready-for-review state; it has no submitted reviews/inline threads and remains unmerged.
-- Stacked preparation branch: `feature/epic-03-6-ecs-consumer-migration`; draft PR [#19](https://github.com/Aizekhan/MythHunter/pull/19) is temporarily based on `feature/framework-ecs-contracts` so its diff isolates the consumer migration. Latest branch CI [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972) passed the static boundary/import checks and .NET ECS tests.
-- EPIC 03.6 branch has targeted namespace cleanup across the composition root, component factory contracts, serializers, archetype APIs, and entity factories; the Editor generator now emits plain components against `RPGFramework.ECS`. Latest migration head `21d8d89938bc4c165aa485ae3abf96e003744cc1`; CI run [#35](https://github.com/Aizekhan/MythHunter/actions/runs/38073513821) passed static boundary checks and .NET ECS tests. Unity EditMode passed 9/9 on the earlier local checkout at 17:36Z; latest-head Unity revalidation and game bootstrap/ECS smoke remain open.
+- PR #18 is merged. Post-merge Minimal CI #237 passed; RPGFramework ECS Runtime #36 was still running at last check.
+- Migration branch: `feature/epic-03-6-ecs-consumer-migration`; draft PR [#19](https://github.com/Aizekhan/MythHunter/pull/19) now targets `dev` and isolates 50 migration files (87 additions, 244 deletions). Alignment commit `fde1beba9940dc6647ac18244ee78fa973c8d31c` records `dev` as a second parent after PR #18's squash merge; source tree unchanged.
+- EPIC 03.6 source migration removes duplicate legacy ECS types, binds Framework `EntityManager` in the composition root, migrates consumers, and updates Editor generation. Original CI [#35](https://github.com/Aizekhan/MythHunter/actions/runs/38073513821) passed; refreshed checks on aligned head `fde1beba9940dc6647ac18244ee78fa973c8d31c`: [RPGFramework ECS Runtime #37](https://github.com/Aizekhan/MythHunter/actions/runs/38075216261) and [Minimal CI #238](https://github.com/Aizekhan/MythHunter/actions/runs/38075216339).
 
 ## Implemented on the feature branch
 - Standalone `RPGFramework.ECS.Runtime` assembly with no assembly references and `noEngineReferences: true`.
@@ -31,14 +31,14 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - .NET 8 test harness and GitHub Actions workflow.
 - Static boundary validator for asmdef settings, forbidden runtime references, Unity metadata and GUID uniqueness.
 - `AddComponent` rejects unknown or destroyed IDs with `ArgumentException`; regression coverage included.
-- Legacy MythHunter ECS runtime remains active until a separate consumer migration is validated.
+- Legacy MythHunter ECS contract/manager duplicates are removed in migration PR #19; awaiting refreshed CI before merge.
 - Five unrelated Editor/runtime portability edits were removed from PR #18.
 
 ## Validation Evidence
 - Tested source commit: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - GitHub Actions on that source commit: success; static boundary validation passed; .NET compile/NUnit 8 passed, 0 failed, 0 skipped.
 - Unity CLI on that source commit, Unity `6000.0.45f1`: `RPGFramework.ECS.Runtime.Tests.dll` discovered; all 8 `RPGFramework.ECS.Tests.EntityManagerTests` passed; total EditMode run 9 passed, 0 failed, 0 skipped.
-- Latest PR-head documentation-only commit: `4385e0f23729f37749344c7ad33d2861e2003125`; [RPGFramework ECS Runtime #19](https://github.com/Aizekhan/MythHunter/actions/runs/38070722424) and [Minimal CI #236](https://github.com/Aizekhan/MythHunter/actions/runs/38070722498) are complete and successful.
+- PR #18 merge commit: `b6e046895938d2dd72026827c4f72fd44ced1fdf`; post-merge Minimal CI #237 passed. Latest migration-head Unity EditMode: `EPIC-03-6-EditMode-latest.xml`, 9 passed, 0 failed, 0 skipped.
 
 ## Rules
 1. Do not reset, clean or discard user's local worktree changes.
@@ -49,7 +49,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 6. Track one active roadmap task at a time.
 
 ## Next Action
-Do not repeat EditMode tests: latest migration-head run passed 9/9 (8 Framework ECS + 1 unrelated Addressables stub). Next validation gate is a game bootstrap/ECS smoke test and checking Unity Editor Console/full project compilation. Then finish PR #18 formal review/merge decision (no merge without user approval); PR #19 must remain stacked and unmerged until #18 lands.
+Wait for refreshed CI on PR #19 aligned head `fde1beba9940dc6647ac18244ee78fa973c8d31c`; boundary validation passed and .NET ECS tests were running at last check. If both workflows pass, mark PR #19 ready and merge (user authorized progression and confirmed Unity compile/bootstrap smoke). Then record EPIC 03.6 complete and activate EPIC 04 — Framework Core Contracts and Shared Primitives.
 
 ## Source of Truth
 - Master Plan: ordering and checklist.
