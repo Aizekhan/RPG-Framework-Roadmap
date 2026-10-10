@@ -1,7 +1,7 @@
 # EPIC 05.1 — Neutral Logging Contract and MythHunter Adapter
 
 ## Status
-**SOURCE SLICE IMPLEMENTED — .NET/static CI PASS; Unity validation pending.** Branch: `feature/epic-05-1-logging-contract`; current head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`. Draft PR #20: https://github.com/Aizekhan/MythHunter/pull/20. CI #41 succeeded: static boundary OK, 13 Framework/Test asset GUIDs checked, 9 .NET tests passed (8 ECS + 1 Logging), 0 failed, 0 skipped; nullable compiler warnings were fixed and the latest run has no C# compiler warnings. Do not merge until Unity import/compile, logging EditMode test, and bootstrap smoke are verified.
+**LOGGING SLICE MERGED AND VALIDATED; VALIDATION API AUDIT IN PROGRESS.** PR #20: https://github.com/Aizekhan/MythHunter/pull/20; merge commit `ec967a2944ba83db69655d4415d416f49a2ce122`. CI on source head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary/GUID checks passed, 9 .NET tests passed, 0 failed/skipped, no compiler warnings. Unity `6000.0.45f1` EditMode XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: 10 passed, 0 failed, 0 skipped; the Logging contract test was discovered and passed. User confirmed full-project compile/Console and game bootstrap smoke clean.
 
 ## Parent
 - EPIC 05 — Framework Runtime Modules
@@ -35,5 +35,12 @@
 ## Rollback
 Revert only this feature branch/PR. The MythHunter-facing API remains intact, so rollback must not require mass caller edits. Do not reset/clean the user's local worktree.
 
-## Next step
-Run Unity EditMode on `feature/epic-05-1-logging-contract`, inspect `RPGFramework.Logging.Runtime.Tests.dll` and confirm the one logger contract test passes. Check Unity Console/full project compile and confirm bootstrap registers the same logger under both interfaces. Then update this record with the XML evidence and merge PR #20. Afterward, audit actual callers of `IValidator<T>` / `ValidationResult` before choosing whether to extract a neutral validation contract.
+## Validation API audit — evidence so far
+- `IValidator<T>` declaration: `Assets/_MythHunter/Code/Utils/Validation/IValidator.cs`; it returns `ValidationResult`.
+- Concrete `Validator<T>` in `Assets/_MythHunter/Code/Utils/Validation/Validator.cs` accumulates rule errors and short-circuits on `IsCritical`. `ValidationResult` exposes a mutable `List<string> Errors` and `Success`, `Error`, `Critical` factories.
+- Repository search finds no explicit direct callers of `IValidator<T>` outside its declaration. Separate domain/config `Validate()` methods do not establish cross-module contract usage.
+- Do not extract `IValidator<T>` alone: its return type and the current mutable/error-critical semantics are coupled. First finish inventory of concrete `Validator<T>` construction and all `ValidationResult` references.
+- If no real generic API consumers exist, record a no-extraction decision instead of inventing a Framework module. If consumers exist, define a cohesive neutral contract and result semantics, compatibility adapter, focused tests and rollback before coding.
+
+## Rollback
+Logging is merged in PR #20. Any future validation extraction must be an independent bounded PR; preserve `ValidationResult`/validator callers until migration is validated. Do not reset/clean local worktree changes.
