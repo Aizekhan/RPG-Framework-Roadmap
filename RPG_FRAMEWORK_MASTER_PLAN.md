@@ -4,99 +4,29 @@
 Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game Layer, then build universal RPG modules on top of that stable foundation.
 
 ## Working Rules
-1. Work strictly top to bottom through the currently ACTIVE item.
-2. Exactly one roadmap item may be ACTIVE at a time.
-3. Audit first, architecture second, implementation third.
-4. Keep source-code evidence separate from architecture proposals and external reference material.
-5. Every completed item requires a documented conclusion and applicable validation evidence.
-6. This file defines execution order; `STATUS.md` is the exact execution pointer.
-7. Re-plan after material architecture or source/build discoveries.
-8. Do not generalize systems before ownership, dependencies and contracts are stable.
-9. Every source migration step needs a compiling checkpoint, relevant tests, and a rollback point.
-10. A file move, namespace change, or assembly definition alone does not prove extraction is complete.
-11. Optional modules must not become mandatory Framework Core dependencies without a documented reason.
-12. Do not mark source implementation complete based only on GitHub document edits; Unity compile/test evidence must be recorded.
+1. Exactly one roadmap item may be ACTIVE.
+2. Prefer short, source-backed decisions that unblock implementation over repeated diagnostics.
+3. Keep source evidence separate from architectural proposals.
+4. A source task must define its target, owner, acceptance criteria and rollback approach.
+5. Do not claim compilation or tests passed unless the relevant results demonstrate that.
+6. Preserve existing user changes; never reset or discard local worktree changes.
+7. Framework Core must not reference MythHunter, UnityEditor, game-specific policies or provider adapters.
+8. Adapters depend on Framework; Framework never depends on adapters.
+9. Avoid broad rewrites and speculative empty assemblies. Extract one small cohesive slice at a time.
+10. After every source change, compile and run focused tests; do not treat repository documentation as implementation evidence.
+11. Optional modules must not become mandatory Core dependencies without a documented reason.
 
 # EPIC 01 — Full MythHunter Audit
 **Status: COMPLETE**
 
 Goal: Understand the actual source architecture and identify Framework/Game ownership.
-
-### 1.1 — Top-level structures
-- [x] Core
-- [x] Components
-- [x] Entities
-- [x] Systems
-- [x] Events
-- [x] Networking
-- [x] Cloud
-- [x] UI
-- [x] Services
-- [x] Utils
-
-### 1.2 — Core
-- [x] ECS
-- [x] DI
-- [x] Game
-- [x] Installers
-- [x] StateMachine
-- [x] SceneManagement
-- [x] Validation
-
-### 1.3 — Components
-- [x] Core
-- [x] Character
-- [x] Combat
-- [x] Movement
-- [x] Lobby
-- [x] Other components
-
-### 1.4 — Entities
-- [x] EntityFactory
-- [x] Archetypes
-- [x] Templates
-- [x] Serialization Registry
-
-### 1.5 — Systems
-- [x] Core Systems
-- [x] Gameplay Systems
-- [x] Hero Systems
-- [x] Lobby Systems
-- [x] Phase Systems
-- [x] System Groups
-
-### 1.6 — Events
-- [x] EventBus
-- [x] Event Types
-- [x] Event Pipeline
-- [x] Middleware
-- [x] Network Events
-
-### 1.7 — Networking
-- [x] Client
-- [x] Server
-- [x] Messages
-- [x] Serialization
-- [x] Security
-
-### 1.8 — Final audit report
-- [x] Framework modules
-- [x] Game Layer modules
-- [x] Technical debt list
-- [x] Dependency map
-- [x] Unnecessary dependency list
-- [x] Refactoring candidates
-- [x] Core/Game
-- [x] Gameplay installers
-- [x] Phase systems
-- [x] CombatSystem
-- [x] ComponentCache
-- [x] EntityManager storage layer
+- [x] Audit top-level structures: Core, Components, Entities, Systems, Events, Networking, Cloud, UI, Services, Utils
+- [x] Audit Core: ECS, DI, Game, Installers, StateMachine, SceneManagement, Validation
+- [x] Audit Components, Entities, Archetypes/Templates, Systems, Events and Networking
+- [x] Record Framework/Game candidates, technical debt, dependencies and unnecessary coupling
 
 # EPIC 01.5 — Audit Completeness Check
 **Status: COMPLETE**
-
-Goal: Include major structures missed by the initial detailed audit.
 - [x] Replay
 - [x] Resources / Preload / Pool
 - [x] Cloud / External Services
@@ -107,283 +37,175 @@ Goal: Include major structures missed by the initial detailed audit.
 
 # EPIC 02 — Architecture Rebuild
 **Status: COMPLETE**
-
-Goal: Define the target architecture and migration policy before source implementation.
-- [x] Freeze Framework/Game boundary
-- [x] Define target module map
-- [x] Define assembly/package boundaries
-- [x] Define allowed dependency direction
-- [x] Define forbidden dependencies
-- [x] Define composition-root strategy
-- [x] Define migration strategy
+- [x] Framework/Game boundary
+- [x] Target module map and assembly/package boundary principles
+- [x] Dependency direction and forbidden references
+- [x] Composition-root and migration strategy
 - [x] Final architecture baseline
 
 # EPIC 02.9 — Post-Architecture Roadmap Reassessment
-**Status: ACTIVE — planning gate; no source implementation may pass this gate until completed.**
+**Status: COMPLETE**
+- [x] Remove overlapping work across former EPIC 03–14
+- [x] Keep optional capabilities out of Framework Core
+- [x] Establish dependency-ordered milestones and exit criteria
+- [x] Align execution pointer with STATUS.md
+- [x] Record conclusion in `Audits/EPIC_02.9_Post_Architecture_Roadmap_Reassessment.md`
 
-Goal: Rewrite and sequence the remaining epics to remove duplicated scope and establish dependency-ordered milestones.
+# EPIC 03 — First Reusable Framework Slice
+**Goal:** Begin extracting reusable code with a small, source-backed ECS boundary instead of extending baseline diagnostics indefinitely.
 
-- [x] Identify overlap between EPIC 03, 05, 06, and 07
-- [x] Identify optional capabilities that must not block Framework Core
-- [x] Define milestone-level execution approach
-- [ ] Map every remaining task to owner, prerequisite, evidence, and exit criteria
-- [ ] Replace old EPIC 03–14 ordering with the revised execution sequence
-- [ ] Align `STATUS.md` with the final revised plan
-- [ ] Verify roadmap consistency and record conclusion
+## 3.1 — Source baseline
+**Status: EVIDENCE RECORDED — PARTIAL**
+- [x] Record remote/local-reported branch and commit: `dev` / `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`
+- [x] Record Unity version: `6000.0.45f1`
+- [x] Inventory assembly definitions: six under UniTask, none under `Assets/_MythHunter`
+- [x] Record local test result: one third-party Addressables EditMode stub passed; PlayMode discovered zero tests
+- [x] Record limitations: clean forced compilation not demonstrated; no existing MythHunter C# tests discovered; local working tree has setup changes
+- [x] Preserve local recovery materials under `D:\RPG-Framework-Baseline` (partial patch/report bundle; not represented as full backup)
+- [x] Confirm no MythHunter source was changed during the audit
 
-# EPIC 03 — Baseline and Enforceable Boundary
-**Goal:** Establish a known build/test baseline and create the first small, enforceable Framework/Game boundary.
+Conclusion: do not spend additional time on baseline investigation unless a specific error blocks the next bounded code change. Compile and create focused tests during implementation. Preserve local changes and do not reset the worktree.
 
-### 3.1 — Source baseline
-- [ ] Record MythHunter source branch and commit
-- [ ] Record working-tree state and preserve unrelated user changes
-- [ ] Record Unity version and package manifest/lockfile state
-- [ ] Inventory all existing assembly definitions and compilation exclusions
-- [ ] Run Unity compilation and available tests; record baseline failures separately
-- [ ] Create a recoverable checkpoint before source changes
+## 3.2 — First Framework slice decision and usage map
+**Status: ACTIVE**
+- [x] Review current ECS contracts and their immediate dependencies
+- [x] Record first-slice decision in `Audits/EPIC_03.2_First_Framework_Slice_Decision.md`
+- [ ] Map all usages of `Entity`, raw entity IDs, `IComponent`, `IEntityManager`, `IEcsWorld`, and `ISystemRegistry`
+- [ ] Record current behavior and all compatibility constraints
+- [ ] Decide canonical entity identity, ID validity/reuse, component type constraints, and missing-component behavior
+- [ ] Define the smallest Framework-owned ECS contracts with no MythHunter dependency
+- [ ] Specify one bounded implementation step, focused tests, compile validation and rollback
 
-**Exit gate:** baseline compilation/test state and rollback point are documented. If local Unity validation is unavailable, stop source migration and record the blocker.
+**Exit gate:** source-backed usage map and explicit API decisions exist. No source code moves in this task.
 
-### 3.2 — Boundary design against actual project constraints
-- [ ] Build a source-backed dependency map for the first candidate slice
-- [ ] Verify Unity assembly-definition and package constraints against the actual project
-- [ ] Choose the smallest viable first Framework-owned assembly/slice
-- [ ] Confirm no Framework-to-MythHunter reference is required by the proposed boundary
-- [ ] Record the chosen boundary and alternatives rejected
+## 3.3 — First enforceable boundary
+- [ ] Establish/confirm a usable local recovery point without discarding existing changes
+- [ ] Add only the assembly boundary required by the agreed first slice
+- [ ] Keep `EcsWorld` / system-registry integration on the Game side unless the dependency is inverted cleanly
+- [ ] Add focused tests for the extracted behavior
+- [ ] Run Unity compilation and relevant tests; record exact outcomes
+- [ ] Verify Framework-owned code has no MythHunter dependency
+- [ ] Document resulting commit/checkpoint and rollback instructions
 
-**Exit gate:** the first slice is justified by source evidence; no code has been moved yet in this task.
-
-### 3.3 — First enforceable boundary
-- [ ] Add the minimal required assembly definition(s)
-- [ ] Isolate Editor-only scripts where required for the boundary
-- [ ] Compile Unity project
-- [ ] Run relevant tests
-- [ ] Check for assembly cycles and forbidden references
-- [ ] Document a rollback point and outcome
-
-**Exit gate:** the first boundary compiles, tests pass or baseline failures are explicitly separated, and Framework code does not reference MythHunter.
+**Exit gate:** the selected slice compiles, focused tests exercise it, and the dependency direction is enforceable.
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
-**Goal:** Extract only stable platform-neutral contracts needed by the first reusable Framework slice.
+**Goal:** Extract only stable, genuinely reusable, low-dependency contracts.
+- [ ] Establish canonical ownership and all callers before moving or renaming types
+- [ ] Keep UnityEditor, game phases, MythHunter types, concrete game events and providers out of neutral contracts
+- [ ] Avoid duplicate CLR types and update consumers coherently
+- [ ] Add compile/test/forbidden-reference validation
 
-- [ ] Define minimal shared primitives and ownership
-- [ ] Identify canonical types and all callers before moving/renaming
-- [ ] Extract contracts into the owning Framework assembly without creating duplicate CLR types
-- [ ] Keep UnityEngine/UnityEditor, MythHunter types, game phases, concrete game events and providers out of neutral contracts
-- [ ] Update consumers and source generators/codegen templates coherently
-- [ ] Compile and run focused tests after each cohesive migration step
-- [ ] Enforce forbidden-reference rules mechanically where feasible
-
-**Exit gate:** contracts compile inside their intended Framework ownership, consumers use the canonical types, and no duplicate type/assembly-cycle problem is introduced.
+**Exit gate:** contracts compile in their intended owner and no duplicate-type or assembly-cycle problem is introduced.
 
 # EPIC 05 — Framework Runtime Modules
-**Goal:** Extract reusable runtime implementations after their contracts, ownership, and required dependencies are stable.
+**Goal:** Extract runtime implementations only after the relevant contracts and dependencies are stable.
 
-## 5.1 — Logging and validation primitives
-- [ ] Separate neutral logging/validation abstractions from MythHunter/Unity implementations
-- [ ] Decide owner and boundary of existing logger and validation utilities
+## 5.1 — Logging and validation
+- [ ] Separate neutral abstractions from MythHunter/Unity implementations
+- [ ] Choose owners and contracts from actual consumers
 - [ ] Add focused tests and compile
 
 ## 5.2 — Dependency injection
-- [ ] Audit registration, lifetime, scope, resolution, disposal, and async lifecycle behaviour
-- [ ] Stabilize DI contracts and remove concrete game/logger dependencies from neutral surfaces
-- [ ] Extract DI runtime into the chosen assembly
-- [ ] Test registration errors, lifetimes, scopes, disposal and cancellation
+- [ ] Specify registration, lifetime, scope, resolution, disposal and async lifecycle
+- [ ] Remove concrete game/logger dependencies from neutral surfaces
+- [ ] Extract runtime module and test lifecycle/error cases
 
 ## 5.3 — Event dispatch
 - [ ] Separate generic event contracts from concrete MythHunter events
-- [ ] Decide dispatch ordering, error handling, subscriptions and disposal semantics
-- [ ] Separate local dispatch from network/replay bridges and middleware ownership
-- [ ] Remove duplicate EventBus only after mapping all call paths
-- [ ] Test ordering, exceptions, subscription disposal and async cancellation
+- [ ] Specify ordering, exception handling, subscription disposal and cancellation
+- [ ] Keep network/replay bridges and middleware as explicit adapters
+- [ ] Remove duplicate EventBus only after all call paths are mapped
 
-## 5.4 — Systems lifecycle and scheduler
-- [ ] Separate generic system lifecycle/scheduling from MythHunter phase policy
-- [ ] Decide initialization/update/shutdown ordering and failure semantics
-- [ ] Break EcsWorld/SystemRegistry coupling where needed
-- [ ] Test lifecycle ordering, cancellation and disposal
+## 5.4 — System lifecycle and scheduling
+- [ ] Separate generic scheduling/lifecycle from MythHunter phase policy
+- [ ] Specify initialization, update, shutdown and failure semantics
+- [ ] Decouple ECS world from the Game-owned system registry where required
+- [ ] Test lifecycle order and disposal
 
 ## 5.5 — ECS runtime
-- [ ] Decide identity, entity/component lifecycle, storage, archetype and query model before extraction
-- [ ] Map current callers and cache/registry behaviour
-- [ ] Resolve ComponentCache ownership/duplication with evidence
-- [ ] Extract ECS contracts/runtime one cohesive slice at a time
-- [ ] Test entity/component operations, storage, query correctness and lifecycle
-- [ ] Validate performance only after correctness and API stability
+- [ ] Decide identity, lifecycle, storage, archetype and query model before extraction
+- [ ] Map callers and cache/registry behavior
+- [ ] Resolve ComponentCache ownership with evidence
+- [ ] Extract cohesive slices with correctness tests
+- [ ] Evaluate performance only after API correctness and stability
 
-**Exit gate:** each selected runtime module has explicit dependencies, focused tests and a successful compiling checkpoint. ECS storage/identity decisions are recorded before their implementation is moved.
+**Exit gate:** each selected runtime module has explicit ownership, dependencies, focused tests and a successful compiling checkpoint.
 
 # EPIC 06 — Serialization Foundation
-**Goal:** Separate generic codecs/schema identity from persistence orchestration and network wire protocols.
-
-- [ ] Audit current component, entity, versioned, delta, persistence and network serializers separately
-- [ ] Define stable schema/type identifiers independent of CLR names where data crosses process/version boundaries
-- [ ] Separate generic serialization contracts from persistence save/load policy
-- [ ] Separate network wire format/versioning from persistence serialization
-- [ ] Extract only the contract/runtime portion proven reusable
-- [ ] Add compatibility/version/migration tests as applicable
-- [ ] Compile and validate consumers
-
-**Exit gate:** persistence and networking do not own or redefine the generic serializer contract inconsistently; schema evolution risks and migration limits are documented.
+- [ ] Audit component/entity/versioned/delta/network serialization separately
+- [ ] Define stable schema/type identifiers when data crosses version/process boundaries
+- [ ] Separate generic serialization from persistence policy and network wire formats
+- [ ] Extract only proven-reusable contracts/runtime and test compatibility
 
 # EPIC 07 — MythHunter Game Layer and Composition
-**Goal:** Move concrete application/domain/gameplay ownership into MythHunter-owned assemblies and integrate through one authoritative composition root.
-
-## 7.1 — Composition root
-- [ ] Map existing bootstrap, installers, registries and startup paths
-- [ ] Define one authoritative Game Composition Root
-- [ ] Separate Framework module registration, adapter binding and MythHunter registrations
-- [ ] Define deterministic initialization failure, cancellation and disposal
-- [ ] Validate missing/duplicate registrations and compile/run the game path
-
-## 7.2 — Application and content ownership
-- [ ] Extract concrete states, scene flow and application/game flow
-- [ ] Extract Lobby and Hero rules
-- [ ] Extract MythHunter phase rules from generic systems infrastructure
-- [ ] Extract Combat/Abilities and other concrete gameplay rules
-- [ ] Keep concrete domain events, archetypes, templates, settings and content in Game Layer
-- [ ] Move game-specific UI/presentation and authoring to their appropriate boundaries
-- [ ] Compile and validate game behaviour at each cohesive step
-
-**Exit gate:** MythHunter depends on public Framework APIs; Framework does not depend on MythHunter; game behaviour is preserved unless a separately approved task changes it.
+- [ ] Map bootstrap/installers/registries/startup paths
+- [ ] Establish one authoritative Game Composition Root
+- [ ] Keep concrete states, phase policies, Hero/Lobby/Combat rules, domain events, archetypes, content and game UI in the Game Layer
+- [ ] Separate Framework registration, adapter binding and game registrations
+- [ ] Validate startup, shutdown and the working game path
 
 # EPIC 08 — Dependency Debt and Lifecycle Stabilization
-**Goal:** Remove audited coupling after relevant ownership boundaries are established, rather than mixing bulk cleanup into extraction.
-
-- [ ] Remove cyclic and unnecessary dependencies one at a time
-- [ ] Complete duplicate EventBus cleanup if not already resolved in EPIC 05.3
-- [ ] Complete ComponentCache cleanup if not already resolved in EPIC 05.5
-- [ ] Replace implicit assembly/service discovery with explicit registration where required
-- [ ] Stabilize reflection/dynamic hot paths when evidence justifies change
-- [ ] Stabilize async lifecycle, cancellation and shutdown
-- [ ] Validate dependency graph and prohibited references automatically
-- [ ] Document each debt item outcome and regression/rollback evidence
-
-**Exit gate:** each cleanup has source evidence, tests/compile validation and no untracked regression. Do not repeat tasks already completed in EPIC 05.
+- [ ] Remove remaining cycles and unnecessary dependencies one at a time
+- [ ] Avoid repeating fixes already handled during module extraction
+- [ ] Stabilize async cancellation/shutdown and reflection paths when evidence warrants it
+- [ ] Enforce forbidden references mechanically where feasible
 
 # EPIC 09 — Optional Runtime Services and Adapters
-**Goal:** Extract reusable services as opt-in capabilities, keeping provider/platform implementations outside neutral Framework modules.
+- [ ] Resources/preload/scene loading
+- [ ] Pooling (optional; only where a consumer needs it)
+- [ ] Replay and developer diagnostics
+- [ ] Cloud/provider integrations
+- [ ] Keep Unity/platform/provider implementations outside neutral contracts
 
-## 9.1 — Resources, preload and scene loading
-- [ ] Define resource and scene-loading abstractions that are genuinely platform-neutral
-- [ ] Separate MythHunter resource keys, scene names, phase policy and content configuration
-- [ ] Implement/retain Unity resource and scene adapters in Unity-specific assemblies
-- [ ] Test error, cancellation and preload lifecycle
-
-## 9.2 — Pooling
-- [ ] Define pooling abstraction only if a real consumer requires it
-- [ ] Keep pooling optional and avoid making ECS/Core require it
-- [ ] Test acquire/release and lifecycle semantics
-
-## 9.3 — Replay and developer diagnostics
-- [ ] Define replay ownership against stable event and serialization contracts
-- [ ] Keep debug tools out of runtime Framework Core
-- [ ] Separate generic Framework tooling from MythHunter authoring
-- [ ] Add tests/validation only for implemented capabilities
-
-## 9.4 — Cloud/provider integrations
-- [ ] Keep authentication, cloud data and analytics optional
-- [ ] Define provider-neutral boundaries only where more than one game/provider needs them
-- [ ] Isolate concrete SDK integrations in provider adapters
-- [ ] Test adapter boundary without making Core depend on providers
-
-**Exit gate:** every shipped service is optional, has an explicit dependency contract and lives in the appropriate runtime/adapter/game/editor owner.
-
-# EPIC 10 — RPG Foundation Modules
-**Goal:** Build universal RPG domain modules above the stable Framework, not inside the low-level infrastructure.
-
+# EPIC 10 — RPG Foundation Domain Modules
 - [ ] Stats and attributes
 - [ ] Resources
-- [ ] Statuses
-- [ ] Buffs and debuffs
+- [ ] Statuses, buffs and debuffs
 - [ ] Damage and resistances
 - [ ] Death/life-state rules
-- [ ] Define data/API ownership and interactions before implementation
-- [ ] Add deterministic domain tests
-- [ ] Validate modules without MythHunter-specific content
+- [ ] Define interactions and test domain behavior without MythHunter content
 
-**Exit gate:** modules remain game-agnostic, depend only on documented lower-level APIs and have tests for domain rules.
-
-# EPIC 11 — Gameplay Modules
-**Goal:** Create reusable gameplay capabilities as optional domain modules.
-
-- [ ] Inventory
-- [ ] Items
-- [ ] Equipment
-- [ ] Loot
-- [ ] Abilities
-- [ ] Combat
-- [ ] Progression
-- [ ] Cooldowns
-- [ ] Define explicit module dependencies and avoid cycles
-- [ ] Add domain tests and integration tests for chosen combinations
-
-**Exit gate:** modules can be selected independently where designed, do not force unrelated capabilities into Core, and do not contain MythHunter-specific policies/content.
+# EPIC 11 — Optional Gameplay Modules
+- [ ] Inventory, items and equipment
+- [ ] Loot, abilities and combat
+- [ ] Progression and cooldowns
+- [ ] Define explicit dependencies and test selectable combinations
 
 # EPIC 12 — Persistence
-**Goal:** Implement durable save/load functionality using the serialization foundation, with explicit schemas and migration policy.
+- [ ] Define save/load lifecycle, storage abstraction, schema versioning and migrations
+- [ ] Test roundtrip, compatibility and interrupted operations
+- [ ] Keep network protocol concerns outside persistence
 
-- [ ] Define save/load lifecycle, storage abstraction and failure semantics
-- [ ] Define schema versioning and migration strategy
-- [ ] Implement storage adapters only for selected platforms/providers
-- [ ] Test roundtrip, compatibility, interrupted operations and migration
-- [ ] Keep network packet/protocol responsibilities outside persistence
-- [ ] Document guarantees and unsupported cases
-
-**Exit gate:** persistence is tested independently and does not require a networking module.
-
-# EPIC 13 — Networking
-**Goal:** Build networking as an independent optional Framework module with explicit wire contracts and security boundaries.
-
-- [ ] Audit the actual status of existing client/server/transport code before reuse
-- [ ] Define transport/session lifecycle
-- [ ] Define commands, snapshots and replication responsibilities
-- [ ] Define stable network IDs and wire schema/versioning
-- [ ] Define authentication/authorization and replay-protection requirements where applicable
-- [ ] Keep concrete game-domain events/content outside generic networking
-- [ ] Add protocol, lifecycle and security tests
-- [ ] Validate networking can be omitted from offline games
-
-**Exit gate:** networking is optional, wire identity is stable, security limitations are documented, and it does not depend on persistence implementation details.
+# EPIC 13 — Optional Networking
+- [ ] Audit actual client/server implementation before reuse
+- [ ] Define transport/session lifecycle, commands/snapshots/replication and stable wire schema
+- [ ] Define security boundaries and tests
+- [ ] Prove offline games can omit networking
 
 # EPIC 14 — Tools, Sample and Release
-**Goal:** Make the Framework understandable, verifiable and reusable in a new RPG project.
-
-## 14.1 — Tooling
-- [ ] Framework dependency/module graph
-- [ ] Entity/component/system inspectors where supported by public APIs
-- [ ] Event/network/save diagnostics only for modules that exist
-- [ ] Isolate Unity Editor code from runtime assemblies
-- [ ] Keep MythHunter-specific authoring tools Game-owned
-
-## 14.2 — Adoption and release
-- [ ] Framework and API documentation
-- [ ] New-project template
-- [ ] Module template guidance
+- [ ] Dependency/module graph and relevant inspectors/diagnostics
+- [ ] Runtime/editor assembly separation
+- [ ] Framework API documentation and new-project/module templates
 - [ ] Small sample RPG independent of MythHunter game content
-- [ ] Automated architecture/build/test validation
-- [ ] Final dependency and API review
-- [ ] Release candidate and known-limitations document
-
-**Exit gate:** a new project can consume the Framework and selected modules without copying MythHunter-specific code; published capabilities are tested and documented.
+- [ ] Automated architecture/build/test validation and release-candidate review
 
 ---
 
 ## Milestone map
-- **M0 — Baseline:** EPIC 03.1 complete.
-- **M1 — Enforceable boundary:** EPIC 03.2–03.3 complete.
-- **M2 — Reusable Core:** EPIC 04–06 complete for the explicitly selected Core scope.
-- **M3 — MythHunter integration:** EPIC 07–08 complete with a working game path.
-- **M4 — Optional capabilities:** EPIC 09, 12 and 13 as selected; no optional module blocks Core.
-- **M5 — RPG modules and adoption:** EPIC 10–11 and 14 complete for the intended release scope.
+- **M0 — Baseline evidence:** EPIC 03.1 recorded; no additional diagnostic loop.
+- **M1 — First reusable boundary:** EPIC 03.2–03.3.
+- **M2 — Reusable Core:** EPIC 04–06 for selected scope.
+- **M3 — MythHunter integration:** EPIC 07–08.
+- **M4 — Optional capabilities:** EPIC 09, 12 and 13 as selected.
+- **M5 — RPG modules and adoption:** EPIC 10–11 and 14.
 
 ## Dependency and validation rules
-- Every epic/task must have an owner, prerequisites, source evidence, tests/compile requirements and an exit gate.
-- A task can be marked complete only if its documented outcome and applicable compile/test evidence exist.
-- Run Unity compilation and relevant tests after each cohesive source change.
-- Stop after a migration regression; repair or revert the specific step before continuing.
-- Framework contracts/Core must not reference MythHunter, UI, UnityEditor or platform/provider implementations.
-- Adapters depend on Framework abstractions; Framework never references adapters.
-- Optional modules remain optional; avoid speculative empty assemblies/packages.
-- Keep persistence and network wire serialization separate.
-- Any future reordering must be documented with evidence and reflected in this file and STATUS.md.
+- Exactly one active item, tracked in STATUS.md.
+- Every source change preserves unrelated local changes and has a rollback plan.
+- Compile and run relevant focused tests after each cohesive source change; report actual results.
+- A documentation commit is not source implementation.
+- Framework/Core must not reference MythHunter, UnityEditor or adapters.
+- Adapters depend on Framework; Framework never depends on adapters.
+- Do not create speculative empty modules or perform a broad ECS rewrite.
+- Keep persistence schema separate from network wire serialization.
