@@ -108,10 +108,11 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Harden the new Framework EntityManager so AddComponent rejects unknown/destroyed IDs instead of creating phantom entities; add focused regression test.
 - [x] Re-run .NET CI after the behavior fix: 8 passed, 0 failed, 0 skipped (including unknown and destroyed entity IDs).
 - [x] Run static boundary validation in CI: OK; 3 runtime C# files, 1 test file, 7 Framework/test asset GUIDs checked.
-- [x] Re-run CI against commit `be362f9df6910b3027f05f5b742b65bc3dc65182`: static boundary OK, 8 passed, 0 failed, 0 skipped.
-- [ ] Run Unity import/compile and execute the Unity test assembly against the current PR head (the recorded .NET run tests an earlier commit).
-- [ ] Review and preferably split the five unrelated Editor/runtime portability edits from the ECS slice.
-- [ ] Confirm no unexpected project assets or behavior changes exist beyond the expected staged runtime/test/CI files.
+- [x] Re-run GitHub Actions on current PR head `3917e6a48344d4469fd95a2049b1a2e60d983223`: static boundary OK; .NET compile and NUnit 8 passed, 0 failed, 0 skipped.
+- [x] Remove five unrelated legacy Editor/runtime portability edits from this ECS PR.
+- [x] Review current changed-file list: only Framework runtime/test/CI assets and expected legacy metadata/newline normalization remain.
+- [ ] Run Unity import/compile and execute the Unity test assembly against the current PR head `3917e6a48344d4469fd95a2049b1a2e60d983223`.
+- [ ] Record Unity result and final review; keep PR draft until the Unity gate passes.
 - [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
 
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
