@@ -109,8 +109,9 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Re-run .NET CI after the behavior fix: 8 passed, 0 failed, 0 skipped (including unknown and destroyed entity IDs).
 - [x] Run static boundary validation in CI: OK; 3 runtime C# files, 1 test file, 7 Framework/test asset GUIDs checked.
 - [x] Re-run CI against commit `be362f9df6910b3027f05f5b742b65bc3dc65182`: static boundary OK, 8 passed, 0 failed, 0 skipped.
-- [ ] Run Unity import/compile and execute the Unity test assembly against this exact feature branch.
-- [ ] Review the additional Editor/runtime portability fixes in the PR and keep the migration scope explicit.
+- [ ] Run Unity import/compile and execute the Unity test assembly against the current PR head (the recorded .NET run tests an earlier commit).
+- [ ] Review and preferably split the five unrelated Editor/runtime portability edits from the ECS slice.
+- [ ] Confirm no unexpected project assets or behavior changes exist beyond the expected staged runtime/test/CI files.
 - [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
 
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
