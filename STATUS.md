@@ -25,6 +25,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 - Six assembly definitions under `Assets/Plugins/UniTask`; none found under `Assets/_MythHunter`.
 - No test C# files found under `Assets`; existing Unity results were one unrelated Addressables stub test passing and zero PlayMode test cases.
 - Source search confirmed broad consumers of `IComponent` / `IEntityManager` and Editor references within runtime-looking folders; see `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`.
+- Small editor-import cleanup is staged on feature branch PR #18; it has not been compiled and is not proof of a working assembly boundary.
 - Unity CLI reported “script recompilation was not required”; this is not a forced clean compile.
 - Local worktree contains Unity/CLI setup changes. A patch/test-result/status bundle is saved under `D:\RPG-Framework-Baseline`; it is a partial recovery bundle and must be preserved.
 
@@ -37,7 +38,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 6. Compile and test the local Unity project only when there's an actual source boundary to validate, not for ongoing design-only steps.
 
 ## Next action
-Map the files and direct references that would cross proposed Framework/Game/Editor assembly boundaries, then choose the smallest valid assembly cut. Revise or replace draft PR #18 only after this map exists. Do not merge without focused tests and Unity compile evidence.
+Complete the file-level runtime/editor assembly inventory and choose the smallest valid assembly cut, then revise the draft PR around that layout. Keep the current PR in draft until the compile graph and tests are valid.
 
 ## Source of truth
 - Master Plan: task ordering and checkboxes.
