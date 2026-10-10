@@ -8,13 +8,14 @@
 - EPIC 04 candidate audit: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`
 
 ## Current position
-- **Active task: EPIC 05.1 — validation API candidate audit.** Logging slice is merged and validated.
+- **Active task: EPIC 05.2 — DI behavior characterization and safe extraction plan.** Source audit complete; no DI source changes yet.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
 - CI on pre-merge head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 Framework/Test asset GUIDs checked; .NET tests 9 passed, 0 failed, 0 skipped; no C# compiler warnings.
 - Unity CLI EditMode, Unity `6000.0.45f1`, XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: **10 passed, 0 failed, 0 skipped**. Logging test discovered and passed: `RPGFramework.Logging.Tests.LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException`.
 - User confirmed Unity full-project compile/Console and game bootstrap smoke are clean; source inspection verifies same logger instance bound under both `IMythLogger` and `RPGFramework.Logging.ILogger`.
-- Validation source audit: `IValidator<T>` has only its declaration found in search; concrete `Validator<T>` and mutable `ValidationResult` currently live in MythHunter Utils. No Framework-neutral extraction until callers/contracts have defined value semantics.
+- Validation API audit: no external production callers of `IValidator<T>`/`Validator<T>` found; no Framework validation extraction justified. See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
+- DI source audit: see `Audits/EPIC_05.2_DI_Candidate_Audit.md`. Several source-level risks need characterization tests before any fix or extraction.
 
 ## Completed roadmap work
 ### EPIC 03.5 — Standalone Framework ECS runtime
@@ -44,12 +45,17 @@
 - CI: static boundary/GUID validation passed; .NET 9/9. Unity EditMode: 10/10; Logging contract test passed. User confirmed compile and bootstrap smoke.
 - PR #20 merged to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
 
-## Validation contract audit — complete
-- Audit: `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
-- Search found no actual external production construction/call sites of `Validator<T>`, and no `IValidator<T>` consumers beyond its declaration. `DIValidator` is unrelated to this generic interface.
-- `ValidationResult` is coupled to the local builder, exposes a mutable error list and has critical short-circuit semantics. Other domain/config validation methods have different APIs.
-- Decision: no Framework Validation extraction for now. Preserve current files unchanged; reopen only when real consumer demand and semantics justify a cohesive API.
-- **Next active task: EPIC 05.2 — Dependency Injection audit/design.** Map contracts, scopes/lifetimes, lazy resolution, lifecycle/disposal and failure semantics before proposing extraction.
+## EPIC 05.1 — complete
+- Logging contract implemented, CI validated and PR #20 merged as `ec967a2944ba83db69655d4415d416f49a2ce122`.
+- Unity EditMode: 10 passed, 0 failed, 0 skipped; Logging contract test passed.
+- Validation candidate audit completed; no extraction justified without real caller demand. See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
+
+## EPIC 05.2 — active
+- DI audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
+- Work item: `Tasks/EPIC_05.2_DI_Behavior_Characterization.md`.
+- Key source risks to verify: scoped resolution uses `object` rather than requested service type; Type-based resolve appears to return internal registration metadata; Type-based registration check ignores singleton/instance/lazy maps; scope-parent visibility and disposal ownership are unspecified.
+- These are static-source findings only; do not claim confirmed runtime defects until focused tests reproduce them.
+- First implementation slice: characterization/regression tests and bounded fixes in the existing Game Layer DI, with APIs/call sites preserved. No Framework DI assembly yet.
 
 ## Rules
 1. One active roadmap item at a time.
@@ -57,10 +63,10 @@
 3. Do not modify `dev` directly.
 4. Framework runtime/contracts must not depend on MythHunter, UnityEngine, UnityEditor, DI, logging sinks, or providers.
 5. Record actual validation evidence; successful .NET CI does not imply Unity assembly import/compile passed.
-6. Logging slice PR #20 is merged and validation audit is complete; proceed to the next bounded roadmap item.
+6. EPIC 05.1 is complete; EPIC 05.2 is active. Preserve local work and require source-backed tests before DI behavior changes.
 
 ## Next action
-Start EPIC 05.2 by auditing concrete DI contracts/implementations and their consumers; record the current public surface, lifetimes/scopes, disposal behavior, resolution errors, and dependencies before proposing a neutral DI slice. Do not modify source or create an assembly until the dependency map and acceptance criteria are written.
+Continue EPIC 05.2 by reviewing the DI container and scope source in detail, then add characterization tests for registration/resolution, scoped lifetime, Type-based APIs and disposal. Do not extract the Framework DI assembly before behaviors and acceptance criteria are explicit.
 
 ## Source of truth
 - Master plan: milestone ordering and checklist.
