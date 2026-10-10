@@ -15,25 +15,26 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
 - **Active task: 3.5 — Implement and validate first Framework ECS runtime**
-- Status: ACTIVE — .NET validated; Unity validation pending.
+- Status: ACTIVE — pure .NET validated; Unity validation pending.
 - PR: [#18 — Draft: add isolated RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Next required validation: import the branch into Unity, confirm compilation, and execute the Unity test assembly. Do not merge before that check.
 
 ## What is implemented on the feature branch
-- Pure .NET `RPGFramework.ECS.Runtime` assembly with no assembly references and `noEngineReferences: true`.
+- Pure .NET `RPGFramework.ECS.Runtime` assembly with no references and `noEngineReferences: true`.
 - `IComponent`, `IEntityManager`, and an initial dictionary-backed `EntityManager`.
-- Seven NUnit tests in a separate Unity test assembly.
-- .NET 8 test harness and GitHub Actions workflow so the pure runtime compiles/tests without opening Unity.
+- Eight NUnit tests in a separate Unity test assembly.
+- .NET 8 test harness and GitHub Actions workflow so the pure runtime compiles/tests without loading Unity.
+- `AddComponent` now rejects unknown/destroyed IDs with `ArgumentException`; it cannot silently create a phantom entity.
 - Legacy `MythHunter.Core.ECS` interface files remain intact; MythHunter consumers have not yet been migrated to the new runtime.
-- New Unity script GUIDs were checked for uniqueness across the changed asset meta files; legacy interface GUIDs are preserved.
+- New Unity script GUIDs were checked for uniqueness across changed asset meta files; legacy interface GUIDs are preserved.
 - A small set of Editor/runtime portability changes is included in PR #18 and must be reviewed as part of its diff.
 
 ## CI evidence
-- GitHub Actions workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38048892361)
-- Latest checked run on commit `f1acc9eb5dc934c1f36a173c37a53bfb1df34452`: success.
-- .NET compile and NUnit result: **7 passed, 0 failed, 0 skipped**.
-- Earlier run emitted two nullable warnings; the follow-up commit addressed those and the latest run contains no C# compiler warnings.
-- This run validates only the pure .NET sources linked into the test project. It does not validate Unity .asmdef import or the whole MythHunter project.
+- Latest GitHub Actions run: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38049093863)
+- Tested commit: `cd3d34633ba8d656347cfbaf8f85848b3810a790`.
+- Result: **8 passed, 0 failed, 0 skipped**.
+- The previous nullable warnings were addressed; no C# compiler warnings were found in the latest job log.
+- This validates only the pure .NET sources linked into the test project. It does not validate Unity .asmdef import or the whole MythHunter project.
 
 ## Architectural constraints
 1. Keep `RPGFramework.ECS.Runtime` independent of MythHunter, UnityEngine, UnityEditor, logging, DI, and providers.
