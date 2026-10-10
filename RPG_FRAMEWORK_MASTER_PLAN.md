@@ -120,7 +120,7 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 **Exit gate:** .NET tests pass; Unity imports and compiles the branch; the Unity test assembly runs; legacy MythHunter code has not been silently switched; the follow-up migration is explicit. Do not merge before Unity validation.
 
 ## 3.6 — Migrate MythHunter ECS consumers to Framework runtime
-**Status: SOURCE/UNITY VALIDATION COMPLETE — refreshed aligned-head CI pending before PR #19 merge**
+**Status: COMPLETE — PR #19 merged to `dev`, merge commit `d3b81484f42d084cae150b5b60fc64185cfb70c2`**
 - [x] Create a dedicated migration branch and stacked draft PR #19 based on the 3.5 branch.
 - [x] Move identified ECS consumers to import the Framework contract and manager APIs.
 - [x] Change the MythHunter composition root to bind the Framework manager; remove duplicate legacy interface/manager source files on the migration branch.
@@ -140,23 +140,35 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] No reported Unity compile/import errors; latest-head EditMode passed.
 - [x] Game bootstrap/ECS smoke reported OK; test suite covers unknown/destroyed-ID rejection.
 - [x] After PR #18 merged, retarget PR #19 to `dev` and align branch ancestry in `fde1beba9940dc6647ac18244ee78fa973c8d31c` without changing the source tree.
-- [ ] Update the usage map and verify no legacy ECS references remain, including editor/generator/reflection/serialization paths.
-- [ ] Wait for refreshed aligned-head CI to pass, merge PR #19, and record EPIC 03.6 complete in `STATUS.md` before activating EPIC 04.
+- [x] Static boundary validator confirms no duplicate legacy ECS contracts, no explicit legacy interface references, and Framework imports for current consumers; preserve targeted manual review for future changes.
+- [x] Refreshed migration CI #37/#238 passed; PR #19 merged, then post-merge CI #38/#239 passed. Recorded in `STATUS.md`.
 
-**Dependency rule:** PR #18 has merged. PR #19 targets `dev`; do not merge until refreshed aligned-head CI passes.
+**Outcome:** Exactly one ECS component contract, entity-manager contract and active entity store remain. Game-owned world/system lifecycle APIs stayed in MythHunter.
 Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Consumer_Migration.md`](Tasks/EPIC_03.6_ECS_Consumer_Migration.md).
 
 # EPIC 04 — Framework Core Contracts and Shared Primitives
-- [ ] Establish canonical ownership and callers before moving or renaming types
-- [ ] Keep UnityEditor, game phases, MythHunter types, concrete game events and providers out of neutral contracts
-- [ ] Avoid duplicate CLR types and update consumers coherently
-- [ ] Add compile/test/forbidden-reference validation
+**Status: COMPLETE — source-backed candidate audit; no speculative shared assembly created**
+- [x] Establish canonical ownership and callers before moving or renaming types
+- [x] Keep UnityEditor, game phases, MythHunter types, concrete game events and providers out of neutral contracts
+- [x] Avoid duplicate CLR types and update consumers coherently
+- [x] Record audit at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`.
+- [x] Decision: don't create an empty `RPGFramework.Contracts`; current reusable ECS contracts have a canonical owner, while DI/events/logging/serialization/validation candidates need bounded, source-backed extractions.
 
 # EPIC 05 — Framework Runtime Modules
 ## 5.1 — Logging and validation
-- [ ] Separate neutral abstractions from MythHunter/Unity implementations
-- [ ] Choose owners and contracts from actual consumers
-- [ ] Add focused tests and compile
+**Status: ACTIVE — logging contract first slice in PR #20; Unity validation pending**
+- [x] Map current `IMythLogger`, concrete `MythLogger`, its composition-root binding, and broad consumer reach.
+- [x] Add neutral `RPGFramework.Logging.ILogger` and `LogSeverity` in a separate no-engine-reference assembly.
+- [x] Keep MythHunter's existing `IMythLogger` API as a compatibility facade; adapt severity and bind same logger instance in `GameBootstrapper`.
+- [x] Add focused contract test, include it in .NET harness, extend static boundary/GUID validator and CI path filters.
+- [x] Run CI after nullable fixes: static boundary OK, 13 Framework/Test asset GUIDs checked, .NET 9 passed / 0 failed / 0 skipped, no C# compiler warnings. Run #41: https://github.com/Aizekhan/MythHunter/actions/runs/38075878947
+- [ ] Unity Editor import/full project compile, confirm `RPGFramework.Logging.Runtime.Tests.dll` discovery and EditMode test pass.
+- [ ] Confirm game bootstrap logs through both legacy and Framework logger registrations.
+- [ ] Review the validation contract candidate (`IValidator<T>` / `ValidationResult`) against actual callers before deciding whether to extract it.
+- [ ] Merge PR #20 only after Unity checks pass, then update `STATUS.md` with Unity report and move to validation API work.
+
+Detailed task: `Tasks/EPIC_05.1_Logging_Validation.md`.
+
 
 ## 5.2 — Dependency injection
 - [ ] Specify registration, lifetime, scope, resolution, disposal and async lifecycle
