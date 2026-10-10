@@ -88,9 +88,9 @@ Conclusion: do not merge the current draft as a completed extraction. The assemb
 - [x] Keep the initial extraction isolated in draft PR #18; do not merge it
 - [x] Record the assembly-reference limitation and Editor/runtime contamination in `Audits/EPIC_03.3_Assembly_Boundary_Reassessment.md`
 - [x] Record current dependency clusters and known Editor crossings in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`
-- [ ] Complete a source-backed inventory of candidate runtime/editor assembly contents and cross-boundary dependencies
-- [ ] Choose the smallest acyclic layout that existing consumers can actually reference
-- [ ] Amend or replace PR #18 to implement that layout and preserve metadata
+- [x] Record a partial source-backed inventory of cross-boundary dependencies in `Audits/EPIC_03.4_Assembly_Dependency_Inventory.md`
+- [ ] Complete the file-level runtime/editor assembly inventory and choose the smallest acyclic layout that existing consumers can actually reference
+- [ ] Replace the contract-only PR #18 staging experiment with the selected integrated assembly cut; preserve source asset GUIDs and related metadata
 - [ ] Add focused tests; confirm a real compile in Unity before merge
 
 **Exit gate:** there is a valid, documented assembly dependency graph; the proposed source moves form a coherent slice and can be verified in Unity.
