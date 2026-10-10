@@ -17,7 +17,7 @@ BLOCKED FOR INTEGRATION/MERGE — PR #18 must merge first. Preliminary migration
 - Updated the Editor code generator to emit `using RPGFramework.ECS;`.
 - Static validator now checks for duplicate legacy contract/runtime files, orphaned legacy metadata, explicit legacy contract references, and missing Framework imports in ECS consumers.
 - CI run [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972): static checks and .NET ECS tests passed.
-- Still required before merging PR #19: Unity full project compile, Unity EditMode tests after migration, and game bootstrap/ECS smoke check. The Framework `AddComponent` behavior difference for invalid IDs remains a specific compatibility risk.
+- Local check update: Unity CLI EditMode invocation was run on `feature/epic-03-6-ecs-consumer-migration` and produced `EPIC-03-6-EditMode.xml`; its test counts/failure details have not yet been inspected. Still required before merging PR #19: inspect that XML, confirm the full project compile outcome, and run a game bootstrap/ECS smoke check. The Framework `AddComponent` behavior difference for invalid IDs remains a specific compatibility risk.
 
 ## Current source facts
 - Framework assembly: `Assets/_Framework/ECS/Runtime`, namespace `RPGFramework.ECS`.
