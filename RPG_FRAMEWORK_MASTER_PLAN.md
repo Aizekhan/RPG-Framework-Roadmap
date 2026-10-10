@@ -106,8 +106,9 @@ Conclusion: static dependency mapping is sufficient to start the isolated runtim
 - [x] Preserve the original MythHunter interface files and their Unity GUIDs; assign distinct GUIDs to new Framework assets.
 - [x] Run .NET CI after nullable cleanup: 7 passed, 0 failed, no compiler warnings.
 - [x] Harden the new Framework EntityManager so AddComponent rejects unknown/destroyed IDs instead of creating phantom entities; add focused regression test.
-- [x] Re-run .NET CI after the behavior fix: 8 passed, 0 failed, 0 skipped.
+- [x] Re-run .NET CI after the behavior fix: 8 passed, 0 failed, 0 skipped (including unknown and destroyed entity IDs).
 - [x] Run static boundary validation in CI: OK; 3 runtime C# files, 1 test file, 7 Framework/test asset GUIDs checked.
+- [x] Re-run CI against commit `be362f9df6910b3027f05f5b742b65bc3dc65182`: static boundary OK, 8 passed, 0 failed, 0 skipped.
 - [ ] Run Unity import/compile and execute the Unity test assembly against this exact feature branch.
 - [ ] Review the additional Editor/runtime portability fixes in the PR and keep the migration scope explicit.
 - [ ] Document the final result and the follow-up migration that removes legacy MythHunter ECS duplication.
