@@ -1,7 +1,7 @@
 # EPIC 03.6 — Migrate MythHunter ECS consumers to Framework runtime
 
 ## Status
-PLANNED — blocked on completion of EPIC 03.5 Unity validation and merge of PR #18.
+BLOCKED FOR INTEGRATION/MERGE — PR #18 must merge first. Preliminary migration code is being prepared on a stacked branch so implementation can proceed, but PR #19 must not be merged before PR #18 lands.
 
 ## Parent and target
 - Parent: EPIC 03 — First Reusable Framework Slice
@@ -9,6 +9,15 @@ PLANNED — blocked on completion of EPIC 03.5 Unity validation and merge of PR 
 - Target repository: Aizekhan/MythHunter
 - Target starting point: updated `dev` after PR #18 merge; create a separate feature branch for this task.
 - Do not modify `dev` directly.
+
+## Implementation checkpoint (2026-10-10)
+- Branch: `feature/epic-03-6-ecs-consumer-migration`.
+- Draft stacked PR: [#19 — Migrate MythHunter ECS consumers to Framework runtime](https://github.com/Aizekhan/MythHunter/pull/19), currently based on `feature/framework-ecs-contracts` to isolate the diff.
+- Completed source slice: added Framework imports to identified consumers (component cache/factory, world, systems, archetype/template code, serializers and entity factories); switched the composition-root binding to the Framework manager by removing the legacy class; removed duplicate `MythHunter.Core.ECS.IComponent` and `IEntityManager` definitions.
+- Updated the Editor code generator to emit `using RPGFramework.ECS;`.
+- Static validator now checks for duplicate legacy contract/runtime files, orphaned legacy metadata, explicit legacy contract references, and missing Framework imports in ECS consumers.
+- CI run [#21](https://github.com/Aizekhan/MythHunter/actions/runs/38071622972): static checks and .NET ECS tests passed.
+- Still required before merging PR #19: Unity full project compile, Unity EditMode tests after migration, and game bootstrap/ECS smoke check. The Framework `AddComponent` behavior difference for invalid IDs remains a specific compatibility risk.
 
 ## Current source facts
 - Framework assembly: `Assets/_Framework/ECS/Runtime`, namespace `RPGFramework.ECS`.
