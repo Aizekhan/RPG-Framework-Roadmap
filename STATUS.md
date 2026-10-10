@@ -15,9 +15,9 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 - Epic: 03 — First Reusable Framework Slice
 - Active task: 3.3 — First enforceable boundary
 - Status: ACTIVE
-- Objective: extract the canonical `IComponent` and `IEntityManager` contracts into a Framework-owned assembly, with no duplicate types or Framework-to-MythHunter dependency.
+- Objective: finish the integration design for the staged contracts in draft PR #18; do not merge until consumer references, tests and compile result are established.
 - Unity use: not needed for further architecture/source inspection on GitHub. Needed when the new assembly/source integration is validated locally.
-- No source code has yet been changed through this task.
+- Source changed on isolated branch `feature/framework-ecs-contracts`; canonical contract declarations and an asmdef are staged in [PR #18](https://github.com/Aizekhan/MythHunter/pull/18). PR remains DRAFT; no local Unity compile was run against this branch.
 
 ## Evidence already recorded
 - Source branch/commit reported locally: `dev` / `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`.
@@ -36,7 +36,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 6. Compile and test the local Unity project only when there's an actual source boundary to validate, not for ongoing design-only steps.
 
 ## Next action
-Prepare the exact minimal source diff for the contract assembly, preserving unrelated project changes. Once the source files are changed locally, validate compile/test and record the actual result. If the GitHub path can safely carry the source edits, do so on an isolated branch/PR; do not change `dev` in place without a reviewable recovery point.
+Determine and implement the smallest valid assembly-reference integration for all existing consumers, add focused tests, then ask for local Unity validation of this isolated PR branch. Do not merge without compile evidence; do not return to broad environment diagnostics.
 
 ## Source of truth
 - Master Plan: task ordering and checkboxes.
