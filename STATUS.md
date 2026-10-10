@@ -20,7 +20,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - PR: [#18 — Draft: standalone RPGFramework ECS runtime and tests](https://github.com/Aizekhan/MythHunter/pull/18)
 - Current PR head: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - Current-head workflow: [RPGFramework ECS Runtime](https://github.com/Aizekhan/MythHunter/actions/runs/38067838447).
-- Do not merge PR #18 until the Framework test assembly is actually discovered and run, and Unity import/compilation evidence is recorded.
+- Unity ECS test gate is passed; do not merge PR #18 until final changed-file and PR CI/review checks are complete.
 
 ## Implemented on the feature branch
 - Standalone `RPGFramework.ECS.Runtime` assembly with no assembly references and `noEngineReferences: true`.
@@ -36,9 +36,9 @@ This roadmap controls refactoring of **Aizekhan/MythHunter**, Unity project on b
 - Current-head workflow: https://github.com/Aizekhan/MythHunter/actions/runs/38067838447
 - Tested PR head: `3917e6a48344d4469fd95a2049b1a2e60d983223`.
 - GitHub Actions: success; static boundary validation passed; .NET compile/NUnit: 8 passed, 0 failed, 0 skipped.
-- Local Unity CLI general EditMode run: XML `D:\MythHunter-Git\TestResults.xml`, Passed, Total 1, Failed 0, Skipped 0; only `AddressableAssets.DocExampleCode.TestStub.RequiredTest` ran.
-- Targeted Unity CLI run filtered for `RPGFramework.ECS.Tests.EntityManagerTests`: Passed, Total 0, Failed 0, Skipped 0.
-- These results do not validate the Framework test assembly, and do not prove full Unity project compilation. Investigate test assembly discovery/compile/import; do not treat a zero-test run as success.
+- Earlier Unity CLI runs either discovered only an unrelated Addressables stub or returned zero tests with an overly specific filter.
+- Latest Unity CLI full EditMode run: `FrameworkECS-TestResults.xml`; root suite Passed, total 9, passed 9, failed 0, skipped 0. `RPGFramework.ECS.Runtime.Tests.dll` was discovered and all 8 `RPGFramework.ECS.Tests.EntityManagerTests` passed.
+- Unity CLI reported Unity `6000.0.45f1`; local HEAD was verified as `3917e6a48344d4469fd95a2049b1a2e60d983223` before the run.
 
 ## Rules
 1. Do not reset, clean or discard user's local worktree changes.
