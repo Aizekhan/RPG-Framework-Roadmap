@@ -172,16 +172,18 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 **Outcome:** EPIC 05.1 is closed. Proceed to EPIC 05.2.
 
 ## 5.2 — Dependency injection
-**Status: ACTIVE — source audit recorded; characterization tests are next**
-- [x] Map the current public surface and coupled concepts (`IDIContainer`, `DIScope`, `LazyDependency<T>`, `IDIInstaller`, lifecycle manager).
-- [x] Record source risks: scoped resolution path, Type-based resolution/registration checks, scope hierarchy, disposal ownership, and current-scope concurrency.
-- [x] Define bounded execution/acceptance criteria in `Tasks/EPIC_05.2_DI_Behavior_Characterization.md`.
-- [ ] Add characterization/regression tests for singleton, transient, scoped, lazy and Type-based API behavior.
-- [ ] Confirm defects with tests and fix the smallest set while preserving current MythHunter-facing APIs.
-- [ ] Define lifetime, scope, disposal, injection and failure semantics before creating a neutral Framework DI module.
-- [ ] Extract and migrate only after tests, compile, Unity EditMode and bootstrap validation pass.
+**Status: ACTIVE — PR #21 awaits Unity validation**
+- [x] Map current DI surface and coupling (`IDIContainer`, `DIScope`, `LazyDependency<T>`, installers, lifecycle manager).
+- [x] Record source risks and acceptance gates in `Audits/EPIC_05.2_DI_Candidate_Audit.md` and `Tasks/EPIC_05.2_DI_Behavior_Characterization.md`.
+- [x] Add eight Unity EditMode characterization tests in draft PR #21: singleton, transient, scoped same/different scopes, Type-based resolve and registration check, lazy singleton, scoped disposable cleanup.
+- [x] In draft PR #21, fix scoped service caching to key on requested type and avoid repeated injection; make `Resolve(Type)` return a resolved instance; align `IsRegistered(Type)` with generic API for instance/lazy registrations.
+- [x] GitHub Actions #44 succeeded for Framework boundary/.NET tests; Minimal CI #242 succeeded but was no-op. These CI runs do not execute the new Unity DI tests.
+- [ ] Run Unity EditMode and confirm all eight DI tests pass; capture XML evidence.
+- [ ] Confirm full-project compile/Console and bootstrap smoke.
+- [ ] Review test failures/actual semantics, then decide whether PR #21 can merge; preserve current public APIs.
+- [ ] Keep parent-scope lookup, disposal ownership for transient/singletons, and async scope propagation as separate explicit decisions.
 
-Audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
+Draft PR: https://github.com/Aizekhan/MythHunter/pull/21
 
 ## 5.3 — Event dispatch
 - [ ] Separate generic event contracts from concrete MythHunter events
