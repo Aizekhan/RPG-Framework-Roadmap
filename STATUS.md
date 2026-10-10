@@ -13,11 +13,11 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 
 ## Current Position
 - Epic: 03 — First Reusable Framework Slice
-- Active task: 3.3 — First enforceable boundary
+- Active task: 3.4 — Compile-time dependency map and minimal assembly cut
 - Status: ACTIVE
-- Objective: finish the integration design for the staged contracts in draft PR #18; do not merge until consumer references, tests and compile result are established.
+- Objective: identify the smallest acyclic Unity assembly layout that permits Framework contracts to be consumed without pulling Editor/game dependencies into Framework Core.
 - Unity use: not needed for further architecture/source inspection on GitHub. Needed when the new assembly/source integration is validated locally.
-- Source changed on isolated branch `feature/framework-ecs-contracts`; canonical contract declarations and an asmdef are staged in [PR #18](https://github.com/Aizekhan/MythHunter/pull/18). PR remains DRAFT; no local Unity compile was run against this branch.
+- Source experiment is isolated in [draft PR #18](https://github.com/Aizekhan/MythHunter/pull/18). It is intentionally not merge-ready: the predefined assembly cannot directly reference the newly introduced asmdef, and no Unity compile was run against the branch.
 
 ## Evidence already recorded
 - Source branch/commit reported locally: `dev` / `66f83dbf6a3ab87cc7584c098dd481a38c5279e2`.
@@ -36,7 +36,7 @@ This roadmap controls refactoring of **Aizekhan/MythHunter** (Unity project, bra
 6. Compile and test the local Unity project only when there's an actual source boundary to validate, not for ongoing design-only steps.
 
 ## Next action
-Determine and implement the smallest valid assembly-reference integration for all existing consumers, add focused tests, then ask for local Unity validation of this isolated PR branch. Do not merge without compile evidence; do not return to broad environment diagnostics.
+Map the files and direct references that would cross proposed Framework/Game/Editor assembly boundaries, then choose the smallest valid assembly cut. Revise or replace draft PR #18 only after this map exists. Do not merge without focused tests and Unity compile evidence.
 
 ## Source of truth
 - Master Plan: task ordering and checkboxes.
