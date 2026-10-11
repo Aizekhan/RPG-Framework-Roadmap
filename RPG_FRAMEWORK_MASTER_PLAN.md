@@ -261,6 +261,8 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 ## 5.9 — ECS runtime and ComponentCache ownership
 **Status: BLOCKED until EPIC 01 Phase 1 reference-validation closeout is complete.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
 
+Current execution evidence (2026-10-11) is tracked in `STATUS.md` and `HANDOFF_NEXT_CHAT.md`: PR #48 remains the single active source gate; Unity validation on the exact PR head is not complete. The independent compile blocker `PreloadDebugTool.cs` is tracked in PR #50. A 600-second Unity CLI test timeout on #50 produced no NUnit report and is inconclusive. Do not treat it as a test failure or a pass.
+
 - [ ] Decide identity, lifecycle, storage, archetype and query model before extraction.
 - [ ] Resolve ComponentCache ownership with source evidence; `IEntityManager` remains authoritative unless evidence proves otherwise.
 - [ ] Extract cohesive slices only after Phase 1 exit gates, with correctness tests.
