@@ -27,7 +27,7 @@
 - Draft source PR #24: https://github.com/Aizekhan/MythHunter/pull/24
 - Last implementation head at latest audit: `5819aafe1d535639e9233b1192b62658c73ad01e`.
 - Source changes include `EventNetworkMode`, explicit composition-root mode selection in `GameBootstrapper`, role-to-`INetworkSystem` aliasing in `NetworkingInstaller`, mode-driven bus selection and singleton alias in `EventsInstaller`, authority policy in `NetworkEventBus`, and reflection-based EditMode characterization tests.
-- GitHub Actions on earlier head `9ced67674576127d98b3cd328b9b85917faacb18` passed. Latest implementation head is `5819aafe1d535639e9233b1192b62658c73ad01e`; latest CI boundary/GUID validation and .NET ECS test steps succeeded, with workflow cleanup still completing when last checked. **Unity EditMode and branch-specific full-project/bootstrap confirmation are not yet done.** Review actual current head before running tests; don't assume commits are compile-clean.
+- GitHub Actions on earlier head `9ced67674576127d98b3cd328b9b85917faacb18` passed. Latest GitHub Actions on head `5819aafe1d535639e9233b1192b62658c73ad01e` are both complete and passed; Framework boundary/GUID validation and .NET ECS tests passed, as did Minimal CI (no-op). **Unity EditMode and branch-specific full-project/bootstrap confirmation are not yet done.** Review actual current head before running tests; don't assume commits are compile-clean.
 - Do not write directly to `dev`. Use a narrow PR with a rollback path.
 
 ## First next task
