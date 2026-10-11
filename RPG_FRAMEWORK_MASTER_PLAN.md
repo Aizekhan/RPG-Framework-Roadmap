@@ -195,7 +195,8 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter; audit records source evidence.
 - [x] Confirm source-level registration-order defect: SystemRegistry eagerly resolves/captures SimpleEventBus before EventsInstaller rebinds IEventBus; DI resolves cached singleton first.
 - [x] Add a focused regression test and fix installer binding order without changing event dispatch semantics — draft PR #23.
-- [ ] Run Unity EditMode and full-project/bootstrap validation for PR #23 before merge.
+- [ ] Read the Unity XML summary for PR #23 and record actual total/passed/failed/skipped counts; CLI completion alone is not test evidence.
+- [ ] Confirm full-project compile/Console and game bootstrap smoke, then merge PR #23 if both gates pass. GitHub Actions on head `280882f1550cd3befcd58def29f76d08fd93b163` passed.
 - [ ] Resolve how the composition root supplies the selected client/server `INetworkSystem` instance before relying on `NetworkEventBus`; do not create an unrelated base-interface singleton.
 - [ ] Separate generic event contracts from concrete MythHunter events
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation
