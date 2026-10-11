@@ -1,7 +1,13 @@
 # EPIC 05.2 — Scope Lifecycle and Disposal Semantics
 
 ## Status
-**ACTIVE — design/test slice before source modifications.** Prior PR #21 is merged: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
+**ACTIVE — scope lifecycle implementation in draft PR #22; Unity validation pending.** Prior PR #21 is merged: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
+
+## Current PR
+- PR #22: https://github.com/Aizekhan/MythHunter/pull/22
+- Head: `a48002f8e2e2cd7690f4f338796dcad2288c5a3f`.
+- CI boundary/.NET passed; Minimal CI is a no-op. Unity is still required.
+- Added tests for worker/main thread scope isolation, independent child scope, reverse disposal and resilient cleanup, and exactly-once cleanup of a shared reference.
 
 ## Goal
 Make current-scope selection, nested scope behavior and resource ownership explicit. Preserve existing APIs while fixing only behavior established by regression tests.
@@ -20,7 +26,7 @@ Make current-scope selection, nested scope behavior and resource ownership expli
 4. Disposal: define deterministic order (recommended reverse creation order), idempotency, and best-effort behavior if one `Dispose` throws.
 5. Transient/singleton disposal: do not automatically dispose transient/singleton results until ownership and container shutdown semantics are specified.
 
-## Tests to add
+## Implemented and still-required tests
 - Switching scope actually changes the current scope and scoped service instance.
 - Returning/restoring the previous scope returns the expected prior scoped instance.
 - Child scope follows the chosen parent-visibility rule and does not dispose resources owned by the parent.
