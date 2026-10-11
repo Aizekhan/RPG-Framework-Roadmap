@@ -30,7 +30,7 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 - Preserve local changes. Never reset, clean, or discard a working tree. Never write directly to `dev`; use PRs.
 
 # EPIC 01 — Full MythHunter Audit
-**Status: INITIAL INVENTORY COMPLETE; Phase 1 reference-validation closeout REOPENED (2026-10-11).** The initial audit inventory and module cards are recorded, but `MythHunter/ARCHITECTURE_AUDIT.md` still has open Phase 1 exit gates: validate dependency/reverse-reference evidence and record all evidence-backed actions/issues. Do not start Phase 2 or broad refactoring until the active closeout task in `STATUS.md` is resolved.
+**Status: INITIAL INVENTORY COMPLETE; Phase 1 reference-validation closeout remains ACTIVE (2026-10-11).** PR #48 (ComponentCache consistency) and prerequisite compile fix PR #50 (PreloadDebugTool editor-only GUI) have been merged, but the audit is not closed. Exact-current-head Unity EditMode, full compile/Console, Player Build, Movement/Visibility/Hero smoke checks and reverse-reference/asmdef/scene/prefab evidence remain open in `STATUS.md`. Do not start Phase 2 or broad refactoring until these gates are resolved.
 - [x] Audit top-level structures: Core, Components, Entities, Systems, Events, Networking, Cloud, UI, Services, Utils
 - [x] Audit Core: ECS, DI, Game, Installers, StateMachine, SceneManagement, Validation
 - [x] Record Framework/Game candidates, technical debt, dependencies and unnecessary coupling
@@ -261,7 +261,7 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 ## 5.9 — ECS runtime and ComponentCache ownership
 **Status: BLOCKED until EPIC 01 Phase 1 reference-validation closeout is complete.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
 
-Current execution evidence (2026-10-11) is tracked in `STATUS.md` and `HANDOFF_NEXT_CHAT.md`: PR #48 remains the single active source gate; Unity validation on the exact PR head is not complete. The independent compile blocker `PreloadDebugTool.cs` is tracked in PR #50. A 600-second Unity CLI test timeout on #50 produced no NUnit report and is inconclusive. Do not treat it as a test failure or a pass.
+Current execution evidence (2026-10-11): PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`; PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`. The source fixes are in `dev`, but exact-current-head Unity EditMode, full compile/Console, Player Build and consumer smoke checks remain unconfirmed. The PR #50 isolated-worktree test timed out without an NUnit report and is inconclusive. Confirmed remote source consumers include MovementSystem (three direct caches), VisibilitySystem (two direct caches), and HeroSystem (registry-backed Stats/Health caches). Remaining reverse-reference coverage must include local IDE/ripgrep, asmdef references and Unity scene/prefab serialized references. No broad extraction or cache removal until Phase 1 exits.
 
 - [ ] Decide identity, lifecycle, storage, archetype and query model before extraction.
 - [ ] Resolve ComponentCache ownership with source evidence; `IEntityManager` remains authoritative unless evidence proves otherwise.
