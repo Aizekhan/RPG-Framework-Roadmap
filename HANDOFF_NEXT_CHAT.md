@@ -24,8 +24,10 @@
 
 ## Active branch / PR
 - Implementation branch: `feature/epic-05-3-network-eventbus-selection`, created from `dev`.
-- Source work in progress on the branch includes `EventNetworkMode`, explicit composition-root mode selection in `GameBootstrapper`, role-to-`INetworkSystem` aliasing in `NetworkingInstaller`, mode-driven bus selection in `EventsInstaller`, authority policy in `NetworkEventBus`, and reflection-based EditMode characterization tests.
-- No source PR has been opened yet. Review current branch head/files and actual Unity test results first; don't assume current commits compile.
+- Draft source PR #24: https://github.com/Aizekhan/MythHunter/pull/24
+- Last audited PR head: `9ced67674576127d98b3cd328b9b85917faacb18`.
+- Source changes include `EventNetworkMode`, explicit composition-root mode selection in `GameBootstrapper`, role-to-`INetworkSystem` aliasing in `NetworkingInstaller`, mode-driven bus selection and singleton alias in `EventsInstaller`, authority policy in `NetworkEventBus`, and reflection-based EditMode characterization tests.
+- GitHub Actions on this head: Framework boundary/GUID validation + .NET ECS tests passed; Minimal CI passed (no-op). **Unity EditMode and branch-specific full-project/bootstrap confirmation are not yet done.** Review actual current head before running tests; don't assume commits are compile-clean.
 - Do not write directly to `dev`. Use a narrow PR with a rollback path.
 
 ## First next task
@@ -36,7 +38,7 @@ Finish validation and correct any failures for the in-progress explicit network-
 4. Verify `EventsInstaller` binds `IEventBus` and `INetworkEventBus` to the exact same `NetworkEventBus` singleton (not two separate singleton registrations).
 5. Verify `NetworkEventBus` uses the configured mode for `Server/Client/Both` authorization and unsubscribes its network callback on Dispose.
 6. Run Unity EditMode; record actual counts and failures; user confirms full project compile/Console/bootstrap before merge.
-7. Open a source PR, update the roadmap/audit/handoff with exact PR and SHA, and merge only after the validation gates pass.
+7. PR #24 is already open as a draft; update its description and roadmap/audit/handoff with the exact validated head, and merge only after all validation gates pass.
 
 ## Files to inspect first
 - `Assets/_MythHunter/Code/Core/Installers/InstallerRegistry.cs`
@@ -59,7 +61,7 @@ unity test "D:\\MythHunter-Git" --mode EditMode --output "D:\\MythHunter-Git\\EP
 [xml]$r = Get-Content "D:\\MythHunter-Git\\EPIC-05-3-Network-Selection.xml"
 $r.SelectNodes("//test-run") | Select-Object result,total,passed,failed,skipped
 ```
-The latest confirmed result is PR #23's 23/23 only. This new branch has not yet had Unity tests confirmed. Never copy previous counts to this branch; record the actual output.
+The latest confirmed Unity result is PR #23's 23/23 only. PR #24's new branch has not yet had Unity tests confirmed. Never copy previous counts to this branch; record the actual output.
 
 ## Mandatory end-of-epic chat transition
 At the end of every epic, do not continue indefinitely in the same chat. Before announcing completion, create/update and commit this handoff file with the next-chat instructions, exact source/roadmap SHAs, PR links, test evidence, changed files, deferred risks, next atomic task and local commands. Update `STATUS.md` to link this file. Only then tell the user the epic is closed and that the next work should start in a new chat.
