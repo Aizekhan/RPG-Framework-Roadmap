@@ -1,74 +1,42 @@
 # Project Status
 
-## Source project
-- Game repository: `Aizekhan/MythHunter`
-- Roadmap repository: `Aizekhan/RPG-Framework-Roadmap`
-- Master plan: `RPG_FRAMEWORK_MASTER_PLAN.md`
-- Architecture baseline: `Audits/EPIC_02.8_Final_Architecture_Baseline.md`
-- EPIC 04 candidate audit: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`
+> Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
+> Last reconciled against GitHub: 2026-10-11.
 
-## Current position
-- **EPIC 05.3 — Event dispatch: COMPLETE.** PR #23 merged `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`; PR #24 merged `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`. Both validated with Unity EditMode **23 passed, 0 failed, 0 skipped**, GitHub Actions passed and user confirmed full-project compile/Console/bootstrap. The source-backed event contract audit found no independent Framework consumer; keep `IEventBus` in the MythHunter layer and do not create an empty contract assembly.
-- **Active item 5.4 — System lifecycle and scheduling.** Draft PR #25: https://github.com/Aizekhan/MythHunter/pull/25; branch `feature/epic-05-4-system-lifecycle-audit`; current head `b9bd216d0425102dabc979cab8a0a0106709bb78`. GitHub Actions both passed (Framework boundary/GUID/.NET ECS and Minimal CI no-op). **Unity EditMode and branch-specific full compile/Console/bootstrap confirmation remain pending; do not merge yet.**
-- PR #25 currently changes registry update gating and reverse disposal, group child initialization tracking/error isolation and tests. Separate questions queued: fixed/late update calls are not found in `GameBootstrapper`, and DI lifecycle-manager shutdown APIs appear unused; inspect before changing them.
-- **Next-chat handoff:** [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md). For item 5.4, read the handoff, STATUS, master plan and `Audits/EPIC_05.4_System_Lifecycle_Audit.md` before modifying code.
+## Repositories
+- Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
+- Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
+- Source branch: `dev`
+- Current source head: `e43fed636df0d1b257da5f9708f1a8af685fbd0e` — [commit](https://github.com/Aizekhan/MythHunter/commit/e43fed636df0d1b257da5f9708f1a8af685fbd0e)
 
-- EPIC 05.2 — DI scope lifecycle complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed for PR #22, and full-project/bootstrap/scope smoke confirmed clean.
-- Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
-- Logging merge commit: `ec967a2944ba83db69655d4415d416f49a2ce122`.
-- CI on logging pre-merge head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 Framework/Test asset GUIDs checked; .NET tests 9 passed, 0 failed, 0 skipped; no C# compiler warnings.
-- Unity CLI EditMode, Unity `6000.0.45f1`, XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: **10 passed, 0 failed, 0 skipped**. Logging contract test passed.
-- User confirmed logging full-project compile/Console and bootstrap smoke clean; same logger instance is bound under both `IMythLogger` and `RPGFramework.Logging.ILogger`.
-- Validation API audit found no external production callers of `IValidator<T>`/`Validator<T>`; no Framework validation extraction justified.
-- DI source audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`. Characterization and scope lifecycle fixes are merged and validated.
+## Verified completed sequence
+- EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
+- EPIC 05.5: PR #27 merged as `81e621ca98aa4ef409ead5cae7b6380328689b4c`; Unity EditMode 36/36 and integration checks confirmed.
+- EPIC 05.6: PR #28 merged as `4830f7735dce6a12ecbf2eee3d5c2379c9dda340`; Unity EditMode 41/41 and integration checks confirmed.
+- EPIC 05.7: PR #29 merged as `3b2783bd8005c58a3454dfad7dc132272fccdbd4`.
+- EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
+- The master plan now records the above history. Do not infer current work from an old chat summary.
 
-## Completed roadmap work
-### EPIC 03.5 — Standalone Framework ECS runtime
-- PR #18 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/18
-- Merge commit: `b6e046895938d2dd72026827c4f72fd44ced1fdf`
-- Unity EditMode on source commit `3917e6a48344d4469fd95a2049b1a2e60d983223`: all 8 ECS tests passed; full EditMode run 9/9 passed.
+## Exactly one active roadmap item
+**ACTIVE — EPIC 01 Phase 1 reference-validation closeout; immediate tracked implementation gate is [MythHunter PR #48](https://github.com/Aizekhan/MythHunter/pull/48), ComponentCache consistency.**
 
-### EPIC 03.6 — Migrate ECS consumers
-- PR #19 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/19
-- Merge commit: `d3b81484f42d084cae150b5b60fc64185cfb70c2`
-- Unity EditMode on migration source `21d8d89938bc4c165aa485ae3abf96e003744cc1`, Unity `6000.0.45f1`: 9 passed, 0 failed, 0 skipped.
-- User confirmed full-project compile/Console and game bootstrap/ECS smoke OK. Duplicate legacy ECS contracts/manager removed; game-owned world/system lifecycle remains in MythHunter.
+Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-component-cache-consistency`; draft and not merged.
 
-### EPIC 04 — Core contract candidate audit
-- Audit complete: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`.
-- Decision: no speculative empty `RPGFramework.Contracts`; first implementation slice was neutral logging under EPIC 05.1.
+### Unmet gates for PR #48
+- Local Unity EditMode evidence currently reports 44/44 at local HEAD `40b6296`, **not** the current PR head `6631edf`; repeat on exact head.
+- Full-project compilation with zero Console errors.
+- Player Build.
+- Movement, Visibility and Hero consumer smoke checks.
+- Review final local/remote diffs and record exact tested SHA. Do not merge until all gates are satisfied.
 
-### EPIC 05.1 — Logging and validation
-- Logging contract implemented; PR #20 merged to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
-- Unity EditMode: 10 passed, 0 failed, 0 skipped; compile/bootstrap smoke confirmed.
-- Generic validation extraction deferred by source audit.
-
-### EPIC 05.2 — Dependency injection
-- PR #21 merged: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
-- PR #22 scope lifecycle merged: `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
-- Unity 6000.0.45f1 EditMode for PR #22: **22 passed, 0 failed, 0 skipped**; user confirmed full-project compile/Console and bootstrap/DI-scope smoke.
-- Async-flow scope propagation and transient/singleton disposal ownership remain deferred.
-
-### EPIC 05.3 — Event dispatch (active)
-- PR #23 merge commit: `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
-- Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**.
-- GitHub Actions on source head `280882f1550cd3befcd58def29f76d08fd93b163` passed.
-- Fix: register the final event bus before resolving `ISystemRegistry`, preventing the registry from capturing a cached `SimpleEventBus` singleton in the non-network configuration.
-- Next: map the selected client/server `INetworkSystem` binding and composition-root policy. Do not extract event contracts until network selection and behavior semantics are specified.
-
-## Rules
-1. One active roadmap item at a time.
-2. Do not reset, clean, or discard local worktree changes.
-3. Do not modify `dev` directly; use pull requests.
-4. Framework runtime/contracts must not depend on MythHunter, UnityEngine, UnityEditor, DI, logging sinks or providers.
-5. Record actual validation evidence; successful .NET CI does not imply Unity assembly import/compile passed.
-6. Avoid speculative empty modules and broad rewrites.
+### Separate duplicate maintenance PR
+- [PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the only retained draft for the `PreloadDebugTool.cs` EditorStyles compile issue; its local Unity/Player validation remains a separate gate. It is not a second active roadmap item.
+- PR #49 duplicates the same fix and is to be closed as superseded by #50; closing #49 does not mean the defect is validated or resolved.
 
 ## Next action
-Investigate the `INetworkSystem` composition-root gap with source evidence: trace client/server implementations, configuration/game mode selection, and current bootstrap registrations; propose a small explicit binding design and tests. Do not choose an arbitrary client/server binding or begin event contract extraction prematurely.
+1. Inspect and preserve the local worktree: `git status --short --branch`; do not reset, clean, discard, or switch branches unsafely.
+2. Compare local diffs with PR #48 head `6631edf83362e6aed70ca70bc26b7c96ed15587e`; use a separate worktree if necessary.
+3. Validate exact PR head in Unity, then update PR #48 and this status with results. Do not start EPIC 05.9 or broad refactoring before EPIC 01 Phase 1 exit gates are met.
 
-## Source of truth
-- Master plan: milestone ordering and checklists.
-- `STATUS.md`: current active task.
-- `Tasks/`: scope and acceptance criteria.
-- `Audits/`: source evidence and architectural decisions.
+## Conflict rule
+If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation. Test results are valid only for the exact commit tested.
