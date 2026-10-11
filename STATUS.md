@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `54a35204dab5ced9a825bb4e7946ab8efdb31ce3` — [PR #52 audit-doc reconciliation merge](https://github.com/Aizekhan/MythHunter/commit/54a35204dab5ced9a825bb4e7946ab8efdb31ce3). Runtime fixes remain at [PR #48 merge](https://github.com/Aizekhan/MythHunter/commit/0d97060d45d978cafbe376cd43f00eb8fdf9f175) and [PR #50 merge](https://github.com/Aizekhan/MythHunter/commit/0af6ab74f8236b5de7455349c795377c883b5295).
+- Current source head: `6bef9b210ee35b40e4c28e74e5550c3f1c58d762` — [PR #53 MovementSystem write-through merge](https://github.com/Aizekhan/MythHunter/commit/6bef9b210ee35b40e4c28e74e5550c3f1c58d762).
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -29,7 +29,7 @@
 - Branch: `fix/epic-05-9-ondemand-positive-membership`.
 - Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
 - Scope: `ComponentCache<T>.Contains` in OnDemand mode now checks authoritative `IEntityManager.HasComponent<T>`, refreshes the cache when present, and removes stale membership when absent. Added `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- GitHub Actions runs are currently in progress on this exact head: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442).
+- GitHub Actions on this exact head passed: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither runs Unity EditMode.
 - Draft; Unity EditMode for the new regression test and full Unity build/smoke validation are not yet confirmed. Do not merge until the test result is available and the remaining required gates are accounted for.
 
 ### Latest merged bounded source slice
