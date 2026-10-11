@@ -8,14 +8,15 @@
 - EPIC 04 candidate audit: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`
 
 ## Current position
-- **Active task: EPIC 05.2 — DI behavior characterization and safe extraction plan.** Source audit complete; no DI source changes yet.
+- **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. We did not skip it; the decision was to avoid a speculative empty `RPGFramework.Contracts` assembly.
+- **Active task: EPIC 05.2 — DI scope lifecycle and disposal semantics.** PR #21 is merged; PR #22 is open as a draft and awaits Unity EditMode plus full-project/bootstrap validation.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
 - CI on pre-merge head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 Framework/Test asset GUIDs checked; .NET tests 9 passed, 0 failed, 0 skipped; no C# compiler warnings.
 - Unity CLI EditMode, Unity `6000.0.45f1`, XML `D:\\MythHunter-Git\\EPIC-05-1-Logging-EditMode.xml`: **10 passed, 0 failed, 0 skipped**. Logging test discovered and passed: `RPGFramework.Logging.Tests.LoggerContractTests.Log_PreservesSeverityMessageCategoryAndException`.
 - User confirmed Unity full-project compile/Console and game bootstrap smoke are clean; source inspection verifies same logger instance bound under both `IMythLogger` and `RPGFramework.Logging.ILogger`.
 - Validation API audit: no external production callers of `IValidator<T>`/`Validator<T>` found; no Framework validation extraction justified. See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
-- DI source audit: see `Audits/EPIC_05.2_DI_Candidate_Audit.md`. Several source-level risks need characterization tests before any fix or extraction.
+- DI source audit: see `Audits/EPIC_05.2_DI_Candidate_Audit.md`. Characterization fixes are underway and must be backed by Unity validation.
 
 ## Completed roadmap work
 ### EPIC 03.5 — Standalone Framework ECS runtime
@@ -62,13 +63,17 @@
 - CI boundary/.NET run #38121408276 passed; Minimal CI #38121408235 passed as a no-op. Neither runs Unity tests.
 - **Unity EditMode/full-project compile/bootstrap verification are still pending for PR #22. Keep it draft.**
 
+## EPIC 04 clarification
+- EPIC 04 was an audit/decision milestone, not a requirement to create a new assembly. The completed audit chose not to create `RPGFramework.Contracts` without demonstrated shared consumers.
+- The actual source implementation sequence is EPIC 03.5/03.6 (ECS runtime and migration), EPIC 04 audit, then EPIC 05.1 logging and EPIC 05.2 DI. No EPIC 04 implementation task was silently skipped.
+
 ## Rules
 1. One active roadmap item at a time.
 2. Do not reset, clean, or discard local worktree changes.
 3. Do not modify `dev` directly.
 4. Framework runtime/contracts must not depend on MythHunter, UnityEngine, UnityEditor, DI, logging sinks, or providers.
 5. Record actual validation evidence; successful .NET CI does not imply Unity assembly import/compile passed.
-6. EPIC 05.1 is complete; EPIC 05.2 is active. PR #21 is merged after the user confirmed Unity validation; preserve all local worktree changes and use focused tests for the next DI lifecycle slice.
+6. EPIC 04 and EPIC 05.1 are complete; EPIC 05.2 is active. PR #21 is merged; PR #22 remains draft pending Unity validation. Preserve all local worktree changes and use focused tests for the DI lifecycle slice.
 
 ## Next action
 Run Unity EditMode on `feature/epic-05-2-di-scope-lifecycle`, verify all 12 DI tests are discovered and pass, check full-project compile/Console and game bootstrap/scope smoke. Then review PR #22 and decide merge. Leave async context propagation and transient/singleton disposal policy deferred.
