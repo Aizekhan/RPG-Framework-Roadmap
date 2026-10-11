@@ -1,7 +1,7 @@
 # EPIC 05.3 — Event Dispatch Candidate Audit
 
 ## Status
-Initial source-backed audit COMPLETE. Event dispatch contract extraction is **not yet approved**; implementation must wait for semantics and all consumers to be mapped.
+Initial source-backed audit and registration-order fix are complete. PR #23 merged to `dev` as `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. Event API extraction is **not yet approved**; next resolve network-mode composition and binding semantics.
 
 ## Source baseline
 Reviewed `Aizekhan/MythHunter` on `dev` after EPIC 05.2 merge `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
@@ -56,16 +56,20 @@ Key sources:
 
 10. **Confirmed registration-order defect:** `InstallerRegistry` executes `CoreInstaller` before `EventsInstaller`. `CoreInstaller` registers `IEventBus -> SimpleEventBus`. Inside `EventsInstaller`, `container.Resolve<ISystemRegistry>()` runs before the later `IEventBus` registration. `SystemRegistry` constructor immediately resolves/captures `IEventBus` and subscribes to `PhaseChangedEvent`, which materializes the current `SimpleEventBus` singleton. Later registration of `EventBus` or `NetworkEventBus` only overwrites `_registrations[IEventBus]`; `DIContainer.ResolveByType` checks `_singletons` before `_registrations`, so it can continue returning the already-created `SimpleEventBus`. `GameBootstrapper` resolves the same cached `IEventBus` after installers. This conflicts with EventsInstaller's stated intent to replace the simple bus. CI/source inspection proves the path; runtime branch behavior should be verified with a focused test before changing code.
 
-11. `InstallerRegistry` catches installer exceptions and continues; `EventsInstaller` also registers the timer system through `ISystemRegistry`. Preserve that lifecycle while fixing the binding sequence. Do not change dispatch/pooling semantics as part of the wiring correction.
+11. `InstallerRegistry` catches installer exceptions and continues; `EventsInstaller` also registers the timer system through `ISystemRegistry`. PR #23 preserved that lifecycle and changed only the order of bus registration versus registry resolution. It added `EventsInstaller_RegistersFinalEventBusBeforeResolvingSystemRegistry`; Unity 6000.0.45f1 EditMode XML reports **23 passed, 0 failed, 0 skipped**, and GitHub Actions on head `280882f1550cd3befcd58def29f76d08fd93b163` passed. Full-project compile/Console and bootstrap smoke specific to PR #23 are not separately confirmed.
 
-12. **Separate unresolved network selection gap:** `NetworkingInstaller` registers `IClientNetworkSystem` and `IServerNetworkSystem`, but the inspected installer chain does not register the exact `INetworkSystem` key. `DIContainer.IsRegistered(Type)` checks exact dictionary keys (not assignability), so `container.IsRegistered<INetworkSystem>()` is false for those registrations alone. In the current in-repo composition this selects the standard `EventBus` path; selecting `NetworkEventBus` needs an explicitly chosen active client/server service exposed under `INetworkSystem` without accidentally creating a second singleton. Track this separately from the registration-order fix.
+12. **Confirmed network selection gap:** `NetworkingInstaller` binds `IClientNetworkSystem -> ClientNetworkSystem` and `IServerNetworkSystem -> ServerNetworkSystem` as singletons, but it does not register the exact `INetworkSystem` key. `DIContainer.IsRegistered(Type)` checks exact dictionary keys, not assignability; the `EventsInstaller` check therefore returns false for these bindings alone and chooses regular `EventBus`.
+
+13. `INetworkSystem` is a shared interface; `IClientNetworkSystem` and `IServerNetworkSystem` both derive from it but expose role-specific capabilities. `ClientNetworkSystem` wraps `INetworkClient`; `ServerNetworkSystem` wraps `INetworkServer`. A separate `NetworkSystem : INetworkSystem` also exists and composes both low-level client and server services, but `NetworkingInstaller` does not register it.
+
+14. `NetworkAuthority` directly depends on both `IClientNetworkSystem` and `IServerNetworkSystem`. `NetworkEventBus` depends on `INetworkSystem` and uses `is IClientNetworkSystem` / `is IServerNetworkSystem` to enforce event-authority attributes. Blindly binding either role singleton to `INetworkSystem` may cause wrong behavior for the other role. Registering the separate combined `NetworkSystem` is a candidate, but would need reconciliation with duplicate wrappers and all current consumers before changing code.
 
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
 
 ## Next bounded task
-1. Inventory all registrations/bindings of `IEventBus` and concrete event-bus construction/use.
-2. Map publish/subscribe consumers, including systems, network adapter, event batcher and debug middleware.
-3. Record which semantics existing production callers actually depend on, especially ordering and async behavior.
-4. Propose a minimal neutral synchronous contract first only if concrete cross-module reuse justifies it; keep async, priority, pooling and networking as separately justified capabilities.
-5. Add characterization tests before any implementation change.
+1. Trace the application/game mode decision: offline, client, server, or combined host.
+2. Decide the canonical composition path: bind the existing combined `NetworkSystem`, explicitly select one role service, or use a deliberate adapter. Do not alias an arbitrary singleton.
+3. Add installer/DI characterization tests proving offline uses `EventBus`, network mode uses `NetworkEventBus`, and `SystemRegistry` captures the same selected bus.
+4. Verify `NetworkAuthority` and existing callers remain compatible with the selected networking model.
+5. Continue event-semantics mapping; consider a neutral synchronous contract only if concrete cross-module reuse justifies it.
