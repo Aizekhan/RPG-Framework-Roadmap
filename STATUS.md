@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `0d97060d45d978cafbe376cd43f00eb8fdf9f175` — [PR #48 merge](https://github.com/Aizekhan/MythHunter/commit/0d97060d45d978cafbe376cd43f00eb8fdf9f175), following [PR #50 merge](https://github.com/Aizekhan/MythHunter/commit/0af6ab74f8236b5de7455349c795377c883b5295).
+- Current source head: `54a35204dab5ced9a825bb4e7946ab8efdb31ce3` — [PR #52 audit-doc reconciliation merge](https://github.com/Aizekhan/MythHunter/commit/54a35204dab5ced9a825bb4e7946ab8efdb31ce3). Runtime fixes remain at [PR #48 merge](https://github.com/Aizekhan/MythHunter/commit/0d97060d45d978cafbe376cd43f00eb8fdf9f175) and [PR #50 merge](https://github.com/Aizekhan/MythHunter/commit/0af6ab74f8236b5de7455349c795377c883b5295).
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -19,6 +19,7 @@
 - PR #48 merged to `dev` as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
 - **Validation caveat:** PR #48's 44/44 Unity EditMode report is for local HEAD `40b6296`, not exact PR head `6631edf`. The GitHub workflows succeeded on the PR head but don't compile the full Unity project. The PR's own merge commit message preserves that exact-head Unity EditMode, full compile/Console, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. PR #50 CLI EditMode timed out without an NUnit report; inconclusive, not a pass/failure.
 - Local investigation found no project-specific Unity Editor/test process, and `Editor.log` didn't change over 15 seconds. Do not kill long-lived Unity CLI server PID 18080 or delete caches based only on this evidence.
+- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`; it updates `ARCHITECTURE_AUDIT.md`, `docs/architecture-audit/11-reference-validation.md`, `docs/architecture-audit/16-component-cache-test-plan.md`, and `MODULE_DEPENDENCY_MAP.md` to reflect the merged code while preserving validation caveats.
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
