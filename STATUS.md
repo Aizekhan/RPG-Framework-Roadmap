@@ -8,11 +8,10 @@
 - EPIC 04 candidate audit: `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`
 
 ## Current position
-- **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. Decision: avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.3 — event contract boundary audit.** Network mode and bus identity corrections are merged and validated: PR #24 https://github.com/Aizekhan/MythHunter/pull/24, merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23 passed, 0 failed, 0 skipped; user confirmed full-project compile/Console/bootstrap, and both GitHub Actions passed on tested head `5819aafe1d535639e9233b1192b62658c73ad01e`.
-- PR #23 registration-order fix: https://github.com/Aizekhan/MythHunter/pull/23; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`, Unity EditMode 23/23 and user integration check confirmed.
-- **Next source branch:** `feature/epic-05-3-event-contract-boundary`, created from `dev`. No source PR yet. Current task is an evidence-driven contract boundary audit; do not wholesale-move `IEventBus` or create an empty assembly.
-- Handoff: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md); mandatory end-of-epic handoff protocol is in the master plan.
+- **EPIC 05.3 — Event dispatch: COMPLETE.** PR #23 merged `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`; PR #24 merged `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`. Both validated with Unity EditMode **23 passed, 0 failed, 0 skipped**, GitHub Actions passed and user confirmed full-project compile/Console/bootstrap. The source-backed event contract audit found no independent Framework consumer; keep `IEventBus` in the MythHunter layer and do not create an empty contract assembly.
+- **Active item 5.4 — System lifecycle and scheduling.** Draft PR #25: https://github.com/Aizekhan/MythHunter/pull/25; branch `feature/epic-05-4-system-lifecycle-audit`; current head `b9bd216d0425102dabc979cab8a0a0106709bb78`. GitHub Actions both passed (Framework boundary/GUID/.NET ECS and Minimal CI no-op). **Unity EditMode and branch-specific full compile/Console/bootstrap confirmation remain pending; do not merge yet.**
+- PR #25 currently changes registry update gating and reverse disposal, group child initialization tracking/error isolation and tests. Separate questions queued: fixed/late update calls are not found in `GameBootstrapper`, and DI lifecycle-manager shutdown APIs appear unused; inspect before changing them.
+- **Next-chat handoff:** [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md). For item 5.4, read the handoff, STATUS, master plan and `Audits/EPIC_05.4_System_Lifecycle_Audit.md` before modifying code.
 
 - EPIC 05.2 — DI scope lifecycle complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed for PR #22, and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
