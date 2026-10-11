@@ -190,46 +190,35 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
-**Status: ACTIVE — PR #23 and PR #24 merged and validated; next: event contract boundary audit**
+**Status: ACTIVE — network-mode correction merged/validated; current task: neutral event contract boundary audit**
 
 ### Completed
-- [x] Record source-backed event audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
-- [x] Map installer order and caller families (bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug and network adapter).
-- [x] Fix event-bus registration order so the final bus is registered before resolving `ISystemRegistry`; PR #23 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/23; merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
-- [x] Validate PR #23 with Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**; GitHub Actions passed.
-- [x] User confirmed full-project compile, Unity Console and bootstrap for PR #23.
-- [x] Confirm follow-on source problem: `NetworkingInstaller` didn't register the exact `INetworkSystem` key; `NetworkEventBus` inferred authority using interface-type checks that a combined `NetworkSystem` cannot satisfy; separate service-key registrations could create two NetworkEventBus singleton instances.
-- [x] Add explicit `EventNetworkMode` (`Offline`, `Client`, `Server`) and composition-root config in draft PR #24.
-- [x] Alias the selected existing client/server singleton to the exact `INetworkSystem` service key in draft PR #24; offline mode leaves that key absent.
-- [x] Make event authority a separate explicit policy and bind one NetworkEventBus instance through both `IEventBus` and `INetworkEventBus`.
-- [x] Add EditMode characterization coverage for mode/authority policy, selected network instance, event-bus choice and the identity shared with `SystemRegistry`.
-- [x] GitHub Actions on PR #24 tested head `5819aafe1d535639e9233b1192b62658c73ad01e`: Framework boundary/GUID validation and .NET ECS tests passed; Minimal CI passed (no-op workflow).
-- [x] Merge PR #24 via squash to `dev`: commit `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23/23, user compile/Console/bootstrap confirmation recorded.
+- [x] Source-backed event audit and installer/caller mapping recorded in `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
+- [x] PR #23 fixed final event-bus selection before resolving `ISystemRegistry`; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`, Unity EditMode 23/23, user compile/Console/bootstrap confirmed.
+- [x] PR #24 added explicit `EventNetworkMode` (Offline/Client/Server), exact selected role registration, authority policy, single NetworkEventBus identity across service interfaces and tests; squash merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode **23 passed, 0 failed, 0 skipped**, both GitHub Actions passed, user compile/Console/bootstrap confirmed.
+- [x] Mandatory new-chat handoff protocol is part of the master working rules; keep `HANDOFF_NEXT_CHAT.md` current at each handoff.
 
-### Current source task — event contract boundary
-- [ ] Audit candidate neutral publisher/subscriber contracts and consumer needs on `feature/epic-05-3-event-contract-boundary` (created from `dev` after PR #24 merge).
-- [ ] Prove the smallest reusable contract through consumer mapping and tests; keep Unity, MythHunter event policy, and `UniTask` out of a neutral Framework contract unless explicitly accepted as optional adapters.
-- [ ] Do not remove or consolidate `EventBus` / `SimpleEventBus` until differences in ordering, error behavior, pending events, pooling and lifecycle are characterized.
-- [ ] Open a narrow source PR only after a source-backed plan and focused tests exist; then run Unity EditMode and collect user confirmation before merge.
+### Active task — event contract boundary audit
+- Branch: `feature/epic-05-3-event-contract-boundary` (created from `dev` after PR #24 merge). No source PR yet.
+- [ ] Identify the smallest contract genuinely reusable outside MythHunter, from actual consumer needs.
+- [ ] Keep Unity APIs, `MythHunter.IEvent`, `EventPriority`, Cysharp `UniTask`, pooling, middleware and network replication out of a neutral contract unless explicitly justified as optional adapters/capabilities.
+- [ ] Characterize implementation differences before changing behavior: handler ordering/priority, exception handling, pending-event replay, pooling, async dispatch, Clear/Dispose lifecycle.
+- [ ] Decide whether any neutral contract is justified. Do not create an empty assembly, move the current `IEventBus` wholesale, or unify `EventBus` / `SimpleEventBus` without consumer evidence.
+- [ ] If a minimal contract is justified, implement one narrow slice with framework-only tests and a rollback path; do not migrate all callers in the same change.
+- [ ] Open a source PR only after the audit and focused tests are ready. Run Unity EditMode and collect user compile/Console/bootstrap confirmation before merge.
 
-### Known design boundary
-- Supported explicit event sync modes are Offline, Client and Server. Do not claim Host mode works: current network classes do not support simultaneous dual-role behavior.
-- `NetworkAuthority` still depends on both role interfaces. Do not delete/change this API as part of event bus selection.
-- Preserve offline default until a real menu/scene/bootstrap configuration path deliberately chooses client or server.
-- The mode selection is currently a serialized setting on `GameBootstrapper`; trace UI/menu/scene callers later before proposing a broader network bootstrap refactor.
+### Gating observations
+- `IEvent` requires `GetEventId()` and `GetPriority()`; the latter returns MythHunter's `EventPriority`.
+- `IEventBus` is struct-only, generic over `IEvent`, exposes priority and `Cysharp.Threading.Tasks.UniTask`, and includes broad `Clear()` semantics but no subscription token.
+- `EventBus` has priority queues, critical immediate dispatch, pending-event replay, pooling, middleware and async processing loop. `SimpleEventBus` is a plain handler-list dispatch, ignores priority and lacks those queue/pending behaviors. They are not interchangeable today.
+- `EventHandlerBase`, `SystemBase`, `SystemEventExtensions`, `PhaseSystem`, and UI/game systems are MythHunter-layer consumers; no proof yet requires generic event abstractions in the ECS assembly.
+- Framework ECS and Logging assemblies use `noEngineReferences: true`; keep any new contract similarly platform-neutral. Prefer a new small event-runtime assembly only if evidence justifies its independent reuse.
 
-### Event contract extraction — active audit; implementation remains gated
-- [ ] Separate generic event contracts from concrete MythHunter events only after actual cross-module consumer demand is evidenced.
-- [ ] Specify ordering, exception handling, subscription disposal and cancellation.
-- [ ] Keep network/replay bridges, middleware and pooling as explicit adapters/optional capabilities.
-- [ ] Remove or consolidate duplicate buses only after all call paths and semantics are covered by tests.
-
-### Epic exit gate and chat handoff
-- [ ] All source changes for the epic are merged or explicitly recorded as blockers; CI and focused Unity tests pass; user confirms full-project compile/Console/bootstrap.
-- [ ] Audit, master plan, STATUS and source PR describe the same current state and remaining risks.
-- [ ] Update and commit `HANDOFF_NEXT_CHAT.md` with epic/phase, merged PRs and SHAs, current branch/PR, changed files, exact validation evidence, unresolved risks, next atomic task, local Unity commands, files to inspect and first instruction for the next chat.
-- [ ] Link the committed handoff from STATUS before declaring the epic complete or recommending a new chat.
-- [ ] At the start of the next chat, read `HANDOFF_NEXT_CHAT.md`, `STATUS.md`, the master plan and referenced audit before modifying code.
+### Epic exit / chat handoff gate
+- [ ] Required code/validation blockers are done or precisely recorded.
+- [ ] Audit, plan, STATUS, source PR and handoff report the same exact state and SHAs.
+- [ ] Update/commit `HANDOFF_NEXT_CHAT.md` and link it from STATUS before declaring an epic complete or starting the next chat.
+- [ ] Next chat reads handoff, STATUS, this plan and the audit before editing code.
 
 
 ## 5.4 — System lifecycle and scheduling
