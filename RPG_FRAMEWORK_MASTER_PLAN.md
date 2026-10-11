@@ -17,8 +17,20 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 11. Optional modules must not become mandatory Core dependencies without a documented reason.
 12. At the end of every epic, prepare and commit a concise next-chat handoff report before declaring the epic complete or recommending that work move to a new chat.
 
+
+## Source-of-truth contract (mandatory)
+- `RPG_FRAMEWORK_MASTER_PLAN.md` is canonical for roadmap order, scope, acceptance criteria and durable milestone history.
+- `STATUS.md` is the only operational pointer: exactly one active roadmap item, exact current PR/head SHA, unmet gates, and the next command/action. Do not copy the master plan's historical logs into it.
+- `MythHunter/ARCHITECTURE_AUDIT.md` and `Audits/` hold source evidence and architectural findings; they do not independently select the active task.
+- `MythHunter/ARCHITECTURE.md` holds architecture principles only. It must not duplicate milestone/progress status.
+- `HANDOFF_NEXT_CHAT.md` is a short-lived execution handoff. Update it whenever the active task or its tested head changes; link it from STATUS. It is not a second master plan.
+- Before every action, compare STATUS with the corresponding master-plan acceptance criteria, the live PR state/head, and `dev` head. If these disagree, stop and reconcile the documents first.
+- Test evidence applies only to the exact tested commit SHA. Do not carry results from a parent or sibling branch forward.
+- Before opening a PR, search open PRs and recent merged PRs for the same files/symptom. One defect should have one active PR. Close a confirmed superseded PR with an explanation while preserving its branch/history.
+- Preserve local changes. Never reset, clean, or discard a working tree. Never write directly to `dev`; use PRs.
+
 # EPIC 01 — Full MythHunter Audit
-**Status: COMPLETE**
+**Status: INITIAL INVENTORY COMPLETE; Phase 1 reference-validation closeout REOPENED (2026-10-11).** The initial audit inventory and module cards are recorded, but `MythHunter/ARCHITECTURE_AUDIT.md` still has open Phase 1 exit gates: validate dependency/reverse-reference evidence and record all evidence-backed actions/issues. Do not start Phase 2 or broad refactoring until the active closeout task in `STATUS.md` is resolved.
 - [x] Audit top-level structures: Core, Components, Entities, Systems, Events, Networking, Cloud, UI, Services, Utils
 - [x] Audit Core: ECS, DI, Game, Installers, StateMachine, SceneManagement, Validation
 - [x] Record Framework/Game candidates, technical debt, dependencies and unnecessary coupling
@@ -207,45 +219,52 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 
 ## 5.4 — System lifecycle and scheduling
-**Status: ACTIVE — draft PR #25 fixes update-before-init and child cleanup semantics; Unity validation pending**
+**Status: COMPLETE — PR #25 merged to `dev`, merge commit `df83fdbc438071bfe714978ade7416f9cb2a4146`.**
 
-### Current source PR and audit
 - Audit: `Audits/EPIC_05.4_System_Lifecycle_Audit.md`
-- Draft PR #25: https://github.com/Aizekhan/MythHunter/pull/25
-- Branch: `feature/epic-05-4-system-lifecycle-audit`
-- Last reviewed head: `b9bd216d0425102dabc979cab8a0a0106709bb78`
-- GitHub Actions on that head: **Minimal CI passed**; **RPGFramework ECS Runtime passed** (Framework boundary/GUID validation and .NET ECS tests).
-- [ ] Run Unity 6000.0.45f1 EditMode on this exact branch and record actual XML counts/test names.
-- [ ] User confirms full-project compile, clean Console and bootstrap/game smoke for PR #25.
-- [ ] Fix any failure, rerun on the exact updated head, then merge only after both validation gates pass.
+- Tested PR head: `0a54af034b96e5295a5c4fda8754926aa0290efe`
+- Unity 6000.0.45f1 EditMode: **33/33 passed, 0 failed, 0 skipped** (`EPIC-05-4-System-Lifecycle-r4.xml`; user-confirmed).
+- GitHub Actions Minimal CI and RPGFramework ECS Runtime passed on the tested head.
+- Developer confirmed full-project compile, clean Console and bootstrap/game smoke.
+- Changes: lifecycle-gated regular/fixed/late updates; reverse disposal; initialized-child tracking and per-child exception isolation in `SystemGroup`.
+- Follow-up questions about fixed/late scheduling, DI shutdown wiring, group mutation and registry reuse remain audit candidates; they were not silently included in PR #25.
 
-### Source-backed lifecycle changes in PR #25
-- [x] `SystemRegistry.UpdateAll`, `FixedUpdateAll` and `LateUpdateAll` now dispatch only to active systems whose `Initialize()` completed successfully.
-- [x] `SystemRegistry.DisposeAll` disposes systems in reverse registration/priority order and clears the initialized-system tracking set so references to disposed instances are not retained.
-- [x] `SystemGroup` tracks successful child initialization, skips failed children during updates, isolates per-child initialize/update/dispose exceptions, disposes in reverse order and removes removed children from lifecycle tracking.
-- [x] Add reflection-based EditMode characterization tests for update-before-init, reverse registry disposal and system-group failure isolation.
+## 5.5 — Remove registry service-locator and reflection bypasses
+**Status: COMPLETE — PR #27 merged to `dev`, squash merge `81e621ca98aa4ef409ead5cae7b6380328689b4c`.**
 
-### Separate lifecycle questions — do not silently fold into PR #25
-- [ ] Bootstrap exposes only `Update()` in `GameBootstrapper`; `SystemRegistry.FixedUpdateAll` and `LateUpdateAll` exist, but source search found no production caller. Confirm whether fixed/late scheduling is intentionally unused or missing from composition.
-- [ ] `IDILifecycleManager` is registered, but source search found no production call to `Shutdown()`, `ExecuteShutdownHandlers()` or `DisposeAllScopes()`. Trace actual scope and shutdown consumers before wiring it into `GameBootstrapper.OnDestroy`.
-- [ ] Specify initialization failure/retry policy, add/remove-after-initialize semantics for `SystemGroup`, registry idempotence, and reverse disposal ordering before considering a framework-neutral lifecycle contract.
-- [ ] Keep game phase/state policy out of a neutral runtime contract.
+- Tested PR head: `7cc6c0117a5584c8d1efbd87105f935124c67279`.
+- Unity 6000.0.45f1 EditMode: **36/36 passed, 0 failed, 0 skipped**.
+- Minimal CI and RPGFramework ECS Runtime passed; developer confirmed full-project compilation, clean Console and bootstrap/game smoke.
+- Removed registry service-locator exposure, concrete registry checks and reflection/emergency-provider bypasses.
 
-### Acceptance criteria
-- [ ] All lifecycle callbacks happen only when contractually valid; failed callbacks do not block unrelated sibling cleanup/update.
-- [ ] Initialization, update and disposal order are explicit and tested.
-- [ ] Unity EditMode tests pass, exact XML evidence is recorded, and user verifies full compile/Console/bootstrap.
-- [ ] Audit, plan, STATUS, PR and handoff agree on the same tested head and outstanding risks.
+## 5.6 — Honor explicit system initialization categories
+**Status: COMPLETE — PR #28 merged to `dev`, squash merge `4830f7735dce6a12ecbf2eee3d5c2379c9dda340`.**
 
-### Chat handoff
-- [ ] At the end of item 5.4, commit an updated `HANDOFF_NEXT_CHAT.md` with exact PR/SHAs, changed files, Unity commands/results and the first action for item 5.5 before recommending a new chat.
+- Tested PR head: `648410f40da885d5f61e2084e881762367f582c2`.
+- Unity 6000.0.45f1 EditMode: **41/41 passed, 0 failed, 0 skipped** (`EPIC-05-6-Explicit-Category.xml`).
+- Minimal CI and RPGFramework ECS Runtime passed; developer confirmed integration checks.
+- The explicit category is authoritative in the three-argument API; the two-argument overload retains attribute-based selection and `OnDemand` fallback.
 
+## 5.7 — Record validation and restore architecture-audit sequence
+**Status: COMPLETE — PR #29 merged to `dev`, merge commit `3b2783bd8005c58a3454dfad7dc132272fccdbd4`.**
 
-## 5.5 — ECS runtime
-- [ ] Decide identity, lifecycle, storage, archetype and query model before extraction
-- [ ] Resolve ComponentCache ownership with evidence
-- [ ] Extract cohesive slices with correctness tests
-- [ ] Evaluate performance only after API correctness and stability
+- Documentation-only checkpoint. It recorded the 05.4–05.6 validations and explicitly restored EPIC 01 audit as the next sequential task.
+- No runtime changes; Unity tests not applicable.
+
+## 5.8 — Add architecture audit inventory and module cards
+**Status: COMPLETE — PR #30 merged to `dev`, merge commit `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.**
+
+- Added `ARCHITECTURE_AUDIT.md`, the five-filter audit rubric and initial per-module cards.
+- Inventory counts are navigation aids only. Dependency/reverse-reference validation remains incomplete as recorded in `MythHunter/ARCHITECTURE_AUDIT.md`.
+- Documentation-only; Unity tests not applicable.
+
+## 5.9 — ECS runtime and ComponentCache ownership
+**Status: BLOCKED until EPIC 01 Phase 1 reference-validation closeout is complete.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
+
+- [ ] Decide identity, lifecycle, storage, archetype and query model before extraction.
+- [ ] Resolve ComponentCache ownership with source evidence; `IEntityManager` remains authoritative unless evidence proves otherwise.
+- [ ] Extract cohesive slices only after Phase 1 exit gates, with correctness tests.
+- [ ] Evaluate performance only after API correctness and stability.
 
 # EPIC 06 — Serialization Foundation
 - [ ] Audit component/entity/versioned/delta/network serialization separately
