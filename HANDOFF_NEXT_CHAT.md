@@ -6,7 +6,7 @@
 - Game repo: `Aizekhan/MythHunter`
 - Game integration branch: `dev`
 - Roadmap repo: `Aizekhan/RPG-Framework-Roadmap`
-- Active milestone: **EPIC 05.3 — Event dispatch**
+- Active milestone: **EPIC 05.3 — explicit network event-bus selection and role-aware authorization**
 - Completed source fix: [PR #23](https://github.com/Aizekhan/MythHunter/pull/23), merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
 - User has confirmed PR #23 full-project compilation, Unity Console and bootstrap are clean.
 - Unity 6000.0.45f1 EditMode on PR #23: **23 passed, 0 failed, 0 skipped**. GitHub Actions passed.
@@ -23,19 +23,20 @@
 - Do **not** alias either client or server singleton arbitrarily to `INetworkSystem`, and do not silently change `NetworkAuthority`.
 
 ## Active branch / PR
-- Implementation branch was created from current `dev`: `feature/epic-05-3-network-eventbus-selection`.
-- At handoff creation no source PR for this network-selection task has been opened yet. Check the branch and open PR metadata first; preserve any work already on the branch.
+- Implementation branch: `feature/epic-05-3-network-eventbus-selection`, created from `dev`.
+- Source work in progress on the branch includes `EventNetworkMode`, explicit composition-root mode selection in `GameBootstrapper`, role-to-`INetworkSystem` aliasing in `NetworkingInstaller`, mode-driven bus selection in `EventsInstaller`, authority policy in `NetworkEventBus`, and reflection-based EditMode characterization tests.
+- No source PR has been opened yet. Review current branch head/files and actual Unity test results first; don't assume current commits compile.
 - Do not write directly to `dev`. Use a narrow PR with a rollback path.
 
 ## First next task
-Design an explicit role/capability contract for event network synchronization:
-1. Distinguish whether networking/event replication is enabled from the actual runtime role: Offline, Client, Server, or Combined Host.
-2. Decide who owns role selection, based on real application configuration/runtime callers, not assumptions.
-3. Ensure `NetworkEventBus` can enforce `NetworkEventAuthority.Server/Client/Both` accurately for all supported roles; a shared interface should not be mistaken for a role interface.
-4. Preserve behavior for offline games. Do not make network dependencies mandatory in Framework Core.
-5. Add focused installer/DI tests for bus selection, shared instance between `IEventBus` and `ISystemRegistry`, and authority behavior across roles.
-6. Run Unity EditMode; record the exact XML counts and relevant test names; ask the user to confirm full-project compile/Console/bootstrap before merge.
-7. Update this handoff and the roadmap to the new exact PR/commit/test state.
+Finish validation and correct any failures for the in-progress explicit network-mode design:
+1. Review current source diffs on `feature/epic-05-3-network-eventbus-selection`. Current intended modes are **Offline, Client, Server**; combined host is deliberately unsupported because the current role systems forbid simultaneous client/server operation.
+2. Ensure `GameBootstrapper` registers the serialized mode before `InstallerRegistry`; Offline remains default for backward-compatible behavior.
+3. Verify `NetworkingInstaller` binds the selected role implementation instance under the exact `INetworkSystem` key, and does not remove `NetworkAuthority` registration.
+4. Verify `EventsInstaller` binds `IEventBus` and `INetworkEventBus` to the exact same `NetworkEventBus` singleton (not two separate singleton registrations).
+5. Verify `NetworkEventBus` uses the configured mode for `Server/Client/Both` authorization and unsubscribes its network callback on Dispose.
+6. Run Unity EditMode; record actual counts and failures; user confirms full project compile/Console/bootstrap before merge.
+7. Open a source PR, update the roadmap/audit/handoff with exact PR and SHA, and merge only after the validation gates pass.
 
 ## Files to inspect first
 - `Assets/_MythHunter/Code/Core/Installers/InstallerRegistry.cs`
@@ -58,7 +59,7 @@ unity test "D:\\MythHunter-Git" --mode EditMode --output "D:\\MythHunter-Git\\EP
 [xml]$r = Get-Content "D:\\MythHunter-Git\\EPIC-05-3-Network-Selection.xml"
 $r.SelectNodes("//test-run") | Select-Object result,total,passed,failed,skipped
 ```
-The latest confirmed result is only PR #23's 23/23. Never copy those counts to a future branch; record the actual output.
+The latest confirmed result is PR #23's 23/23 only. This new branch has not yet had Unity tests confirmed. Never copy previous counts to this branch; record the actual output.
 
 ## Mandatory end-of-epic chat transition
 At the end of every epic, do not continue indefinitely in the same chat. Before announcing completion, create/update and commit this handoff file with the next-chat instructions, exact source/roadmap SHAs, PR links, test evidence, changed files, deferred risks, next atomic task and local commands. Update `STATUS.md` to link this file. Only then tell the user the epic is closed and that the next work should start in a new chat.
