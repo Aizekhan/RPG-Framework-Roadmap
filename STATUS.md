@@ -30,6 +30,12 @@ Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-
 - Movement, Visibility and Hero consumer smoke checks.
 - Review final local/remote diffs and record exact tested SHA. Do not merge until all gates are satisfied.
 
+### Current validation blocker (2026-10-11)
+- Exact-head PR #48 Unity test startup is blocked by `PreloadDebugTool.cs` using `EditorStyles.boldLabel` without qualification/guard; the fix is separately tracked by draft PR #50.
+- PR #50 isolated-worktree EditMode invocation timed out after 600 seconds without an NUnit XML report. This is inconclusive, not a reported test failure.
+- The observed long-lived PID 18080 is the Unity CLI server, not evidence of an active Editor test process. `Editor.log` was unchanged over 15 seconds and no project-specific Unity test process was found. Do not kill the server or delete caches based on this evidence.
+- CLI help confirms `unity recompile --project-path <path>`; the earlier positional form was invalid. Next action is to resolve the Editor/CLI launch path before retrying validation; avoid repeated diagnostics and do not merge either PR until the gates pass.
+
 ### Separate duplicate maintenance PR
 - [PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the only retained draft for the `PreloadDebugTool.cs` EditorStyles compile issue; its local Unity/Player validation remains a separate gate. It is not a second active roadmap item.
 - PR #49 is **closed as superseded by #50** (closure comment recorded on PR #49). This is PR deduplication only; the defect remains unvalidated until #50's required local checks pass.
