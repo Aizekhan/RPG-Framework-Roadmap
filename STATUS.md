@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `e43fed636df0d1b257da5f9708f1a8af685fbd0e` — [commit](https://github.com/Aizekhan/MythHunter/commit/e43fed636df0d1b257da5f9708f1a8af685fbd0e)
+- Current source head: `3bb562ec75eb280f92cc487cc3ab1d7eb13c9efb` — [documentation-only architecture cleanup](https://github.com/Aizekhan/MythHunter/commit/3bb562ec75eb280f92cc487cc3ab1d7eb13c9efb). Runtime source is unchanged from prior code head `e43fed636df0d1b257da5f9708f1a8af685fbd0e`.
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -31,7 +31,7 @@ Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-
 
 ### Separate duplicate maintenance PR
 - [PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the only retained draft for the `PreloadDebugTool.cs` EditorStyles compile issue; its local Unity/Player validation remains a separate gate. It is not a second active roadmap item.
-- PR #49 duplicates the same fix and is to be closed as superseded by #50; closing #49 does not mean the defect is validated or resolved.
+- PR #49 is **closed as superseded by #50** (closure comment recorded on PR #49). This is PR deduplication only; the defect remains unvalidated until #50's required local checks pass.
 
 ## Next action
 1. Inspect and preserve the local worktree: `git status --short --branch`; do not reset, clean, discard, or switch branches unsafely.

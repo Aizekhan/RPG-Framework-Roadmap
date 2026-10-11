@@ -12,7 +12,7 @@ EPIC 01 Phase 1 reference-validation closeout. The immediate tracked source PR i
 - Required: exact-head Unity EditMode, full-project compile and clean Console, Player Build, Movement/Visibility/Hero smoke checks, exact SHA recorded.
 
 ## Additional open maintenance gate
-[PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the retained draft for the `PreloadDebugTool.cs` EditorStyles issue. Validate separately; it is not the active roadmap item. PR #49 is redundant and should be closed as superseded by #50 without discarding its branch or history.
+[PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the retained draft for the `PreloadDebugTool.cs` EditorStyles issue. Validate separately; it is not the active roadmap item. PR #49 was closed as superseded by #50; its branch/history are preserved. This is not validation of the fix.
 
 ## First action
 1. Run `git status --short --branch` in `D:\\MythHunter-Git` and preserve all local changes.
