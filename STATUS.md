@@ -38,5 +38,14 @@ Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-
 2. Compare local diffs with PR #48 head `6631edf83362e6aed70ca70bc26b7c96ed15587e`; use a separate worktree if necessary.
 3. Validate exact PR head in Unity, then update PR #48 and this status with results. Do not start EPIC 05.9 or broad refactoring before EPIC 01 Phase 1 exit gates are met.
 
+
+## Dormant GitHub PRs — not active roadmap work
+These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
+- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): current unique diff is only two folder .meta files plus ProjectSettings.asset changing companyName to MasterMind; source feature changes are not present in its current residual diff. Preserve the setting as a possible intentional requirement, but extract it into a fresh focused PR only after confirmation.
+- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind dev; its current diff only proposes _MythHunter and Core folder metadata. Validate GUIDs and whether those files are still needed before deciding; do not merge the old branch directly.
+- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind dev, with a 206-file residual diff including code and metadata. Requires fresh source-level triage or closure after verifying whether any unique behavior remains.
+- [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4) is a long-open dev → main integration PR, not a roadmap implementation task. Review as a release/integration decision separately; do not merge it together with focused source fixes.
+- PR #2 was closed as a duplicate of PR #3's folder-metadata proposal; PR #49 was closed as a duplicate of PR #50's PreloadDebugTool fix.
+
 ## Conflict rule
 If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation. Test results are valid only for the exact commit tested.
