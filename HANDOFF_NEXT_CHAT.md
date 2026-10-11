@@ -27,3 +27,7 @@ EPIC 01 Phase 1 reference-validation closeout. The immediate tracked source PR i
 - Never reset, clean, or discard local files.
 - A CI pass does not prove Unity compilation or Player Build.
 - Do not reuse test counts from a different commit.
+
+
+## Dormant PRs noted during deduplication
+Do not merge old open PRs #1, #3 or #5 as-is; they are 224–244 commits behind current dev and need file-level triage. PR #1 retains a potentially intentional companyName: MasterMind project setting; PR #3 contains only candidate folder metadata; PR #5 has a large 206-file residual diff. PR #4 is a separate long-open dev → main integration PR requiring release review. PR #2 and PR #49 are closed duplicates; their branches/history remain preserved.
