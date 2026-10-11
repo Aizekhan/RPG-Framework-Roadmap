@@ -9,9 +9,9 @@
 
 ## Current position
 - **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. Decision: avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.3 — Event dispatch.** PR #23 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/23. Merge commit: `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. The installer now registers the final event bus before resolving `ISystemRegistry`.
-- Unity 6000.0.45f1 EditMode for PR #23: **23 passed, 0 failed, 0 skipped**. GitHub Actions passed. Full-project compile/Console and bootstrap smoke for PR #23 are not yet confirmed separately.
-- The separate `INetworkSystem` role-selection/binding gap remains open and is the next bounded investigation; do not bind an arbitrary client/server singleton.
+- **Active task: EPIC 05.3 — network event-bus selection and role semantics.** PR #23 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/23; merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. The event-bus registration-order bug is fixed. Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**; GitHub Actions passed; user confirmed full project compilation, Console and bootstrap clean.
+- Network wiring issue confirmed: the installer registers `IClientNetworkSystem` and `IServerNetworkSystem`, but not exact `INetworkSystem`, so current `EventsInstaller` resolves the non-network `EventBus` path. `NetworkSystem` cannot simply be registered as a drop-in because `NetworkEventBus` uses role-interface type checks. Current branch: `feature/epic-05-3-network-eventbus-selection`; source PR not yet opened. Do not alias a random client/server implementation.
+- Handoff for future chats: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md). End-of-epic exit gates now require a committed handoff file.
 - EPIC 05.2 — DI scope lifecycle complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed for PR #22, and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Logging merge commit: `ec967a2944ba83db69655d4415d416f49a2ce122`.
