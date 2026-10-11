@@ -23,26 +23,34 @@
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 05.9 implementation slice: MovementSystem authoritative write-through, tracked by [MythHunter PR #53](https://github.com/Aizekhan/MythHunter/pull/53).** This bounded source task proceeds by the user's explicit request to continue EPIC 5. It does not imply EPIC 01 Phase 1 validation is complete.
+**ACTIVE — EPIC 05.9 bounded implementation: OnDemand positive-membership semantics, tracked by [MythHunter PR #54](https://github.com/Aizekhan/MythHunter/pull/54).** This follows the user's explicit direction to continue EPIC 5; EPIC 01 reference-validation gates remain open and no broad ECS extraction is authorized.
 
-### PR #53
-- Branch: `fix/epic-05-9-movement-cache-write-through`.
-- Exact head: `ab5b7c386163c8a1fcb7314840b8b223acd2868d`.
-- GitHub Actions on this exact head: `Minimal CI` success (run [38149295505](https://github.com/Aizekhan/MythHunter/actions/runs/38149295505)); `RPGFramework ECS Runtime` success (run [38149295555](https://github.com/Aizekhan/MythHunter/actions/runs/38149295555)). Neither workflow runs the Unity project/EditMode suite.
-- Fix writes mutated `PathComponent`, `MovementComponent`, and `PositionComponent` from `MovementSystem.Update()` into authoritative `IEntityManager`, then refreshes local snapshots. On stamina exhaustion it reloads the stopped state written by `StopMovement` before the outer write-through.
-- Added focused regression `MovementSystemUpdate_PersistsMutatedComponentsToAuthoritativeEntityManager`; Unity execution is still pending. The old 44/44 test report belongs to another SHA and is not evidence for this branch.
-- **Do not merge PR #53 yet** until its focused Unity regression test passes on this exact head; full project compilation/Console, Player Build, and Movement/Visibility/Hero smoke remain unconfirmed.
+### PR #54
+- Branch: `fix/epic-05-9-ondemand-positive-membership`.
+- Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
+- Scope: `ComponentCache<T>.Contains` in OnDemand mode now checks authoritative `IEntityManager.HasComponent<T>`, refreshes the cache when present, and removes stale membership when absent. Added `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
+- GitHub Actions runs are currently in progress on this exact head: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442).
+- Draft; Unity EditMode for the new regression test and full Unity build/smoke validation are not yet confirmed. Do not merge until the test result is available and the remaining required gates are accounted for.
 
-### Outstanding EPIC 01 validation gates (still required)
-- [ ] Unity EditMode on current merged `dev`, recording XML summary and failures.
+### Latest merged bounded source slice
+- [PR #53 — MovementSystem authoritative write-through](https://github.com/Aizekhan/MythHunter/pull/53) merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`.
+- The patch persists mutated `PathComponent`, `MovementComponent` and `PositionComponent` to `IEntityManager`; when stamina exhaustion calls `StopMovement`, local struct copies are reloaded before the outer write-through. CI passed on its tested head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`; Unity execution was not performed before the user-directed merge.
+
+### Earlier merges and validation caveat
+- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295` (editor-only GUI guard and qualified `UnityEditor.EditorStyles`).
+- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175` (ComponentCache reconciliation/OnDemand read changes).
+- Those merges cleared the previously reported compiler blocker in source. However, exact-current-`dev` Unity EditMode, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. Historical 44/44 evidence belongs to local SHA `40b6296`, not the merged tip.
+
+### EPIC 01 exit gates remain open
+- [ ] Exact-current-`dev` Unity EditMode with report and failure details.
 - [ ] Full-project compile with clean Console.
 - [ ] Player Build.
 - [ ] Movement, Visibility and Hero smoke checks.
-- [ ] Complete reverse-reference evidence: `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
+- [ ] Complete reverse-reference evidence for `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
 - [ ] Reconcile audit evidence after local IDE/source and scene/prefab inspection.
 
 ### Next action
-Validate the focused PR #53 regression test on its exact head, then complete its integration gates before merge. Keep this as the only active source slice; do not start a broad ECS extraction or remove/centralize caches before the remaining audit and performance evidence.
+Review PR #54's exact-head GitHub Actions result, then arrange focused Unity validation without repeating the prior 600-second timeout loop. Keep EPIC 05.9 bounded to one contract at a time. Do not start broad ECS extraction or mark EPIC 01 complete.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
