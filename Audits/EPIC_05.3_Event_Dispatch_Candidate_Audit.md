@@ -58,6 +58,8 @@ Key sources:
 
 11. `InstallerRegistry` catches installer exceptions and continues; `EventsInstaller` also registers the timer system through `ISystemRegistry`. Preserve that lifecycle while fixing the binding sequence. Do not change dispatch/pooling semantics as part of the wiring correction.
 
+12. **Separate unresolved network selection gap:** `NetworkingInstaller` registers `IClientNetworkSystem` and `IServerNetworkSystem`, but the inspected installer chain does not register the exact `INetworkSystem` key. `DIContainer.IsRegistered(Type)` checks exact dictionary keys (not assignability), so `container.IsRegistered<INetworkSystem>()` is false for those registrations alone. In the current in-repo composition this selects the standard `EventBus` path; selecting `NetworkEventBus` needs an explicitly chosen active client/server service exposed under `INetworkSystem` without accidentally creating a second singleton. Track this separately from the registration-order fix.
+
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
 
