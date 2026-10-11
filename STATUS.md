@@ -9,7 +9,7 @@
 
 ## Current position
 - **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. We did not skip it; the decision was to avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.3 — Event dispatch candidate audit and caller mapping.** Initial source audit is recorded; no Event API/code changes are authorized until registrations/callers and required semantics are mapped.
+- **Active task: EPIC 05.3 — Event dispatch candidate audit and caller mapping.** Source audit and preliminary wiring/caller map are recorded; next step is verify final IEventBus registration semantics and define characterization tests before any code extraction.
 - EPIC 05.2 — DI scope lifecycle is complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
