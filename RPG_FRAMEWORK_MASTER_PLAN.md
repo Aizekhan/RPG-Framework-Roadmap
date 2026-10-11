@@ -30,7 +30,7 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 - Preserve local changes. Never reset, clean, or discard a working tree. Never write directly to `dev`; use PRs.
 
 # EPIC 01 — Full MythHunter Audit
-**Status: INITIAL INVENTORY COMPLETE; Phase 1 reference-validation closeout remains ACTIVE (2026-10-11).** PR #48 (ComponentCache consistency), prerequisite compile fix PR #50 (PreloadDebugTool editor-only GUI), and audit-document reconciliation PR #52 have been merged. Current MythHunter `dev` is `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`, but the audit is not closed. Exact-current-head Unity EditMode, full compile/Console, Player Build, Movement/Visibility/Hero smoke checks and reverse-reference/asmdef/scene/prefab evidence remain open in `STATUS.md`. Do not start Phase 2 or broad refactoring until these gates are resolved.
+**Status: INITIAL INVENTORY COMPLETE; Phase 1 reference-validation closeout remains OPEN (2026-10-11).** PR #48 (ComponentCache consistency), prerequisite compile fix PR #50 (PreloadDebugTool editor-only GUI), and audit-document reconciliation PR #52 have been merged. Current MythHunter `dev` is `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`. Exact-current-head Unity EditMode, full compile/Console, Player Build, Movement/Visibility/Hero smoke checks and reverse-reference/asmdef/scene/prefab evidence remain open in `STATUS.md`. Per the user's explicit instruction to continue EPIC 5, one bounded EPIC 05.9 source slice may proceed while these gates remain explicit; no broad extraction or Phase 2 audit closure is implied.
 - [x] Audit top-level structures: Core, Components, Entities, Systems, Events, Networking, Cloud, UI, Services, Utils
 - [x] Audit Core: ECS, DI, Game, Installers, StateMachine, SceneManagement, Validation
 - [x] Record Framework/Game candidates, technical debt, dependencies and unnecessary coupling
@@ -259,13 +259,17 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - Documentation-only; Unity tests not applicable.
 
 ## 5.9 — ECS runtime and ComponentCache ownership
-**Status: BLOCKED until EPIC 01 Phase 1 reference-validation closeout is complete.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
+**Status: IN PROGRESS — one bounded source slice is active under PR #53; full extraction remains gated.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
 
-Current execution evidence (2026-10-11): PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`; PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`; audit reconciliation PR #52 merged as `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`. The source fixes are in `dev`, but exact-current-head Unity EditMode, full compile/Console, Player Build and consumer smoke checks remain unconfirmed. The PR #50 isolated-worktree test timed out without an NUnit report and is inconclusive. Confirmed remote source consumers include MovementSystem (three direct caches), VisibilitySystem (two direct caches), and HeroSystem (registry-backed Stats/Health caches). Remaining reverse-reference coverage must include local IDE/ripgrep, asmdef references and Unity scene/prefab serialized references. No broad extraction or cache removal until Phase 1 exits.
+- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`; PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`; audit reconciliation PR #52 merged as `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
+- Active bounded slice: [PR #53 — persist MovementSystem component mutations](https://github.com/Aizekhan/MythHunter/pull/53), branch `fix/epic-05-9-movement-cache-write-through`, exact head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`.
+- Source evidence: `MovementSystem.Update()` previously wrote mutated `PositionComponent`, `MovementComponent`, and `PathComponent` only to cache copies, but each next active tick refreshes its default-Full caches from `IEntityManager`. PR #53 persists those struct values to the authoritative manager and adds a focused regression test. GitHub CI passes; Unity execution has not yet occurred.
+- Confirmed consumers: MovementSystem (three direct caches), VisibilitySystem (two direct caches), HeroSystem (registry-backed Stats/Health caches). Exact-current-head Unity EditMode, full compile/Console, Player Build, and Movement/Visibility/Hero smoke remain unconfirmed.
+- EPIC 01 reverse-reference coverage for local IDE/ripgrep, asmdef references, and Unity scene/prefab serialized references remains open. Continuing this single source-backed fix does not close EPIC 01 or authorize broad cache extraction/removal.
 
-- [ ] Decide identity, lifecycle, storage, archetype and query model before extraction.
-- [ ] Resolve ComponentCache ownership with source evidence; `IEntityManager` remains authoritative unless evidence proves otherwise.
-- [ ] Extract cohesive slices only after Phase 1 exit gates, with correctness tests.
+- [ ] Validate/merge the bounded MovementSystem write-through fix after its exact-head Unity regression test and required build/smoke gates.
+- [ ] Decide/test OnDemand positive-membership semantics and cache-local mutation versus authoritative writes.
+- [ ] Decide identity, lifecycle, storage, archetype, and query model before larger extraction.
 - [ ] Evaluate performance only after API correctness and stability.
 
 # EPIC 06 — Serialization Foundation
