@@ -40,3 +40,16 @@ Do not move `IDIContainer`, `DIScope`, `LazyDependency<T>` or the whole DI imple
 - Disposal ownership for transient/scoped/singleton instances is explicit.
 - Existing Game Layer consumers remain compatible until the separate migration gate passes.
 - Do not create a Framework DI assembly until tests and minimal contract design are accepted.
+
+
+## EPIC 05.2 follow-up evidence — PR #22
+The first DI characterization slice was merged as `f57cebb9e0dba11c3e6fbeefc8620627a9363428`. Follow-up draft PR #22:
+https://github.com/Aizekhan/MythHunter/pull/22
+
+Changes in the follow-up:
+- Captures the container construction thread ID and fixes the always-true comparison in `SetCurrentScope`.
+- Renames the field to `_threadLocalScope` to make clear that this is thread-local, not async-local.
+- Makes scope-owned `IDisposable` cleanup deterministic in reverse creation order, continues after exceptions, and avoids duplicate disposal of the same reference.
+- Adds four EditMode characterization tests.
+
+CI boundary/.NET run #38121408276 passed; Minimal CI #38121408235 succeeded as a no-op. Unity EditMode, full-project compile and game bootstrap/scope smoke still need confirmation before PR #22 is merged.
