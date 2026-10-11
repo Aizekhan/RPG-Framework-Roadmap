@@ -193,7 +193,8 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Record first source-backed candidate audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`; no contract extraction approved yet.
 - [x] Map installer order: CoreInstaller binds SimpleEventBus before EventsInstaller conditionally binds EventBus/NetworkEventBus; verify final resolution behavior before changing registrations.
 - [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter; audit records source evidence.
-- [ ] Confirm DI duplicate-registration/helper semantics and effective resolved implementation in the current bootstrap
+- [x] Confirm source-level registration-order defect: SystemRegistry eagerly resolves/captures SimpleEventBus before EventsInstaller rebinds IEventBus; DI resolves cached singleton first.
+- [ ] Add a focused regression test and fix installer binding order without changing event dispatch semantics.
 - [ ] Separate generic event contracts from concrete MythHunter events
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation
 - [ ] Keep network/replay bridges and middleware as explicit adapters
