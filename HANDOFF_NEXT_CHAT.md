@@ -10,7 +10,7 @@
 - Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`
 - Change: OnDemand `ComponentCache<T>.Contains` now queries authoritative `IEntityManager.HasComponent<T>` even for IDs not previously cached; refreshes cache on positive membership; removes stale cache state on absence.
 - Added test: `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- CI runs on exact head are in progress: RPGFramework ECS Runtime [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459), Minimal CI [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442).
+- CI on exact head passed: RPGFramework ECS Runtime [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459), Minimal CI [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither workflow executes Unity EditMode.
 - Keep draft until focused Unity EditMode execution is confirmed; do not report pass from CI alone.
 
 ## Just merged
