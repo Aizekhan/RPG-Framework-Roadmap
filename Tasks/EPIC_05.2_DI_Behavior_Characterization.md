@@ -9,13 +9,15 @@ Make DI behavior explicit and testable before introducing a platform-neutral Fra
 ## Scope for first implementation PR
 Add focused tests and fix only verified DI correctness defects in the existing Game Layer implementation. Do not create a Framework DI assembly in the first PR, do not change all consumers, and do not move Unity/installer policy.
 
-## Current implementation
-- Draft PR #21: https://github.com/Aizekhan/MythHunter/pull/21
-- Branch/head: `feature/epic-05-2-di-characterization` / `d5ab5f5fe4101f0e3d6b111b347649d8e07f4272`.
-- Eight EditMode tests were added under `Assets/_MythHunter/Tests/DI`.
-- Bounded fixes change scoped cache key to the requested service type, make `Resolve(Type)` return an instance, and align `IsRegistered(Type)` with the generic API for registered instances/lazies.
-- CI #44 passes Framework/static/.NET checks; #242 is a successful no-op. These do not validate the Unity DI assembly.
-- **Next gate:** run Unity EditMode on this branch, inspect each named test in XML, verify full project compile/Console and bootstrap smoke before marking PR ready/merging.
+## Completed first slice — PR #21
+- Merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/21
+- Merge commit: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
+- Added eight Unity EditMode characterization tests.
+- Fixed scoped instance cache key and avoids repeated injection; `Resolve(Type)` returns an instance; `IsRegistered(Type)` includes instance/lazy registrations.
+- User confirmed Unity validation/project working; GitHub Actions #44 passed the Framework/static/.NET checks. No exact Unity XML count was supplied.
+
+## Current slice
+Characterize current scope selection, nested scope behavior and disposal ownership. Keep this as a separate PR; preserve APIs, and do not extract a Framework DI assembly yet.
 
 ## Test matrix
 1. Generic singleton registration: repeated resolution returns the same reference.
@@ -37,5 +39,12 @@ Add focused tests and fix only verified DI correctness defects in the existing G
 - Unity full project compilation, EditMode tests and game bootstrap smoke are reported with actual evidence.
 - The audit documents any intentionally deferred semantics and a rollback plan.
 
+## Next tests before source changes
+- `SetCurrentScope` correctly distinguishes main/current execution context (current code compares `ManagedThreadId` to itself).
+- Nested child scopes follow an explicitly documented parent-visibility rule.
+- Scoped disposables are released exactly once, with deterministic disposal order and resilient exception handling.
+- Define ownership of registered instances and transient/singleton disposable services before adding automatic disposal.
+- Test scope switching/restoration, disposal of active scope, and concurrent access where the policy requires it.
+
 ## Rollback
-Revert only the bounded DI behavior-fix PR. Do not reset, clean, or discard local worktree changes. Avoid source edits until the characterization cases and their expected semantics are clear.
+Revert only the bounded DI lifecycle PR. Do not reset, clean, or discard local worktree changes.
