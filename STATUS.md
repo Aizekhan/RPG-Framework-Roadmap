@@ -9,7 +9,8 @@
 
 ## Current position
 - **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. We did not skip it; the decision was to avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.2 — DI scope lifecycle and disposal semantics.** PR #21 and PR #22 are merged; Unity EditMode 22/22 passed and full-project/bootstrap/scope smoke were confirmed clean.
+- **Active task: EPIC 05.3 — Event dispatch candidate audit and caller mapping.** Initial source audit is recorded; no Event API/code changes are authorized until registrations/callers and required semantics are mapped.
+- EPIC 05.2 — DI scope lifecycle is complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
 - CI on pre-merge head `0a0aa0ccc4d04e6bd4e413b21167153aed4bc1e7`: static boundary OK; 13 Framework/Test asset GUIDs checked; .NET tests 9 passed, 0 failed, 0 skipped; no C# compiler warnings.
@@ -77,7 +78,7 @@
 6. EPIC 04, EPIC 05.1 and EPIC 05.2 scope-lifecycle slice are complete. Preserve all local worktree changes; advance to EPIC 05.3 event-dispatch audit.
 
 ## Next action
-Start EPIC 05.3 — event-dispatch contract/call-path audit. Map concrete EventBus implementations/callers, ordering, exception handling, subscription disposal and cancellation before proposing any extraction. Keep async DI scope propagation and transient/singleton disposal policy explicitly deferred.
+EPIC 05.3 source audit recorded in `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`. Next: complete registration/caller mapping and define the smallest justified characterization-test slice before implementation. Keep async DI scope propagation and transient/singleton disposal policy explicitly deferred.
 
 ## Source of truth
 - Master plan: milestone ordering and checklist.
