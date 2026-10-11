@@ -1,7 +1,7 @@
 # EPIC 05.3 — Event Dispatch Candidate Audit
 
 ## Status
-Source-backed audit and the event network-mode correction are complete. PR #23 merged as `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. PR #24 https://github.com/Aizekhan/MythHunter/pull/24 merged via squash as `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23 passed, 0 failed, 0 skipped; user confirmed full-project compile/Console/bootstrap and GitHub Actions passed. Event contract extraction remains gated on a focused consumer/semantics audit.
+Source-backed audit and the event network-mode correction are complete. PR #23 merged as `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. PR #24 https://github.com/Aizekhan/MythHunter/pull/24 merged via squash as `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23 passed, 0 failed, 0 skipped; user confirmed full-project compile/Console/bootstrap and GitHub Actions passed. Current next task is an evidence-driven boundary audit on branch `feature/epic-05-3-event-contract-boundary`; do not move `IEventBus` wholesale. Decide whether any neutral publisher/subscriber contract is warranted only after consumer/semantics mapping.
 
 ## Source baseline
 Reviewed `Aizekhan/MythHunter` on `dev` after EPIC 05.2 merge `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
