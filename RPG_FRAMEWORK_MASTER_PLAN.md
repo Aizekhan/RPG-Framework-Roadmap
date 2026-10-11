@@ -190,42 +190,55 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
-**Status: ACTIVE — network-mode correction merged/validated; current task: neutral event contract boundary audit**
+**Status: COMPLETE — event implementation fixes validated; no neutral Framework event contract justified by current consumer evidence**
 
 ### Completed
-- [x] Source-backed event audit and installer/caller mapping recorded in `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
-- [x] PR #23 fixed final event-bus selection before resolving `ISystemRegistry`; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`, Unity EditMode 23/23, user compile/Console/bootstrap confirmed.
-- [x] PR #24 added explicit `EventNetworkMode` (Offline/Client/Server), exact selected role registration, authority policy, single NetworkEventBus identity across service interfaces and tests; squash merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode **23 passed, 0 failed, 0 skipped**, both GitHub Actions passed, user compile/Console/bootstrap confirmed.
-- [x] Mandatory new-chat handoff protocol is part of the master working rules; keep `HANDOFF_NEXT_CHAT.md` current at each handoff.
+- [x] Source-backed implementation/caller audit recorded in `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
+- [x] PR #23 fixed final event-bus selection before `ISystemRegistry` resolution; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`; Unity EditMode 23/23 and user compile/Console/bootstrap confirmation.
+- [x] PR #24 added explicit `EventNetworkMode` (`Offline`, `Client`, `Server`), selected-role-to-`INetworkSystem` binding, an explicit event-authority policy and one `NetworkEventBus` singleton shared across public interfaces; squash merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`.
+- [x] PR #24 Unity EditMode: **23 passed, 0 failed, 0 skipped**; both GitHub Actions passed on tested head `5819aafe1d535639e9233b1192b62658c73ad01e`; user confirmed full-project compile, clean Console and bootstrap/game smoke.
+- [x] Consumer search found only MythHunter/game-layer uses of `IEventBus` (systems, UI/presenters, state machine/game flow, debug/store, batching/throttling and networking); no independent Framework assembly consumer requiring this API was found.
+- [x] Search found no production call to `IEventBus.Clear()`. Existing `IEventBus` remains game-specific (`IEvent`, `EventPriority`, struct-only events, `UniTask`); `EventBus` and `SimpleEventBus` have materially different queue, priority, error and lifecycle semantics.
+- [x] Decision: **keep the event bus in the MythHunter layer; do not move `IEventBus` wholesale and do not create an empty contract assembly**. Reopen only if a concrete independent Framework consumer emerges.
 
-### Active task — event contract boundary audit
-- Branch: `feature/epic-05-3-event-contract-boundary` (created from `dev` after PR #24 merge). No source PR yet.
-- [ ] Identify the smallest contract genuinely reusable outside MythHunter, from actual consumer needs.
-- [ ] Keep Unity APIs, `MythHunter.IEvent`, `EventPriority`, Cysharp `UniTask`, pooling, middleware and network replication out of a neutral contract unless explicitly justified as optional adapters/capabilities.
-- [ ] Characterize implementation differences before changing behavior: handler ordering/priority, exception handling, pending-event replay, pooling, async dispatch, Clear/Dispose lifecycle.
-- [ ] Decide whether any neutral contract is justified. Do not create an empty assembly, move the current `IEventBus` wholesale, or unify `EventBus` / `SimpleEventBus` without consumer evidence.
-- [ ] If a minimal contract is justified, implement one narrow slice with framework-only tests and a rollback path; do not migrate all callers in the same change.
-- [ ] Open a source PR only after the audit and focused tests are ready. Run Unity EditMode and collect user compile/Console/bootstrap confirmation before merge.
-
-### Gating observations
-- `IEvent` requires `GetEventId()` and `GetPriority()`; the latter returns MythHunter's `EventPriority`.
-- `IEventBus` is struct-only, generic over `IEvent`, exposes priority and `Cysharp.Threading.Tasks.UniTask`, and includes broad `Clear()` semantics but no subscription token.
-- `EventBus` has priority queues, critical immediate dispatch, pending-event replay, pooling, middleware and async processing loop. `SimpleEventBus` is a plain handler-list dispatch, ignores priority and lacks those queue/pending behaviors. They are not interchangeable today.
-- `EventHandlerBase`, `SystemBase`, `SystemEventExtensions`, `PhaseSystem`, and UI/game systems are MythHunter-layer consumers; no proof yet requires generic event abstractions in the ECS assembly.
-- Framework ECS and Logging assemblies use `noEngineReferences: true`; keep any new contract similarly platform-neutral. Prefer a new small event-runtime assembly only if evidence justifies its independent reuse.
-
-### Epic exit / chat handoff gate
-- [ ] Required code/validation blockers are done or precisely recorded.
-- [ ] Audit, plan, STATUS, source PR and handoff report the same exact state and SHAs.
-- [ ] Update/commit `HANDOFF_NEXT_CHAT.md` and link it from STATUS before declaring an epic complete or starting the next chat.
-- [ ] Next chat reads handoff, STATUS, this plan and the audit before editing code.
+### Exit record
+- [x] Audit, source PRs, validation evidence and the chat-handoff process are recorded in the roadmap.
+- [x] Continue in a new chat for item 5.4; read `HANDOFF_NEXT_CHAT.md`, STATUS, the master plan and the next audit before editing.
 
 
 ## 5.4 — System lifecycle and scheduling
-- [ ] Separate generic scheduling/lifecycle from MythHunter phase policy
-- [ ] Specify initialization, update, shutdown and failure semantics
-- [ ] Decouple ECS world from the Game-owned system registry where required
-- [ ] Test lifecycle order and disposal
+**Status: ACTIVE — draft PR #25 fixes update-before-init and child cleanup semantics; Unity validation pending**
+
+### Current source PR
+- Draft PR #25: https://github.com/Aizekhan/MythHunter/pull/25
+- Branch: `feature/epic-05-4-system-lifecycle-audit`
+- Last reviewed head: `b9bd216d0425102dabc979cab8a0a0106709bb78`
+- GitHub Actions on that head: **Minimal CI passed**; **RPGFramework ECS Runtime passed** (Framework boundary/GUID validation and .NET ECS tests).
+- [ ] Run Unity 6000.0.45f1 EditMode on this exact branch and record actual XML counts/test names.
+- [ ] User confirms full-project compile, clean Console and bootstrap/game smoke for PR #25.
+- [ ] Fix any failure, rerun on the exact updated head, then merge only after both validation gates pass.
+
+### Source-backed lifecycle changes in PR #25
+- [x] `SystemRegistry.UpdateAll`, `FixedUpdateAll` and `LateUpdateAll` now dispatch only to active systems whose `Initialize()` completed successfully.
+- [x] `SystemRegistry.DisposeAll` disposes systems in reverse registration/priority order and clears the initialized-system tracking set so references to disposed instances are not retained.
+- [x] `SystemGroup` tracks successful child initialization, skips failed children during updates, isolates per-child initialize/update/dispose exceptions, disposes in reverse order and removes removed children from lifecycle tracking.
+- [x] Add reflection-based EditMode characterization tests for update-before-init, reverse registry disposal and system-group failure isolation.
+
+### Separate lifecycle questions — do not silently fold into PR #25
+- [ ] Bootstrap exposes only `Update()` in `GameBootstrapper`; `SystemRegistry.FixedUpdateAll` and `LateUpdateAll` exist, but source search found no production caller. Confirm whether fixed/late scheduling is intentionally unused or missing from composition.
+- [ ] `IDILifecycleManager` is registered, but source search found no production call to `Shutdown()`, `ExecuteShutdownHandlers()` or `DisposeAllScopes()`. Trace actual scope and shutdown consumers before wiring it into `GameBootstrapper.OnDestroy`.
+- [ ] Specify initialization failure/retry policy, add/remove-after-initialize semantics for `SystemGroup`, registry idempotence, and reverse disposal ordering before considering a framework-neutral lifecycle contract.
+- [ ] Keep game phase/state policy out of a neutral runtime contract.
+
+### Acceptance criteria
+- [ ] All lifecycle callbacks happen only when contractually valid; failed callbacks do not block unrelated sibling cleanup/update.
+- [ ] Initialization, update and disposal order are explicit and tested.
+- [ ] Unity EditMode tests pass, exact XML evidence is recorded, and user verifies full compile/Console/bootstrap.
+- [ ] Audit, plan, STATUS, PR and handoff agree on the same tested head and outstanding risks.
+
+### Chat handoff
+- [ ] At the end of item 5.4, commit an updated `HANDOFF_NEXT_CHAT.md` with exact PR/SHAs, changed files, Unity commands/results and the first action for item 5.5 before recommending a new chat.
+
 
 ## 5.5 — ECS runtime
 - [ ] Decide identity, lifecycle, storage, archetype and query model before extraction
