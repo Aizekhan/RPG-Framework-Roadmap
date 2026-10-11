@@ -9,7 +9,7 @@
 
 ## Current position
 - **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. We did not skip it; the decision was to avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.3 — Event dispatch candidate audit and caller mapping.** Source audit found a concrete IEventBus registration-order defect: SystemRegistry materializes SimpleEventBus before EventsInstaller selects EventBus/NetworkEventBus. Next: add a focused DI/installer regression test, then make a bounded wiring fix before contract extraction.
+- **Active task: EPIC 05.3 — Event dispatch candidate audit and caller mapping.** PR #23 is open as a draft: it selects EventBus before resolving SystemRegistry and adds a regression test. Unity EditMode/full-project/bootstrap validation is pending. A separate network-selection gap is recorded in the event audit.
 - EPIC 05.2 — DI scope lifecycle is complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
 - Merge commit to `dev`: `ec967a2944ba83db69655d4415d416f49a2ce122`.
@@ -18,6 +18,7 @@
 - User confirmed Unity full-project compile/Console and game bootstrap smoke are clean; source inspection verifies same logger instance bound under both `IMythLogger` and `RPGFramework.Logging.ILogger`.
 - Validation API audit: no external production callers of `IValidator<T>`/`Validator<T>` found; no Framework validation extraction justified. See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
 - DI source audit: see `Audits/EPIC_05.2_DI_Candidate_Audit.md`. Characterization and scope lifecycle fixes are merged and validated.
+- **Current source PR #23:** https://github.com/Aizekhan/MythHunter/pull/23 — EPIC 05.3 event-bus installer registration order; draft pending Unity validation.
 
 ## Completed roadmap work
 ### EPIC 03.5 — Standalone Framework ECS runtime
@@ -78,7 +79,7 @@
 6. EPIC 04, EPIC 05.1 and EPIC 05.2 scope-lifecycle slice are complete. Preserve all local worktree changes; advance to EPIC 05.3 event-dispatch audit.
 
 ## Next action
-EPIC 05.3 source audit recorded in `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`. Next: complete registration/caller mapping and define the smallest justified characterization-test slice before implementation. Keep async DI scope propagation and transient/singleton disposal policy explicitly deferred.
+Run Unity EditMode on PR #23, confirm the new `EventsInstaller_RegistersFinalEventBusBeforeResolvingSystemRegistry` test passes (expected full EditMode total: 23 if no other discovery changes), verify full-project compile/Console and game bootstrap. Do not merge until the evidence is recorded. Then investigate the separate network-role binding gap before any Event API extraction. Keep async DI scope propagation and transient/singleton disposal policy explicitly deferred.
 
 ## Source of truth
 - Master plan: milestone ordering and checklist.
