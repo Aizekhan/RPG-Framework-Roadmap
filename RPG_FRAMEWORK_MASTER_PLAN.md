@@ -209,7 +209,8 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 ## 5.4 — System lifecycle and scheduling
 **Status: ACTIVE — draft PR #25 fixes update-before-init and child cleanup semantics; Unity validation pending**
 
-### Current source PR
+### Current source PR and audit
+- Audit: `Audits/EPIC_05.4_System_Lifecycle_Audit.md`
 - Draft PR #25: https://github.com/Aizekhan/MythHunter/pull/25
 - Branch: `feature/epic-05-4-system-lifecycle-audit`
 - Last reviewed head: `b9bd216d0425102dabc979cab8a0a0106709bb78`
