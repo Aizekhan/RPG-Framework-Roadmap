@@ -1,12 +1,13 @@
 # EPIC 05.2 — Scope Lifecycle and Disposal Semantics
 
 ## Status
-**ACTIVE — scope lifecycle implementation in draft PR #22; Unity validation pending.** Prior PR #21 is merged: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
+**COMPLETE — PR #21 and PR #22 merged. Unity EditMode and full-project validation passed.**
 
 ## Current PR
 - PR #22: https://github.com/Aizekhan/MythHunter/pull/22
-- Head: `a48002f8e2e2cd7690f4f338796dcad2288c5a3f`.
-- CI boundary/.NET passed; Minimal CI is a no-op. Unity is still required.
+- Source head: `a48002f8e2e2cd7690f4f338796dcad2288c5a3f`.
+- Merge commit: `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
+- CI boundary/.NET passed; Minimal CI was a no-op; Unity 6000.0.45f1 EditMode: 22 passed, 0 failed, 0 skipped. User confirmed full project compile/Console and game bootstrap/scope smoke.
 - Added tests for worker/main thread scope isolation, independent child scope, reverse disposal and resilient cleanup, and exactly-once cleanup of a shared reference.
 
 ## Goal
