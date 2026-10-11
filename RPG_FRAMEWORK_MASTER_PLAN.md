@@ -172,7 +172,7 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 **Outcome:** EPIC 05.1 is closed. Proceed to EPIC 05.2.
 
 ## 5.2 — Dependency injection
-**Status: ACTIVE — PR #21 merged; PR #22 awaits Unity validation**
+**Status: COMPLETE for characterization and scope lifecycle slices — PR #21 and PR #22 merged**
 - [x] Map DI public surface/coupling and record source risks in `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
 - [x] Add 8 characterization tests and fix scoped cache/injection, Type-based resolve and registration check in PR #21.
 - [x] Merge PR #21: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`; user confirmed Unity branch/project working.
@@ -181,14 +181,15 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 - [x] Make scope disposal deterministic in reverse creation order, resilient to disposal exceptions, and deduplicate a shared disposable reference.
 - [x] Add 4 further EditMode tests in draft PR #22.
 - [x] CI #38121408276 passed Framework/static/.NET checks; Minimal CI #38121408235 passed as no-op.
-- [ ] Run Unity EditMode on PR #22 and verify all 12 DI characterization tests pass.
-- [ ] Confirm full project compile/Console and bootstrap/scope smoke.
-- [ ] Merge PR #22 only after Unity evidence is recorded.
+- [x] Run Unity 6000.0.45f1 full EditMode on PR #22: XML reports 22 passed, 0 failed, 0 skipped (includes the 12 DI characterization tests).
+- [x] User confirmed full-project compile/Console and game bootstrap/DI-scope smoke are clean.
+- [x] Merge PR #22 to `dev`: merge commit `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
 - [ ] Keep async-flow scope propagation and transient/singleton disposal ownership as explicitly deferred decisions.
 
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
+**Status: ACTIVE — source-backed call-path/contract audit; no extraction until semantics and consumers are mapped**
 - [ ] Separate generic event contracts from concrete MythHunter events
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation
 - [ ] Keep network/replay bridges and middleware as explicit adapters
