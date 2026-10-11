@@ -26,9 +26,11 @@
 - These changes are not yet locally validated by Unity; the branch is a draft PR until verified.
 
 ## First action in new chat
-1. Fetch PR #25 and check whether its current head is still `b9bd216d0425102dabc979cab8a0a0106709bb78`. Inspect the current diff; preserve all existing changes. Do not write directly to `dev`.
-2. Make sure the new lifecycle tests use the available `DispatchProxy` API in Unity 6000.0.45f1; if Unity compilation fails, replace only the test proxy mechanism without weakening the assertions.
-3. Have the user run the following command in the local checkout on branch `feature/epic-05-4-system-lifecycle-audit`:
+1. Read this handoff, `STATUS.md`, the master plan and `Audits/EPIC_05.4_System_Lifecycle_Audit.md` before editing code.
+2. Fetch PR #25 and check whether its current head is still `b9bd216d0425102dabc979cab8a0a0106709bb78`. Inspect the current diff; preserve all existing changes. Do not write directly to `dev`.
+3. In `D:\\MythHunter-Git`, first run `git status --short --branch` and inspect any local modifications before switching branches. Do **not** reset or discard user changes; a prior local change to `Assets/_Framework/ECS/Runtime/EntityManager.cs.meta` was observed in an earlier pass. If any local change is still present, preserve it or use a separate worktree before switching to `feature/epic-05-4-system-lifecycle-audit`. Fetch the branch only after the worktree situation is safe.
+4. Make sure the new lifecycle tests use the available `DispatchProxy` API in Unity 6000.0.45f1; if Unity compilation fails, replace only the test proxy mechanism without weakening the assertions.
+5. Have the user run the following command in the local checkout on branch `feature/epic-05-4-system-lifecycle-audit`:
    ```powershell
    unity test "D:\\MythHunter-Git" --mode EditMode --output "D:\\MythHunter-Git\\EPIC-05-4-System-Lifecycle.xml" --verbose --timeout 600
    [xml]$r = Get-Content "D:\\MythHunter-Git\\EPIC-05-4-System-Lifecycle.xml"
