@@ -203,12 +203,12 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Alias the selected existing client/server singleton to the exact `INetworkSystem` service key in draft PR #24; offline mode leaves that key absent.
 - [x] Make event authority a separate explicit policy and bind one NetworkEventBus instance through both `IEventBus` and `INetworkEventBus`.
 - [x] Add EditMode characterization coverage for mode/authority policy, selected network instance, event-bus choice and the identity shared with `SystemRegistry`.
-- [x] GitHub Actions on PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS tests passed; Minimal CI passed (no-op workflow).
+- [x] GitHub Actions on the last audited PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS test steps passed; Minimal CI passed (no-op workflow). The branch has since advanced to `5819aafe1d535639e9233b1192b62658c73ad01e`; latest workflow was still finishing cleanup when last checked.
 
 ### Current source PR — not merged
 - PR #24: https://github.com/Aizekhan/MythHunter/pull/24
 - Branch: `feature/epic-05-3-network-eventbus-selection`
-- Head at last audit: `9ced67674576127d98b3cd328b9b85917faacb18`
+- Latest implementation head at last audit: `5819aafe1d535639e9233b1192b62658c73ad01e`
 - [ ] Run Unity 6000.0.45f1 EditMode on PR #24 and record the actual XML totals and relevant test names; PR #23's older 23/23 result does not validate this branch.
 - [ ] User confirms full-project compile, no Unity Console errors, and bootstrap/game smoke specifically on PR #24.
 - [ ] Fix any test/source defects and rerun Unity tests on the updated exact head.
