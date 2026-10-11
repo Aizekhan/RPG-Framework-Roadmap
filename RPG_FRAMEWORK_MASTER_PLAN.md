@@ -194,7 +194,9 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Map installer order: CoreInstaller binds SimpleEventBus before EventsInstaller conditionally binds EventBus/NetworkEventBus; verify final resolution behavior before changing registrations.
 - [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter; audit records source evidence.
 - [x] Confirm source-level registration-order defect: SystemRegistry eagerly resolves/captures SimpleEventBus before EventsInstaller rebinds IEventBus; DI resolves cached singleton first.
-- [ ] Add a focused regression test and fix installer binding order without changing event dispatch semantics.
+- [x] Add a focused regression test and fix installer binding order without changing event dispatch semantics — draft PR #23.
+- [ ] Run Unity EditMode and full-project/bootstrap validation for PR #23 before merge.
+- [ ] Resolve how the composition root supplies the selected client/server `INetworkSystem` instance before relying on `NetworkEventBus`; do not create an unrelated base-interface singleton.
 - [ ] Separate generic event contracts from concrete MythHunter events
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation
 - [ ] Keep network/replay bridges and middleware as explicit adapters
