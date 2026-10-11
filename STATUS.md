@@ -23,18 +23,26 @@
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 01 Phase 1 reference-validation closeout.** PR #48 and its compile blocker PR #50 are merged, but merging their source changes does **not** itself complete Phase 1.
+**ACTIVE — EPIC 05.9 implementation slice: MovementSystem authoritative write-through, tracked by [MythHunter PR #53](https://github.com/Aizekhan/MythHunter/pull/53).** This bounded source task proceeds by the user's explicit request to continue EPIC 5. It does not imply EPIC 01 Phase 1 validation is complete.
 
-### Remaining closeout gates
-- [ ] Run Unity EditMode on exact merged `dev` head `0d97060d45d978cafbe376cd43f00eb8fdf9f175`, recording the XML summary and failing-test details if any.
-- [ ] Confirm full-project compile and clean Console at that head.
+### PR #53
+- Branch: `fix/epic-05-9-movement-cache-write-through`.
+- Exact head: `ab5b7c386163c8a1fcb7314840b8b223acd2868d`.
+- GitHub Actions on this exact head: `Minimal CI` success (run [38149295505](https://github.com/Aizekhan/MythHunter/actions/runs/38149295505)); `RPGFramework ECS Runtime` success (run [38149295555](https://github.com/Aizekhan/MythHunter/actions/runs/38149295555)). Neither workflow runs the Unity project/EditMode suite.
+- Fix writes mutated `PathComponent`, `MovementComponent`, and `PositionComponent` from `MovementSystem.Update()` into authoritative `IEntityManager`, then refreshes local snapshots. On stamina exhaustion it reloads the stopped state written by `StopMovement` before the outer write-through.
+- Added focused regression `MovementSystemUpdate_PersistsMutatedComponentsToAuthoritativeEntityManager`; Unity execution is still pending. The old 44/44 test report belongs to another SHA and is not evidence for this branch.
+- **Do not merge PR #53 yet** until its focused Unity regression test passes on this exact head; full project compilation/Console, Player Build, and Movement/Visibility/Hero smoke remain unconfirmed.
+
+### Outstanding EPIC 01 validation gates (still required)
+- [ ] Unity EditMode on current merged `dev`, recording XML summary and failures.
+- [ ] Full-project compile with clean Console.
 - [ ] Player Build.
 - [ ] Movement, Visibility and Hero smoke checks.
-- [ ] Finish reverse-reference evidence where GitHub search is incomplete: `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references. Remote code-search results are useful but not an exhaustive graph.
-- [ ] Update `MythHunter/ARCHITECTURE_AUDIT.md` / linked audit after reviewing scene/prefab and local IDE reference results.
+- [ ] Complete reverse-reference evidence: `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
+- [ ] Reconcile audit evidence after local IDE/source and scene/prefab inspection.
 
 ### Next action
-Continue the closeout with the now-merged code. Do not claim Unity/player validation succeeded until actual evidence exists. EPIC 05.9 remains blocked until the EPIC 01 Phase 1 closeout gates are met; do not begin broad ECS extraction or create additional cache APIs before then.
+Validate the focused PR #53 regression test on its exact head, then complete its integration gates before merge. Keep this as the only active source slice; do not start a broad ECS extraction or remove/centralize caches before the remaining audit and performance evidence.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
