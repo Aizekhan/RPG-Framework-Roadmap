@@ -172,21 +172,21 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 **Outcome:** EPIC 05.1 is closed. Proceed to EPIC 05.2.
 
 ## 5.2 — Dependency injection
-**Status: ACTIVE — PR #21 merged; next slice is scope/disposal semantics**
-- [x] Map current DI surface and coupling (`IDIContainer`, `DIScope`, `LazyDependency<T>`, installers, lifecycle manager).
-- [x] Record source risks and acceptance gates in `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
-- [x] Add eight EditMode characterization tests in PR #21.
-- [x] Fix scoped service caching by requested type, duplicate scoped injection, Type-based resolution returning internal metadata, and inconsistent Type-based registration checks.
-- [x] User confirmed Unity validation/project working; CI #44 passed Framework boundary/.NET tests.
-- [x] Merge PR #21 to `dev`: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
-- [ ] Define and test current scope selection; fix the self-comparison bug in `SetCurrentScope`.
-- [ ] Specify/test child-scope lookup and parent visibility.
-- [ ] Define disposal ownership/order for scoped, transient, singleton and externally registered instances; add exactly-once tests.
-- [ ] Clarify concurrency semantics; avoid changing ThreadLocal/async propagation without an explicit policy and regression tests.
-- [ ] Only after these rules are explicit, design a minimal neutral DI runtime and adapter boundary.
+**Status: ACTIVE — PR #21 merged; PR #22 awaits Unity validation**
+- [x] Map DI public surface/coupling and record source risks in `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
+- [x] Add 8 characterization tests and fix scoped cache/injection, Type-based resolve and registration check in PR #21.
+- [x] Merge PR #21: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`; user confirmed Unity branch/project working.
+- [x] Fix always-true thread ID comparison in `SetCurrentScope` by recording container construction thread and isolating other-thread scopes.
+- [x] Rename misleading `_asyncLocalScope` to `_threadLocalScope` (thread-local behavior only).
+- [x] Make scope disposal deterministic in reverse creation order, resilient to disposal exceptions, and deduplicate a shared disposable reference.
+- [x] Add 4 further EditMode tests in draft PR #22.
+- [x] CI #38121408276 passed Framework/static/.NET checks; Minimal CI #38121408235 passed as no-op.
+- [ ] Run Unity EditMode on PR #22 and verify all 12 DI characterization tests pass.
+- [ ] Confirm full project compile/Console and bootstrap/scope smoke.
+- [ ] Merge PR #22 only after Unity evidence is recorded.
+- [ ] Keep async-flow scope propagation and transient/singleton disposal ownership as explicitly deferred decisions.
 
-Audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
-Next task: `Tasks/EPIC_05.2_DI_Behavior_Characterization.md`.
+PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
 - [ ] Separate generic event contracts from concrete MythHunter events
