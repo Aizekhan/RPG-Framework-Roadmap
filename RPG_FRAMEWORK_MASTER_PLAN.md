@@ -259,18 +259,25 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - Documentation-only; Unity tests not applicable.
 
 ## 5.9 — ECS runtime and ComponentCache ownership
-**Status: IN PROGRESS — one bounded source slice is active under PR #53; full extraction remains gated.** This is the deferred scope formerly placed under 5.5 before the additional merged 5.5–5.8 tasks were recorded; do not renumber or reopen historical PRs.
+**Status: IN PROGRESS — bounded source slices only; broad extraction remains gated.** This scope continues because the user explicitly asked to merge the preceding fixes and continue EPIC 5; it does not imply EPIC 01 Phase 1 reference-validation is complete.
 
-- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`; PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`; audit reconciliation PR #52 merged as `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
-- Active bounded slice: [PR #53 — persist MovementSystem component mutations](https://github.com/Aizekhan/MythHunter/pull/53), branch `fix/epic-05-9-movement-cache-write-through`, exact head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`.
-- Source evidence: `MovementSystem.Update()` previously wrote mutated `PositionComponent`, `MovementComponent`, and `PathComponent` only to cache copies, but each next active tick refreshes its default-Full caches from `IEntityManager`. PR #53 persists those struct values to the authoritative manager and adds a focused regression test. GitHub CI passes; Unity execution has not yet occurred.
-- Confirmed consumers: MovementSystem (three direct caches), VisibilitySystem (two direct caches), HeroSystem (registry-backed Stats/Health caches). Exact-current-head Unity EditMode, full compile/Console, Player Build, and Movement/Visibility/Hero smoke remain unconfirmed.
-- EPIC 01 reverse-reference coverage for local IDE/ripgrep, asmdef references, and Unity scene/prefab serialized references remains open. Continuing this single source-backed fix does not close EPIC 01 or authorize broad cache extraction/removal.
+### Merged
+- PR #50: editor-only GUI guard and qualified `UnityEditor.EditorStyles`, merge commit `0af6ab74f8236b5de7455349c795377c883b5295`.
+- PR #48: ComponentCache membership reconciliation, rotating incremental batches, OnDemand live reads and characterization tests, merge commit `0d97060d45d978cafbe376cd43f00eb8fdf9f175`.
+- PR #53: persist `PathComponent`, `MovementComponent` and `PositionComponent` mutations to authoritative `IEntityManager`, merge commit `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`. The PR's GitHub Actions passed on tested head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`; Unity regression/full-project validation was not performed before user-directed merge, so do not imply those gates passed.
 
-- [ ] Validate/merge the bounded MovementSystem write-through fix after its exact-head Unity regression test and required build/smoke gates.
-- [ ] Decide/test OnDemand positive-membership semantics and cache-local mutation versus authoritative writes.
-- [ ] Decide identity, lifecycle, storage, archetype, and query model before larger extraction.
-- [ ] Evaluate performance only after API correctness and stability.
+### Active bounded slice — PR #54
+- [PR #54 — make OnDemand Contains resolve authoritative membership](https://github.com/Aizekhan/MythHunter/pull/54), branch `fix/epic-05-9-ondemand-positive-membership`, head `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
+- Evidence: in OnDemand mode, `Contains(id)` previously returned whether the ID was already cached; an entity with component `T` in `IEntityManager` falsely returned `false` before a preceding `Get`.
+- Change: check `HasComponent<T>` against the authoritative manager, refresh the snapshot when present, and remove stale local membership when absent. Regression test: `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
+- GitHub Actions runs [RPGFramework ECS Runtime #38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and [Minimal CI #38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442) are in progress as recorded in STATUS; Unity validation is pending.
+- Keep PR #54 draft until its focused Unity regression test result is known and remaining validation is recorded.
+
+### Gates still open
+- Exact-current-`dev` Unity EditMode with report/failure details; the historical 44/44 report is from local SHA `40b6296`, not current dev.
+- Full-project compile with clean Console, Player Build, Movement/Visibility/Hero smoke.
+- EPIC 01 reverse-reference audit for cache registry/extensions, asmdef references and serialized Unity scene/prefab references remains open.
+- Decide OnDemand membership/enumeration boundaries and cache-local mutation vs authoritative writes from evidence; do not perform a broad ECS rewrite or evaluate performance before API correctness is stable.
 
 # EPIC 06 — Serialization Foundation
 - [ ] Audit component/entity/versioned/delta/network serialization separately
