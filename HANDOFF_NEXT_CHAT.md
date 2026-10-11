@@ -30,20 +30,19 @@
 - Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**; user confirms full-project compile, clean Console and bootstrap/game smoke; GitHub Actions passed.
 - The merged change adds explicit `EventNetworkMode` (Offline/Client/Server), exact role-instance binding for `INetworkSystem`, authority policy, a single shared NetworkEventBus across interfaces and characterization tests.
 
-## Active branch / PR
-- Source branch: `feature/epic-05-3-event-contract-boundary`, created from `dev` after PR #24 was merged.
-- No source PR has been opened for this task yet. Preserve any work already on the branch and don't write directly to `dev`. Review actual current head before running tests; don't assume commits are compile-clean.
-- Do not write directly to `dev`. Use a narrow PR with a rollback path.
+## Active source task — event contract boundary audit
+- Branch: `feature/epic-05-3-event-contract-boundary`, created from `dev` after PR #24 merge.
+- No source PR has been opened for this task yet; preserve the branch work and don't write directly to `dev`.
+- Audit conclusion so far: do not move current `IEventBus` wholesale and do not create an empty assembly. Current consumers identified so far are in the MythHunter/game layer; no independently reusable Framework consumer has yet established the need for a neutral event contract.
+- Current plan/audit decision: keep the event bus in MythHunter for now unless deeper consumer mapping produces a concrete independent reuse need. `EventBus` and `SimpleEventBus` have materially different behavior, so don't unify them without tests.
 
-## First next task
-Finish validation and correct any failures for the in-progress explicit network-mode design:
-1. Review current source diffs on `feature/epic-05-3-network-eventbus-selection`. Current intended modes are **Offline, Client, Server**; combined host is deliberately unsupported because the current role systems forbid simultaneous client/server operation.
-2. Ensure `GameBootstrapper` registers the serialized mode before `InstallerRegistry`; Offline remains default for backward-compatible behavior.
-3. Verify `NetworkingInstaller` binds the selected role implementation instance under the exact `INetworkSystem` key, and does not remove `NetworkAuthority` registration.
-4. Verify `EventsInstaller` binds `IEventBus` and `INetworkEventBus` to the exact same `NetworkEventBus` singleton (not two separate singleton registrations).
-5. Verify `NetworkEventBus` uses the configured mode for `Server/Client/Both` authorization and unsubscribes its network callback on Dispose.
-6. Run Unity EditMode; record actual counts and failures; user confirms full project compile/Console/bootstrap before merge.
-7. PR #24 is already open as a draft; update its description and roadmap/audit/handoff with the exact validated head, and merge only after all validation gates pass.
+## First next task — continue the source-backed consumer audit
+1. Search for every `IEventBus`, `IEvent`, `EventPriority`, `SubscribeAsync`, `MonitorEventType` and `Clear()` use, including UI presenters/views, bootstrap/state machine, ECS, debug/store, pooling and network adapters.
+2. Classify each caller by layer (Framework, MythHunter core/game, UI, Debug/Tools, Network/Replay) and record whether it needs only synchronous publish/subscribe, priority, async, pending-event replay, history, or network replication.
+3. Check lifecycle paths to see whether all subscriptions are paired with unsubscribe/dispose and whether `IEventBus.Clear()` has production consumers.
+4. If no independent Framework consumer exists, close the boundary-audit task with a documented "no extraction yet" decision and proceed to the next plan item; do not invent a source change to force a PR.
+5. If a consumer proves the need, propose a minimal neutral interface and test double without `UniTask`, Unity, `MythHunter.IEvent`, `EventPriority`, pooling, middleware or network policy. Create a source PR only after tests are ready.
+6. Update STATUS, master plan, audit and this handoff to the same evidence/SHAs.
 
 ## Files to inspect first
 - `Assets/_MythHunter/Code/Core/Installers/InstallerRegistry.cs`
