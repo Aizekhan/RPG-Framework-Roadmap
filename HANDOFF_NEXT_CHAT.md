@@ -18,6 +18,14 @@
 - PR #50 merge commit: `0af6ab74f8236b5de7455349c795377c883b5295` — fixes editor-only GUI compile reference in `PreloadDebugTool`.
 - PR #48 merge commit: `0d97060d45d978cafbe376cd43f00eb8fdf9f175` — ComponentCache consistency/reconciliation changes.
 
+## Cloud session findings (PR #54 code review and out-of-Unity validation)
+- **Code review (PR #54 HEAD `aaaaee9`):** New `Contains` branch mirrors OnDemand `Get` logic; `_entityIds` is `HashSet<int>` (no duplicates possible). Non-blocking observation: successful `Contains` sets `_isDirty = true` each time.
+- **CI coverage gap:** No workflow compiles `ComponentCache.cs` or `DIContainerCharacterizationTests.cs` in Unity. The ECS workflow only compiles `Assets/_Framework` subset.
+- **Out-of-Unity test (.NET 8, real `ComponentCache.cs` + `CacheStatistics.cs` + `_Framework/ECS/Runtime`, 4 `ComponentCache_*` tests verbatim, typed fixture instead of reflection):**
+  - PR #54 `aaaaee9` → 4/4 passed.
+  - `dev` `6bef9b2` → 3/4 passed; `OnDemandContainsFindsUncachedAuthoritativeMembership` failed (Expected True, was False).
+  - This is NOT Unity EditMode and does NOT close validation gates.
+
 ## EPIC 01 gates remain open
 - Exact current-`dev` Unity EditMode report; historical 44/44 belongs to local SHA `40b6296`.
 - Full-project compile and clean Console; Player Build; Movement/Visibility/Hero smoke.
