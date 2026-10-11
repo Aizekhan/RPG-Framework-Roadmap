@@ -51,13 +51,12 @@
 - Validation candidate audit completed; no extraction justified without real caller demand. See `Audits/EPIC_05.1_Validation_API_Candidate_Audit.md`.
 
 ## EPIC 05.2 — active
-- Audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
-- Current draft PR #21: https://github.com/Aizekhan/MythHunter/pull/21
-- Branch: `feature/epic-05-2-di-characterization`; head `d5ab5f5fe4101f0e3d6b111b347649d8e07f4272`.
-- Added 8 Unity EditMode reflection-based characterization tests for singleton, transient, scoped lifetimes, Type-based resolve/check, lazy singleton and scoped disposal.
-- Source changes: scoped instance cache keyed by requested service type; `Resolve(Type)` resolves the instance rather than returning internal registration metadata; `IsRegistered(Type)` now recognizes instance/singleton/lazy registrations.
-- GitHub Actions #44 passed the existing Framework/.NET boundary and tests; Minimal CI #242 passed (no-op). Neither workflow compiles or executes the new Unity DI test assembly; Unity EditMode/full-project compile and bootstrap smoke remain mandatory.
-- **Do not merge PR #21 yet.** Next: run the new Unity test assembly against this branch and inspect all test cases in XML.
+- DI audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
+- PR #21 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/21
+- Merge commit: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
+- User confirmed Unity tests/project working on the PR branch; GitHub Actions #44 passed Framework boundary/.NET tests. Exact EditMode XML counts were not provided, so no count is inferred here.
+- Implemented 8 DI EditMode characterization tests; fixed scoped service-type caching/injection, Type-based service resolution, and Type-based registration checks.
+- **Next active slice: scope hierarchy, disposal ownership, and current-scope propagation characterization.** No broad Framework DI extraction yet.
 
 ## Rules
 1. One active roadmap item at a time.
@@ -65,10 +64,10 @@
 3. Do not modify `dev` directly.
 4. Framework runtime/contracts must not depend on MythHunter, UnityEngine, UnityEditor, DI, logging sinks, or providers.
 5. Record actual validation evidence; successful .NET CI does not imply Unity assembly import/compile passed.
-6. EPIC 05.1 is complete; EPIC 05.2 is active. Keep PR #21 draft until Unity DI tests and full-project/bootstrap checks pass. Preserve all local worktree changes.
+6. EPIC 05.1 is complete; EPIC 05.2 is active. PR #21 is merged after the user confirmed Unity validation; preserve all local worktree changes and use focused tests for the next DI lifecycle slice.
 
 ## Next action
-Run Unity EditMode from `D:\\MythHunter-Git` on branch `feature/epic-05-2-di-characterization`, inspect the XML to confirm all eight `DIContainerCharacterizationTests` pass, and verify full-project compile/Console plus bootstrap smoke. Keep PR #21 draft pending those results.
+Start a separate bounded PR to characterize and fix current-scope selection (including the self-comparison bug in `SetCurrentScope`), nested/child-scope behavior, and deterministic disposal ownership. First define expected semantics and add tests; then make the smallest source change. Keep the Framework DI assembly deferred until core DI semantics are explicit.
 
 ## Source of truth
 - Master plan: milestone ordering and checklist.
