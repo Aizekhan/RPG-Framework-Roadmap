@@ -6,7 +6,9 @@
 - Game repo: `Aizekhan/MythHunter`
 - Game integration branch: `dev`
 - Roadmap repo: `Aizekhan/RPG-Framework-Roadmap`
-- Active milestone: **EPIC 05.3 — explicit network event-bus selection and role-aware authorization**
+- Active milestone: **EPIC 05.3 — event contract boundary audit/extraction**
+- PR #24 is merged and validated: squash commit `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; tested head `5819aafe1d535639e9233b1192b62658c73ad01e`; Unity EditMode **23 passed, 0 failed, 0 skipped**, user confirms full-project compile/Console/bootstrap, and both GitHub Actions passed.
+- Next source branch: `feature/epic-05-3-event-contract-boundary`, created from `dev`; no source PR for contract extraction has been opened yet.
 - Completed source fix: [PR #23](https://github.com/Aizekhan/MythHunter/pull/23), merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
 - User has confirmed PR #23 full-project compilation, Unity Console and bootstrap are clean.
 - Unity 6000.0.45f1 EditMode on PR #23: **23 passed, 0 failed, 0 skipped**. GitHub Actions passed.
@@ -22,12 +24,15 @@
 - Source search did not expose clear production callers for connect/start or role activation methods; inspect scene objects, serialized config, UI/menu and runtime startup paths before finalizing design.
 - Do **not** alias either client or server singleton arbitrarily to `INetworkSystem`, and do not silently change `NetworkAuthority`.
 
+## Completed PR #24 — network mode correction
+- PR #24: https://github.com/Aizekhan/MythHunter/pull/24; squash merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`.
+- Tested head: `5819aafe1d535639e9233b1192b62658c73ad01e`.
+- Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**; user confirms full-project compile, clean Console and bootstrap/game smoke; GitHub Actions passed.
+- The merged change adds explicit `EventNetworkMode` (Offline/Client/Server), exact role-instance binding for `INetworkSystem`, authority policy, a single shared NetworkEventBus across interfaces and characterization tests.
+
 ## Active branch / PR
-- Implementation branch: `feature/epic-05-3-network-eventbus-selection`, created from `dev`.
-- Draft source PR #24: https://github.com/Aizekhan/MythHunter/pull/24
-- Last implementation head at latest audit: `5819aafe1d535639e9233b1192b62658c73ad01e`.
-- Source changes include `EventNetworkMode`, explicit composition-root mode selection in `GameBootstrapper`, role-to-`INetworkSystem` aliasing in `NetworkingInstaller`, mode-driven bus selection and singleton alias in `EventsInstaller`, authority policy in `NetworkEventBus`, and reflection-based EditMode characterization tests.
-- GitHub Actions on earlier head `9ced67674576127d98b3cd328b9b85917faacb18` passed. Latest GitHub Actions on head `5819aafe1d535639e9233b1192b62658c73ad01e` are both complete and passed; Framework boundary/GUID validation and .NET ECS tests passed, as did Minimal CI (no-op). **Unity EditMode and branch-specific full-project/bootstrap confirmation are not yet done.** Review actual current head before running tests; don't assume commits are compile-clean.
+- Source branch: `feature/epic-05-3-event-contract-boundary`, created from `dev` after PR #24 was merged.
+- No source PR has been opened for this task yet. Preserve any work already on the branch and don't write directly to `dev`. Review actual current head before running tests; don't assume commits are compile-clean.
 - Do not write directly to `dev`. Use a narrow PR with a rollback path.
 
 ## First next task
@@ -61,7 +66,7 @@ unity test "D:\\MythHunter-Git" --mode EditMode --output "D:\\MythHunter-Git\\EP
 [xml]$r = Get-Content "D:\\MythHunter-Git\\EPIC-05-3-Network-Selection.xml"
 $r.SelectNodes("//test-run") | Select-Object result,total,passed,failed,skipped
 ```
-The latest confirmed Unity result is PR #23's 23/23 only. PR #24's new branch has not yet had Unity tests confirmed. Never copy previous counts to this branch; record the actual output.
+The latest confirmed Unity result on PR #24 is 23 passed, 0 failed, 0 skipped. Do not reuse those counts for any new contract-boundary branch; run its own tests and record actual output. Never copy previous counts to this branch; record the actual output.
 
 ## Mandatory end-of-epic chat transition
 At the end of every epic, do not continue indefinitely in the same chat. Before announcing completion, create/update and commit this handoff file with the next-chat instructions, exact source/roadmap SHAs, PR links, test evidence, changed files, deferred risks, next atomic task and local commands. Update `STATUS.md` to link this file. Only then tell the user the epic is closed and that the next work should start in a new chat.
