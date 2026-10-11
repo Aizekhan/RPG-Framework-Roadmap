@@ -58,7 +58,7 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 - [x] Inventory assembly definitions: six under UniTask, none under `Assets/_MythHunter`
 - [x] Record local test result: one third-party Addressables EditMode stub passed; PlayMode discovered zero tests
 - [x] Record limitations: clean forced compilation not demonstrated; no existing MythHunter C# tests discovered; local working tree has setup changes
-- [x] Preserve local recovery materials under `D:\RPG-Framework-Baseline` (partial patch/report bundle; not represented as full backup)
+- [x] Preserve local recovery materials under `D:\\RPG-Framework-Baseline` (partial patch/report bundle; not represented as full backup)
 - [x] Confirm no MythHunter source was changed during the audit
 
 Conclusion: do not spend additional time on baseline investigation unless a specific error blocks the next bounded code change. Compile and create focused tests during implementation. Preserve local changes and do not reset the worktree.
@@ -189,19 +189,20 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
-**Status: ACTIVE — initial audit recorded; registration/caller mapping and characterization plan next**
+**Status: ACTIVE — registration-order regression fixed; next resolve network-role composition before extracting contracts**
 - [x] Record first source-backed candidate audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`; no contract extraction approved yet.
 - [x] Map installer order: CoreInstaller binds SimpleEventBus before EventsInstaller conditionally binds EventBus/NetworkEventBus; verify final resolution behavior before changing registrations.
-- [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter; audit records source evidence.
+- [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter.
 - [x] Confirm source-level registration-order defect: SystemRegistry eagerly resolves/captures SimpleEventBus before EventsInstaller rebinds IEventBus; DI resolves cached singleton first.
-- [x] Add a focused regression test and fix installer binding order without changing event dispatch semantics — draft PR #23.
-- [ ] Read the Unity XML summary for PR #23 and record actual total/passed/failed/skipped counts; CLI completion alone is not test evidence.
-- [ ] Confirm full-project compile/Console and game bootstrap smoke, then merge PR #23 if both gates pass. GitHub Actions on head `280882f1550cd3befcd58def29f76d08fd93b163` passed.
-- [ ] Resolve how the composition root supplies the selected client/server `INetworkSystem` instance before relying on `NetworkEventBus`; do not create an unrelated base-interface singleton.
-- [ ] Separate generic event contracts from concrete MythHunter events
-- [ ] Specify ordering, exception handling, subscription disposal and cancellation
-- [ ] Keep network/replay bridges and middleware as explicit adapters
-- [ ] Remove duplicate EventBus only after all call paths are mapped
+- [x] Fix installer binding order so the final event bus is registered before SystemRegistry resolves; PR #23 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/23
+- [x] Add focused regression test `EventsInstaller_RegistersFinalEventBusBeforeResolvingSystemRegistry`; Unity 6000.0.45f1 EditMode XML: **23 passed, 0 failed, 0 skipped**.
+- [x] GitHub Actions on source head `280882f1550cd3befcd58def29f76d08fd93b163` passed. Merge commit: `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
+- [ ] Confirm full-project compile/Console and game bootstrap smoke for PR #23; do not mark this particular integration check complete without user confirmation.
+- [ ] Map composition-root network mode and selected client/server `INetworkSystem` binding; do not register an arbitrary base-interface instance.
+- [ ] Separate generic event contracts from concrete MythHunter events.
+- [ ] Specify ordering, exception handling, subscription disposal and cancellation.
+- [ ] Keep network/replay bridges and middleware as explicit adapters.
+- [ ] Remove duplicate EventBus only after all call paths are mapped.
 
 ## 5.4 — System lifecycle and scheduling
 - [ ] Separate generic scheduling/lifecycle from MythHunter phase policy
