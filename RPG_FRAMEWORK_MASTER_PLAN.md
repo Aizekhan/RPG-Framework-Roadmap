@@ -270,7 +270,7 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [PR #54 — make OnDemand Contains resolve authoritative membership](https://github.com/Aizekhan/MythHunter/pull/54), branch `fix/epic-05-9-ondemand-positive-membership`, head `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
 - Evidence: in OnDemand mode, `Contains(id)` previously returned whether the ID was already cached; an entity with component `T` in `IEntityManager` falsely returned `false` before a preceding `Get`.
 - Change: check `HasComponent<T>` against the authoritative manager, refresh the snapshot when present, and remove stale local membership when absent. Regression test: `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- GitHub Actions runs [RPGFramework ECS Runtime #38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and [Minimal CI #38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442) are in progress as recorded in STATUS; Unity validation is pending.
+- GitHub Actions runs [RPGFramework ECS Runtime #38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and [Minimal CI #38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442) passed on exact head; neither runs Unity EditMode. Unity validation is pending.
 - Keep PR #54 draft until its focused Unity regression test result is known and remaining validation is recorded.
 
 ### Gates still open
