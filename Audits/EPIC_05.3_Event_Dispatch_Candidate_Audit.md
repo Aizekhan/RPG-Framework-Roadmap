@@ -46,6 +46,16 @@ Key sources:
 
 6. Pooling is coupled to the current `IEvent` struct shape and `EventPriority`; `EventPool` maintains mutable type pools and statistics. Keep pooling as a separate optional policy/adapter, not a mandatory dependency of a neutral bus.
 
+## Registration and caller mapping — follow-up
+
+7. Installer order is confirmed from `InstallerRegistry.RegisterInstallers`: `CoreInstaller` runs before `EventsInstaller`. `CoreInstaller` initially binds `IEventBus -> SimpleEventBus`; `EventsInstaller` later binds either `IEventBus -> NetworkEventBus` when `INetworkSystem` is registered, or `IEventBus -> EventBus` otherwise. The final resolved service therefore depends on DI duplicate-binding semantics. The current `DIContainer.RegisterWithLifetime` replaces `_registrations[serviceType]`, but the installer helper uses binding methods and the full binding path must be inspected before declaring which implementation actually wins. `GameBootstrapper` resolves `IEventBus` after all installers run.
+
+8. Caller search establishes broad dependence on `IEventBus` from Game Flow/State Machine, Systems, UI presenters/views, ECS `SystemBase` and `ComponentCacheRegistry`, event batching/throttling/debugging. Sync subscribe/unsubscribe is widely used. Async subscribe usage is visibly concentrated in `PhaseSystem` plus its helper wrappers; exact comprehensive counts should be generated from the full tree, not inferred from top search results.
+
+9. `EventsInstaller` also registers `EventBatcher`, `EventThrottler`, `EventThrottlerUpdateSystem`, `EventStore`, and `EventLogger`, making the installer and debug/logging features part of the compatibility mapping. `NetworkEventBus` derives from `EventBus`, subscribes to network messages, and overrides `Publish<T>` to synchronize marked/registered network events. Any neutral local event contract must not drag networking message/authority abstractions into Framework Core.
+
+10. Potential wiring risk to characterize: `InstallerRegistry` catches installer exceptions and continues; `EventsInstaller` resolves `ISystemRegistry` before choosing the final bus binding and registers a timer system. Do not “fix” the duplicate binding simply because two installer bindings exist; first verify DI helper semantics and application bootstrap behavior on the current branch.
+
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
 
