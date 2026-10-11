@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `3bb562ec75eb280f92cc487cc3ab1d7eb13c9efb` — [documentation-only architecture cleanup](https://github.com/Aizekhan/MythHunter/commit/3bb562ec75eb280f92cc487cc3ab1d7eb13c9efb). Runtime source is unchanged from prior code head `e43fed636df0d1b257da5f9708f1a8af685fbd0e`.
+- Current source head: `0d97060d45d978cafbe376cd43f00eb8fdf9f175` — [PR #48 merge](https://github.com/Aizekhan/MythHunter/commit/0d97060d45d978cafbe376cd43f00eb8fdf9f175), following [PR #50 merge](https://github.com/Aizekhan/MythHunter/commit/0af6ab74f8236b5de7455349c795377c883b5295).
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -15,36 +15,25 @@
 - EPIC 05.6: PR #28 merged as `4830f7735dce6a12ecbf2eee3d5c2379c9dda340`; Unity EditMode 41/41 and integration checks confirmed.
 - EPIC 05.7: PR #29 merged as `3b2783bd8005c58a3454dfad7dc132272fccdbd4`.
 - EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
-- The master plan now records the above history. Do not infer current work from an old chat summary.
-- Latest execution blocker and corrected Unity CLI usage are recorded in this status, the master plan and handoff (roadmap commits `fa7b4947a3c61e8af6f034e2ce91616cbdc77953`, `424417a36029b651bda3ef6dad40079db1f0fc4b`, and `af563fc82d29117ac0a8d8e9c2676fda2492676b`).
+- PR #50 merged to `dev` as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls are guarded by `#if UNITY_EDITOR`, and `UnityEditor.EditorStyles.boldLabel` is fully qualified.
+- PR #48 merged to `dev` as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
+- **Validation caveat:** PR #48's 44/44 Unity EditMode report is for local HEAD `40b6296`, not exact PR head `6631edf`. The GitHub workflows succeeded on the PR head but don't compile the full Unity project. The PR's own merge commit message preserves that exact-head Unity EditMode, full compile/Console, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. PR #50 CLI EditMode timed out without an NUnit report; inconclusive, not a pass/failure.
+- Local investigation found no project-specific Unity Editor/test process, and `Editor.log` didn't change over 15 seconds. Do not kill long-lived Unity CLI server PID 18080 or delete caches based only on this evidence.
+- Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 01 Phase 1 reference-validation closeout; immediate tracked implementation gate is [MythHunter PR #48](https://github.com/Aizekhan/MythHunter/pull/48), ComponentCache consistency.**
+**ACTIVE — EPIC 01 Phase 1 reference-validation closeout.** PR #48 and its compile blocker PR #50 are merged, but merging their source changes does **not** itself complete Phase 1.
 
-Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-component-cache-consistency`; draft and not merged.
+### Remaining closeout gates
+- [ ] Run Unity EditMode on exact merged `dev` head `0d97060d45d978cafbe376cd43f00eb8fdf9f175`, recording the XML summary and failing-test details if any.
+- [ ] Confirm full-project compile and clean Console at that head.
+- [ ] Player Build.
+- [ ] Movement, Visibility and Hero smoke checks.
+- [ ] Finish reverse-reference evidence where GitHub search is incomplete: `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references. Remote code-search results are useful but not an exhaustive graph.
+- [ ] Update `MythHunter/ARCHITECTURE_AUDIT.md` / linked audit after reviewing scene/prefab and local IDE reference results.
 
-### Unmet gates for PR #48
-- Local Unity EditMode evidence currently reports 44/44 at local HEAD `40b6296`, **not** the current PR head `6631edf`; repeat on exact head.
-- Full-project compilation with zero Console errors.
-- Player Build.
-- Movement, Visibility and Hero consumer smoke checks.
-- Review final local/remote diffs and record exact tested SHA. Do not merge until all gates are satisfied.
-
-### Current validation blocker (2026-10-11)
-- Exact-head PR #48 Unity test startup is blocked by `PreloadDebugTool.cs` using `EditorStyles.boldLabel` without qualification/guard; the fix is separately tracked by draft PR #50.
-- PR #50 isolated-worktree EditMode invocation timed out after 600 seconds without an NUnit XML report. This is inconclusive, not a reported test failure.
-- The observed long-lived PID 18080 is the Unity CLI server, not evidence of an active Editor test process. `Editor.log` was unchanged over 15 seconds and no project-specific Unity test process was found. Do not kill the server or delete caches based on this evidence.
-- CLI help confirms `unity recompile --project-path <path>`; the earlier positional form was invalid. Next action is to resolve the Editor/CLI launch path before retrying validation; avoid repeated diagnostics and do not merge either PR until the gates pass.
-
-### Separate duplicate maintenance PR
-- [PR #50](https://github.com/Aizekhan/MythHunter/pull/50) is the only retained draft for the `PreloadDebugTool.cs` EditorStyles compile issue; its local Unity/Player validation remains a separate gate. It is not a second active roadmap item.
-- PR #49 is **closed as superseded by #50** (closure comment recorded on PR #49). This is PR deduplication only; the defect remains unvalidated until #50's required local checks pass.
-
-## Next action
-1. Inspect and preserve the local worktree: `git status --short --branch`; do not reset, clean, discard, or switch branches unsafely.
-2. Compare local diffs with PR #48 head `6631edf83362e6aed70ca70bc26b7c96ed15587e`; use a separate worktree if necessary.
-3. Validate exact PR head in Unity, then update PR #48 and this status with results. Do not start EPIC 05.9 or broad refactoring before EPIC 01 Phase 1 exit gates are met.
-
+### Next action
+Continue the closeout with the now-merged code. Do not claim Unity/player validation succeeded until actual evidence exists. EPIC 05.9 remains blocked until the EPIC 01 Phase 1 closeout gates are met; do not begin broad ECS extraction or create additional cache APIs before then.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
@@ -55,4 +44,4 @@ These historical PRs predate the current architecture effort and must not be mer
 - PR #2 was closed as a duplicate of PR #3's folder-metadata proposal; PR #49 was closed as a duplicate of PR #50's PreloadDebugTool fix.
 
 ## Conflict rule
-If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation. Test results are valid only for the exact commit tested.
+If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation. Test results are valid only for the exact commit SHA tested.
