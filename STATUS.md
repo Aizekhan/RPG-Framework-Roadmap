@@ -9,10 +9,10 @@
 
 ## Current position
 - **EPIC 04 is COMPLETE** — the candidate audit is recorded at `Audits/EPIC_04_Core_Contract_Candidate_Audit.md`. Decision: avoid a speculative empty `RPGFramework.Contracts` assembly.
-- **Active task: EPIC 05.3 — event contract boundary audit/extraction.** Network event bus selection is now fixed in PR #24: https://github.com/Aizekhan/MythHunter/pull/24; squash merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`. Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped** on the PR head; user confirmed full-project compile, clean Console and bootstrap. Both GitHub Actions passed on the tested head.
-- Prior PR #23 fixed registration order: https://github.com/Aizekhan/MythHunter/pull/23; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
-- **Next source branch:** `feature/epic-05-3-event-contract-boundary` (created from current `dev`). Do not begin wide refactoring. First audit whether the smallest neutral event publisher/subscriber contract belongs in Framework at all; map consumers and test semantics, then propose one small migration slice. Keep `UniTask`, Unity, and MythHunter-specific policy out of a neutral Framework contract. Source PR has not yet been opened.
-- Handoff for the next chat: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md). Epic exit still requires synchronizing STATUS, master plan, audit and handoff with real validation evidence.
+- **Active task: EPIC 05.3 — event contract boundary audit.** Network mode and bus identity corrections are merged and validated: PR #24 https://github.com/Aizekhan/MythHunter/pull/24, merge `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23 passed, 0 failed, 0 skipped; user confirmed full-project compile/Console/bootstrap, and both GitHub Actions passed on tested head `5819aafe1d535639e9233b1192b62658c73ad01e`.
+- PR #23 registration-order fix: https://github.com/Aizekhan/MythHunter/pull/23; merge `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`, Unity EditMode 23/23 and user integration check confirmed.
+- **Next source branch:** `feature/epic-05-3-event-contract-boundary`, created from `dev`. No source PR yet. Current task is an evidence-driven contract boundary audit; do not wholesale-move `IEventBus` or create an empty assembly.
+- Handoff: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md); mandatory end-of-epic handoff protocol is in the master plan.
 
 - EPIC 05.2 — DI scope lifecycle complete: PR #21 and PR #22 merged; Unity EditMode 22/22 passed for PR #22, and full-project/bootstrap/scope smoke confirmed clean.
 - Logging PR #20: https://github.com/Aizekhan/MythHunter/pull/20
