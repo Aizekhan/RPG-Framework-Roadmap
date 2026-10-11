@@ -96,9 +96,8 @@ Key sources:
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
 
-## Next bounded task
-1. Trace the application/game mode decision: offline, client, server, or combined host.
-2. Decide the canonical composition path: bind the existing combined `NetworkSystem`, explicitly select one role service, or use a deliberate adapter. Do not alias an arbitrary singleton.
-3. Add installer/DI characterization tests proving offline uses `EventBus`, network mode uses `NetworkEventBus`, and `SystemRegistry` captures the same selected bus.
-4. Verify `NetworkAuthority` and existing callers remain compatible with the selected networking model.
-5. Continue event-semantics mapping; consider a neutral synchronous contract only if concrete cross-module reuse justifies it.
+## Final outcome and next roadmap item
+- Event dispatch implementation and network-mode selection are complete and validated in PR #23 and PR #24; see the merge SHAs and Unity evidence in the Status section above.
+- Consumer mapping did not find a Framework-side consumer that requires the existing `IEventBus` API. Keep it in the MythHunter game layer; do not create a contract assembly solely for architectural symmetry.
+- EPIC 05.3 is closed. The next active item is **5.4 — System lifecycle and scheduling**, with source audit and draft PR tracked in `Audits/EPIC_05.4_System_Lifecycle_Audit.md` and [PR #25](https://github.com/Aizekhan/MythHunter/pull/25).
+- At the 5.3 exit, the next-chat handoff has been updated; the new chat must read `HANDOFF_NEXT_CHAT.md`, STATUS, master plan and the 5.4 audit before editing code.
