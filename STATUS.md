@@ -40,10 +40,10 @@ Current PR head: `6631edf83362e6aed70ca70bc26b7c96ed15587e` on `feature/epic-01-
 
 
 ## Dormant GitHub PRs — not active roadmap work
-These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
-- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): current unique diff is only two folder .meta files plus ProjectSettings.asset changing companyName to MasterMind; source feature changes are not present in its current residual diff. Preserve the setting as a possible intentional requirement, but extract it into a fresh focused PR only after confirmation.
-- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind dev; its current diff only proposes _MythHunter and Core folder metadata. Validate GUIDs and whether those files are still needed before deciding; do not merge the old branch directly.
-- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind dev, with a 206-file residual diff including code and metadata. Requires fresh source-level triage or closure after verifying whether any unique behavior remains.
+These historical PRs predate the current architecture effort and must not be merged as-is. This inventory is a maintenance queue, not a second roadmap. It does not change the single active roadmap pointer above.
+- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): the PR's current diff against `dev` is only two folder .meta files plus `ProjectSettings.asset` changing `companyName` to `MasterMind`; its original source feature isn't in the residual diff. Preserve that setting as possibly intentional, but do not restore the stale branch wholesale.
+- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind `dev`; its residual diff only proposes `_MythHunter` and `Core` folder metadata. Validate GUIDs and whether those files are still needed before deciding; do not merge the old branch directly.
+- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind `dev`, with a 206-file residual diff. Requires fresh source-level triage or closure after verifying whether any unique behavior remains.
 - [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4) is a long-open dev → main integration PR, not a roadmap implementation task. Review as a release/integration decision separately; do not merge it together with focused source fixes.
 - PR #2 was closed as a duplicate of PR #3's folder-metadata proposal; PR #49 was closed as a duplicate of PR #50's PreloadDebugTool fix.
 
