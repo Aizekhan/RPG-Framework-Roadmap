@@ -80,6 +80,19 @@ Key sources:
 - Host mode is deliberately absent: current implementation does not support simultaneous client+server operation. Do not represent Host as working unless transport behavior and authority are implemented and tested.
 - New Unity assets currently have explicit Unity `.meta` GUIDs: `EventNetworkMode.cs.meta` = `d153502a8dbb4a09a100000000000004`; `EventNetworkAuthorityPolicy.cs.meta` = `d153502a8dbb4a09a100000000000005`.
 
+## Neutral event contract boundary — source-backed outcome
+
+### Reuse question and evidence
+- The current `IEventBus` is not a Framework-neutral contract: constraints require the game-layer `IEvent`, `EventPriority`, structs, and `Cysharp.Threading.Tasks.UniTask`; `Clear()` has broad, implementation-specific semantics and there are no subscription tokens.
+- `IEvent` itself requires a generated ID and a game-layer priority. That is logging/dispatch policy, not a generic minimum for arbitrary framework notifications.
+- Consumers found so far (`EventHandlerBase`, `SystemBase`, `SystemEventExtensions`, `PhaseSystem`, debug/store/network adapters) are MythHunter-layer callers. Current evidence does not show a separate framework subsystem that needs the existing entire event bus API.
+- The generic candidate should be at most a synchronous publisher/subscriber abstraction for payload types, with no lifecycle-wide `Clear()`, logging, IDs, priority, pooling, middleware, async scheduler, Unity or network policy. Even this is a proposal, not yet a proven requirement.
+- `EventBus` and `SimpleEventBus` are observably non-interchangeable today. The former uses prioritized queues, critical immediate dispatch, monitored pending-event replay, pooling, middleware and an async loop; the latter uses handler lists, ignores priority, dispatches synchronously in registration order, and has different async/error/clear semantics.
+- Therefore no current production consumer has been identified as requiring a new neutral contract right now. Do not create a new assembly or move/rename `IEventBus` merely to satisfy architectural aesthetics.
+
+### Current conclusion
+**Keep the current event bus in the MythHunter game layer for now.** Continue the caller-level audit; if a future generic framework module produces a concrete publisher/subscriber need, introduce the smallest contract as an independent opt-in slice with framework-only tests and a separate game adapter. No source API changes are approved by this audit step.
+
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
 
