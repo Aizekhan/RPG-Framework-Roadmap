@@ -16,6 +16,7 @@
 - EPIC 05.7: PR #29 merged as `3b2783bd8005c58a3454dfad7dc132272fccdbd4`.
 - EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
 - The master plan now records the above history. Do not infer current work from an old chat summary.
+- Latest execution blocker and corrected Unity CLI usage are recorded in this status, the master plan and handoff (roadmap commits `fa7b4947a3c61e8af6f034e2ce91616cbdc77953`, `424417a36029b651bda3ef6dad40079db1f0fc4b`, and `af563fc82d29117ac0a8d8e9c2676fda2492676b`).
 
 ## Exactly one active roadmap item
 **ACTIVE — EPIC 01 Phase 1 reference-validation closeout; immediate tracked implementation gate is [MythHunter PR #48](https://github.com/Aizekhan/MythHunter/pull/48), ComponentCache consistency.**
