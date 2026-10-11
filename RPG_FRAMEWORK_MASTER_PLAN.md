@@ -190,36 +190,49 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
-**Status: ACTIVE — PR #23 merged; network bus role selection and handoff procedure must be completed before event-contract extraction**
+**Status: ACTIVE — PR #23 merge validated; PR #24 network-mode correction awaits Unity validation**
 
 ### Completed
-- [x] Record source-backed candidate audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`; no contract extraction approved yet.
+- [x] Record source-backed event audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
 - [x] Map installer order and caller families (bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug and network adapter).
-- [x] Confirm the installer-order defect and merge the fix in PR #23: https://github.com/Aizekhan/MythHunter/pull/23; merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
-- [x] Unity 6000.0.45f1 EditMode for PR #23: **23 passed, 0 failed, 0 skipped**; GitHub Actions passed.
-- [x] User confirmed full-project compile, Unity Console and bootstrap are clean for PR #23.
+- [x] Fix event-bus registration order so the final bus is registered before resolving `ISystemRegistry`; PR #23 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/23; merge commit `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`.
+- [x] Validate PR #23 with Unity 6000.0.45f1 EditMode: **23 passed, 0 failed, 0 skipped**; GitHub Actions passed.
+- [x] User confirmed full-project compile, Unity Console and bootstrap for PR #23.
+- [x] Confirm follow-on source problem: `NetworkingInstaller` didn't register the exact `INetworkSystem` key; `NetworkEventBus` inferred authority using interface-type checks that a combined `NetworkSystem` cannot satisfy; separate service-key registrations could create two NetworkEventBus singleton instances.
+- [x] Add explicit `EventNetworkMode` (`Offline`, `Client`, `Server`) and composition-root config in draft PR #24.
+- [x] Alias the selected existing client/server singleton to the exact `INetworkSystem` service key in draft PR #24; offline mode leaves that key absent.
+- [x] Make event authority a separate explicit policy and bind one NetworkEventBus instance through both `IEventBus` and `INetworkEventBus`.
+- [x] Add EditMode characterization coverage for mode/authority policy, selected network instance, event-bus choice and the identity shared with `SystemRegistry`.
+- [x] GitHub Actions on PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS tests passed; Minimal CI passed (no-op workflow).
 
-### Current implementation task
-- [ ] Define the explicit role/capability contract used by `NetworkEventBus`; do not choose an arbitrary client/server service or silently change `NetworkAuthority`.
-- [ ] Fix `EventsInstaller`'s decision path so `INetworkSystem` registration, event synchronization enabled/disabled, and the selected client/server/combined-host role are not conflated.
-- [ ] Ensure `NetworkEventBus` enforces `NetworkEventAuthority.Server/Client/Both` against the selected runtime role, not only interface type identity.
-- [ ] Add focused EditMode characterization tests: offline uses `EventBus`; explicitly configured network mode uses `NetworkEventBus`; `SystemRegistry` captures the exact resolved bus; Server/Client/Both authority checks behave for client, server and combined host modes.
-- [ ] Trace UI/menu/scene/bootstrap call paths and serialized configuration for client/server startup; source search alone did not expose clear production call sites.
-- [ ] Run Unity EditMode; record exact XML counts and test names. User then confirms full-project compile/Console/bootstrap before merge.
-- [ ] Update audit and STATUS with actual results and the merge SHA.
+### Current source PR — not merged
+- PR #24: https://github.com/Aizekhan/MythHunter/pull/24
+- Branch: `feature/epic-05-3-network-eventbus-selection`
+- Head at last audit: `9ced67674576127d98b3cd328b9b85917faacb18`
+- [ ] Run Unity 6000.0.45f1 EditMode on PR #24 and record the actual XML totals and relevant test names; PR #23's older 23/23 result does not validate this branch.
+- [ ] User confirms full-project compile, no Unity Console errors, and bootstrap/game smoke specifically on PR #24.
+- [ ] Fix any test/source defects and rerun Unity tests on the updated exact head.
+- [ ] Merge PR #24 only after both gates pass; record actual merge SHA and updated CI/test evidence in STATUS, audit and handoff.
 
-### Event contract extraction — blocked until role selection is resolved
+### Known design boundary
+- Supported explicit event sync modes are Offline, Client and Server. Do not claim Host mode works: current network classes do not support simultaneous dual-role behavior.
+- `NetworkAuthority` still depends on both role interfaces. Do not delete/change this API as part of event bus selection.
+- Preserve offline default until a real menu/scene/bootstrap configuration path deliberately chooses client or server.
+- The mode selection is currently a serialized setting on `GameBootstrapper`; trace UI/menu/scene callers later before proposing a broader network bootstrap refactor.
+
+### Event contract extraction — blocked until role-selection fix is validated
 - [ ] Separate generic event contracts from concrete MythHunter events only after actual cross-module consumer demand is evidenced.
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation.
 - [ ] Keep network/replay bridges, middleware and pooling as explicit adapters/optional capabilities.
 - [ ] Remove or consolidate duplicate buses only after all call paths and semantics are covered by tests.
 
 ### Epic exit gate and chat handoff
-- [ ] All source changes are in a PR; CI and focused Unity tests pass; the user confirms full-project compile/Console/bootstrap.
+- [ ] All source changes for the epic are merged or explicitly recorded as blockers; CI and focused Unity tests pass; user confirms full-project compile/Console/bootstrap.
 - [ ] Audit, master plan, STATUS and source PR describe the same current state and remaining risks.
-- [ ] Create/update `HANDOFF_NEXT_CHAT.md` in the roadmap repository with: epic/phase, merged PRs and SHAs, current branch/PR, changed files, exact validation evidence, unresolved decisions/risks, next small task, local Unity commands, files to inspect and the first instruction for the next chat.
-- [ ] The handoff document is committed and linked from STATUS before declaring the epic complete or recommending a new chat.
+- [ ] Update and commit `HANDOFF_NEXT_CHAT.md` with epic/phase, merged PRs and SHAs, current branch/PR, changed files, exact validation evidence, unresolved risks, next atomic task, local Unity commands, files to inspect and first instruction for the next chat.
+- [ ] Link the committed handoff from STATUS before declaring the epic complete or recommending a new chat.
 - [ ] At the start of the next chat, read `HANDOFF_NEXT_CHAT.md`, `STATUS.md`, the master plan and referenced audit before modifying code.
+
 
 ## 5.4 — System lifecycle and scheduling
 - [ ] Separate generic scheduling/lifecycle from MythHunter phase policy
