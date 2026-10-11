@@ -15,6 +15,7 @@ Transform MythHunter into a reusable, modular RPG Framework plus a concrete Game
 9. Avoid broad rewrites and speculative empty assemblies. Extract one small cohesive slice at a time.
 10. After every source change, compile and run focused tests; do not treat repository documentation as implementation evidence.
 11. Optional modules must not become mandatory Core dependencies without a documented reason.
+12. At the end of every epic, prepare and commit a concise next-chat handoff report before declaring the epic complete or recommending that work move to a new chat.
 
 # EPIC 01 — Full MythHunter Audit
 **Status: COMPLETE**
@@ -299,6 +300,19 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - **M3 — MythHunter integration:** EPIC 07–08.
 - **M4 — Optional capabilities:** EPIC 09, 12 and 13 as selected.
 - **M5 — RPG modules and adoption:** EPIC 10–11 and 14.
+
+## Chat boundary protocol — mandatory at every epic exit
+
+The project intentionally moves to a **new chat after each completed epic** so the working context stays manageable. The epic is not considered closed until all of the following are done:
+
+- Source work is in merged PR(s), or remaining blockers are explicitly documented rather than presented as completed.
+- Actual CI/Unity validation evidence and user-confirmed compile/Console/bootstrap checks are recorded.
+- `STATUS.md`, the relevant audit and this master plan agree on the current state.
+- `HANDOFF_NEXT_CHAT.md` is updated and committed in the roadmap repository, then linked from `STATUS.md`.
+- The handoff contains: current epic and exact next task; merged PR links and commit SHAs; active branch/PR; changed files; actual test/CI results; open decisions/risks and explicitly deferred work; commands for local Unity validation; source files to inspect; constraints such as preserving local changes/no direct writes to `dev`; and the first actionable instruction for the next chat.
+- The final message in the old chat says the epic's result, links the handoff, and instructs the next chat to read the handoff, `STATUS.md`, the master plan and referenced audit before editing code.
+
+Use the handoff as an **operational mini-report and continuation instruction**, not as a transcript. It must distinguish confirmed facts from assumptions and must not copy old test totals into new branches.
 
 ## Dependency and validation rules
 - Exactly one active item, tracked in STATUS.md.
