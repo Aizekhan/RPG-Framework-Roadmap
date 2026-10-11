@@ -203,7 +203,7 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Alias the selected existing client/server singleton to the exact `INetworkSystem` service key in draft PR #24; offline mode leaves that key absent.
 - [x] Make event authority a separate explicit policy and bind one NetworkEventBus instance through both `IEventBus` and `INetworkEventBus`.
 - [x] Add EditMode characterization coverage for mode/authority policy, selected network instance, event-bus choice and the identity shared with `SystemRegistry`.
-- [x] GitHub Actions on the last audited PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS test steps passed; Minimal CI passed (no-op workflow). The branch has since advanced to `5819aafe1d535639e9233b1192b62658c73ad01e`; latest workflow was still finishing cleanup when last checked.
+- [x] GitHub Actions on the last audited PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS test steps passed; Minimal CI passed (no-op workflow). Latest GitHub Actions on head `5819aafe1d535639e9233b1192b62658c73ad01e` are both complete and passed.
 
 ### Current source PR — not merged
 - PR #24: https://github.com/Aizekhan/MythHunter/pull/24
