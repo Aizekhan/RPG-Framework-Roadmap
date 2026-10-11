@@ -191,8 +191,9 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 ## 5.3 — Event dispatch
 **Status: ACTIVE — initial audit recorded; registration/caller mapping and characterization plan next**
 - [x] Record first source-backed candidate audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`; no contract extraction approved yet.
-- [ ] Map all IEventBus registrations and concrete implementation selection across installers/composition roots
-- [ ] Map publish/subscribe callers and required compatibility semantics before extraction
+- [x] Map installer order: CoreInstaller binds SimpleEventBus before EventsInstaller conditionally binds EventBus/NetworkEventBus; verify final resolution behavior before changing registrations.
+- [x] Map caller families: bootstrap/state machine/game flow, systems/ECS, UI, batching/throttling/debug, and network adapter; audit records source evidence.
+- [ ] Confirm DI duplicate-registration/helper semantics and effective resolved implementation in the current bootstrap
 - [ ] Separate generic event contracts from concrete MythHunter events
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation
 - [ ] Keep network/replay bridges and middleware as explicit adapters
