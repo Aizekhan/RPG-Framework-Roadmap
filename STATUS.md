@@ -54,9 +54,13 @@
 - DI audit: `Audits/EPIC_05.2_DI_Candidate_Audit.md`.
 - PR #21 merged to `dev`: https://github.com/Aizekhan/MythHunter/pull/21
 - Merge commit: `f57cebb9e0dba11c3e6fbeefc8620627a9363428`.
-- User confirmed Unity tests/project working on the PR branch; GitHub Actions #44 passed Framework boundary/.NET tests. Exact EditMode XML counts were not provided, so no count is inferred here.
-- Implemented 8 DI EditMode characterization tests; fixed scoped service-type caching/injection, Type-based service resolution, and Type-based registration checks.
-- **Next active slice: scope hierarchy, disposal ownership, and current-scope propagation characterization.** No broad Framework DI extraction yet.
+- User confirmed the Unity tests and project work on PR #21; GitHub Actions #44 passed Framework boundary/.NET checks. Exact Unity XML totals were not provided.
+- The merged slice added eight DI characterization tests and fixed scoped instance caching/injection, `Resolve(Type)`, and `IsRegistered(Type)`.
+- **Current PR #22:** https://github.com/Aizekhan/MythHunter/pull/22
+- Branch/head: `feature/epic-05-2-di-scope-lifecycle` / `a48002f8e2e2cd7690f4f338796dcad2288c5a3f`.
+- Changes: isolate worker-thread scope from the container thread's scope; rename misleading `_asyncLocalScope` field to `_threadLocalScope`; deterministic reverse-order cleanup and deduplication of scope-owned disposables; 4 more EditMode tests.
+- CI boundary/.NET run #38121408276 passed; Minimal CI #38121408235 passed as a no-op. Neither runs Unity tests.
+- **Unity EditMode/full-project compile/bootstrap verification are still pending for PR #22. Keep it draft.**
 
 ## Rules
 1. One active roadmap item at a time.
@@ -67,7 +71,7 @@
 6. EPIC 05.1 is complete; EPIC 05.2 is active. PR #21 is merged after the user confirmed Unity validation; preserve all local worktree changes and use focused tests for the next DI lifecycle slice.
 
 ## Next action
-Start a separate bounded PR to characterize and fix current-scope selection (including the self-comparison bug in `SetCurrentScope`), nested/child-scope behavior, and deterministic disposal ownership. First define expected semantics and add tests; then make the smallest source change. Keep the Framework DI assembly deferred until core DI semantics are explicit.
+Run Unity EditMode on `feature/epic-05-2-di-scope-lifecycle`, verify all 12 DI tests are discovered and pass, check full-project compile/Console and game bootstrap/scope smoke. Then review PR #22 and decide merge. Leave async context propagation and transient/singleton disposal policy deferred.
 
 ## Source of truth
 - Master plan: milestone ordering and checklist.
