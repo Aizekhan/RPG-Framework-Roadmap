@@ -190,7 +190,7 @@ Detailed scope, acceptance criteria and rollback plan: [`Tasks/EPIC_03.6_ECS_Con
 PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 
 ## 5.3 — Event dispatch
-**Status: ACTIVE — PR #23 merge validated; PR #24 network-mode correction awaits Unity validation**
+**Status: ACTIVE — PR #23 and PR #24 merged and validated; next: event contract boundary audit**
 
 ### Completed
 - [x] Record source-backed event audit at `Audits/EPIC_05.3_Event_Dispatch_Candidate_Audit.md`.
@@ -203,16 +203,14 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [x] Alias the selected existing client/server singleton to the exact `INetworkSystem` service key in draft PR #24; offline mode leaves that key absent.
 - [x] Make event authority a separate explicit policy and bind one NetworkEventBus instance through both `IEventBus` and `INetworkEventBus`.
 - [x] Add EditMode characterization coverage for mode/authority policy, selected network instance, event-bus choice and the identity shared with `SystemRegistry`.
-- [x] GitHub Actions on the last audited PR #24 head `9ced67674576127d98b3cd328b9b85917faacb18`: Framework boundary/GUID validation and .NET ECS test steps passed; Minimal CI passed (no-op workflow). Latest GitHub Actions on head `5819aafe1d535639e9233b1192b62658c73ad01e` are both complete and passed.
+- [x] GitHub Actions on PR #24 tested head `5819aafe1d535639e9233b1192b62658c73ad01e`: Framework boundary/GUID validation and .NET ECS tests passed; Minimal CI passed (no-op workflow).
+- [x] Merge PR #24 via squash to `dev`: commit `178b1a3e10e4905b0ae162bf73d6e2c3a95386db`; Unity EditMode 23/23, user compile/Console/bootstrap confirmation recorded.
 
-### Current source PR — not merged
-- PR #24: https://github.com/Aizekhan/MythHunter/pull/24
-- Branch: `feature/epic-05-3-network-eventbus-selection`
-- Latest implementation head at last audit: `5819aafe1d535639e9233b1192b62658c73ad01e`
-- [ ] Run Unity 6000.0.45f1 EditMode on PR #24 and record the actual XML totals and relevant test names; PR #23's older 23/23 result does not validate this branch.
-- [ ] User confirms full-project compile, no Unity Console errors, and bootstrap/game smoke specifically on PR #24.
-- [ ] Fix any test/source defects and rerun Unity tests on the updated exact head.
-- [ ] Merge PR #24 only after both gates pass; record actual merge SHA and updated CI/test evidence in STATUS, audit and handoff.
+### Current source task — event contract boundary
+- [ ] Audit candidate neutral publisher/subscriber contracts and consumer needs on `feature/epic-05-3-event-contract-boundary` (created from `dev` after PR #24 merge).
+- [ ] Prove the smallest reusable contract through consumer mapping and tests; keep Unity, MythHunter event policy, and `UniTask` out of a neutral Framework contract unless explicitly accepted as optional adapters.
+- [ ] Do not remove or consolidate `EventBus` / `SimpleEventBus` until differences in ordering, error behavior, pending events, pooling and lifecycle are characterized.
+- [ ] Open a narrow source PR only after a source-backed plan and focused tests exist; then run Unity EditMode and collect user confirmation before merge.
 
 ### Known design boundary
 - Supported explicit event sync modes are Offline, Client and Server. Do not claim Host mode works: current network classes do not support simultaneous dual-role behavior.
@@ -220,7 +218,7 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - Preserve offline default until a real menu/scene/bootstrap configuration path deliberately chooses client or server.
 - The mode selection is currently a serialized setting on `GameBootstrapper`; trace UI/menu/scene callers later before proposing a broader network bootstrap refactor.
 
-### Event contract extraction — blocked until role-selection fix is validated
+### Event contract extraction — active audit; implementation remains gated
 - [ ] Separate generic event contracts from concrete MythHunter events only after actual cross-module consumer demand is evidenced.
 - [ ] Specify ordering, exception handling, subscription disposal and cancellation.
 - [ ] Keep network/replay bridges, middleware and pooling as explicit adapters/optional capabilities.
