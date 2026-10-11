@@ -1,7 +1,7 @@
 # EPIC 05.3 — Event Dispatch Candidate Audit
 
 ## Status
-Initial source-backed audit and registration-order fix are complete. PR #23 merged to `dev` as `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`. Event API extraction is **not yet approved**; next resolve network-mode composition and binding semantics.
+Initial source-backed audit is complete. PR #23 registration-order fix merged to `dev` as `8e8ad7b16f813dcdebc4b2d057616f75f73f2fe8`; full-project compile/Console/bootstrap confirmed by user and Unity EditMode 23/23 passed. Draft PR #24 https://github.com/Aizekhan/MythHunter/pull/24 implements explicit network event mode and role-aware bus wiring; its Unity validation remains pending. Event API extraction is **not approved yet**.
 
 ## Source baseline
 Reviewed `Aizekhan/MythHunter` on `dev` after EPIC 05.2 merge `9c6f03675a85085fe5f713dfd9a9be871b5c1e59`.
@@ -65,6 +65,20 @@ Key sources:
 14. `NetworkAuthority` directly depends on both `IClientNetworkSystem` and `IServerNetworkSystem`. `NetworkEventBus` depends on `INetworkSystem` and uses `is IClientNetworkSystem` / `is IServerNetworkSystem` to enforce event-authority attributes. Blindly binding either role singleton to `INetworkSystem` may cause wrong behavior for the other role. Registering the separate combined `NetworkSystem` is not a drop-in solution: that class implements only `INetworkSystem`, so `NetworkEventBus`'s role checks would not recognize it as client or server. It would need a designed role abstraction or adapter and reconciliation with the duplicate wrappers.
 
 15. Source search finds no production call sites for `NetworkAuthority.SetClientActive` / `SetServerActive` and no visible gameplay call sites of `IClientNetworkSystem.ConnectToServerAsync` / `IServerNetworkSystem.StartServer` outside their declarations/implementations in the indexed source. Treat this as a likely incomplete networking integration, not proof that no reflection/Unity scene/external code depends on these APIs. Before implementing composition, trace serialized scene objects, UI/menu call paths, and bootstrap/runtime usage in the checked-out project.
+
+## Follow-up implementation — PR #24 (draft, Unity validation pending)
+
+- PR head at last recorded review: `9ced67674576127d98b3cd328b9b85917faacb18`.
+- Explicit `EventNetworkMode` supports `Offline`, `Client`, `Server`; `GameBootstrapper` stores it as a serialized composition-root setting, with Offline as the compatibility default.
+- `NetworkingInstaller` binds the selected existing role singleton object to the exact `INetworkSystem` key. Offline does not bind that key.
+- `EventsInstaller` now chooses the event bus from `EventNetworkMode`, not a DI type-presence heuristic.
+- For network mode, register/resolves one `NetworkEventBus` singleton under `INetworkEventBus` and binds that same object instance as `IEventBus`. This avoids independently constructed buses with split subscriber registries/queues.
+- `EventNetworkAuthorityPolicy` decides whether the configured local role may send Server/Client/Both-authority events. `NetworkEventBus.Dispose` unregisters its network receive handler before disposing the base bus.
+- Reflection-based EditMode tests cover authority policy, the exact role instance alias, offline/client/server bus selection, and bus identity shared with `SystemRegistry`.
+- GitHub Actions on the reviewed head passed: framework boundary/GUID validation and .NET ECS tests; Minimal CI was successful but is only a no-op workflow.
+- Unity EditMode counts and user confirmation of project compilation/Console/bootstrap for PR #24 remain **pending**; do not merge using PR #23 older results.
+- Host mode is deliberately absent: current implementation does not support simultaneous client+server operation. Do not represent Host as working unless transport behavior and authority are implemented and tested.
+- New Unity assets currently have explicit Unity `.meta` GUIDs: `EventNetworkMode.cs.meta` = `d153502a8dbb4a09a100000000000004`; `EventNetworkAuthorityPolicy.cs.meta` = `d153502a8dbb4a09a100000000000005`.
 
 ## Decision
 Do not move/rename `IEvent`, `IEventBus`, or `IEventPool` into a Framework assembly yet. A neutral extraction would first require an explicit choice about event payload identity, priority (if any), sync/async abstraction, ordering, cancellation, error propagation, and subscription lifetime. Avoid creating an empty contracts assembly or changing runtime behavior in an audit task.
