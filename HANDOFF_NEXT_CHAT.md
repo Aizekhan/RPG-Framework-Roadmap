@@ -3,83 +3,74 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 07 Phase 1: Modular Game Composition System — PR #58 [READY FOR REVIEW].**
+**Determine next milestone after EPIC 07 completion.**
 
-- PR: https://github.com/Aizekhan/MythHunter/pull/58
+## Just completed (2026-10-13)
+**EPIC 07 COMPLETED ✅** — Modular Game Composition System
+
+### Phase 1 (PR #58) — MERGED as `0862793`
 - Branch: `feature/epic-07-game-layer-composition`
-- Initial head: `d972a5a` (initial implementation)
-- Current head: `f701e79` (assembly fixes + validation + metadata + .claude settings)
-- Scope: Implements plug-and-play module system for Framework/Game separation and optional features
+- Merge commit: `0862793`
+- Scope: Modular composition infrastructure
   - Module infrastructure with dependency resolution (topological sort)
   - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
   - Game modules: GameLayerModule, InfrastructureModule, GameplayModule
   - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
   - RPGFramework.Core.Runtime assembly for composition system
-  - 8 architecture tests in ModularCompositionTests
-- Files: 18 changed, 787+ insertions
-- Assembly dependency fixes (7 additional commits after initial implementation)
-- Unity validation COMPLETED at HEAD `1fa6115` (metadata + settings updates: `f701e79`):
+- Unity validation at HEAD `1fa6115`:
   - ✅ EditMode: 58/60 passed (96.7%), ModularCompositionTests: 7/8 passed
   - ✅ Compilation: Clean, no errors
-  - ✅ System functionally validated and ready for review
-- Note: GitHub Actions failing on Unity licensing (CI configuration issue, NOT code problem)
 
-## Just merged (2026-10-12)
+### Phase 2 (PR #59) — MERGED as `92c9abe`
+- Branch: `feature/epic-07-phase2-core-installer-split`
+- Merge commit: `92c9abe`
+- Scope: CoreInstaller split and module migration
+  - Created FrameworkCoreInstaller (Framework services + ParallelSystemRegistry)
+  - Created GameCoreInstaller (Game services + Event system)
+  - Migrated 4 installers to modular architecture
+  - Removed direct installer calls from GameBootstrapper
+  - Deleted dead code (InstallerRegistry)
+  - Resolved hidden registration conflicts (ISystemRegistry, IEventBus)
+  - Fixed LazyDependencyInjector duplication
+- Unity validation at HEAD `859b846`:
+  - ✅ EditMode: 62/62 passed (100%)
+  - ✅ Full project compile: Clean, no errors
+  - ✅ Player Build: SUCCESS (D:\MythHunter-Git\Builds\MythHunter-DevBuild.exe, 3.0 GB, IL2CPP)
+  - ✅ Smoke test: Game launches successfully, no crashes
+
+## Earlier merges (2026-10-12)
 - **PR #56** (JobHandle IL2CPP fix): `d36b271` → Fixes IL2CPP compilation error in `JobHandleExtensions.IsValid()`
 - **PR #57** (Architecture Enforcement Phase 1): `6637cca` → Foundation layer with architecture tests
 - **PR #54** (EPIC 01): `e8f724f` → ComponentCache OnDemand positive-membership semantics
 
 ## Related open PRs
-None currently - PR #58 is the active PR
+None currently
 
-## Phase 2 Research Completed (2026-10-12)
+## EPIC 07 Achievements
+- ✅ Clear Framework/Game separation achieved
+- ✅ Modular architecture with dependency resolution
+- ✅ Zero Framework dependencies on game logic
+- ✅ Optional features (Networking, Lobby, Debug) can be loaded conditionally
+- ✅ Resolved 4 architectural issues: God Class anti-pattern, hidden registration overwrites, resource duplication, dead code
+- ✅ 100% test pass rate (62/62 EditMode tests)
+- ✅ Clean compilation, successful Player Build, game runs without crashes
 
-### Critical Findings
-Deep analysis of installer migration revealed **4 categories of architectural issues**:
-
-1. **God Class Anti-pattern**
-   - CoreInstaller mixes 13 services (7 Framework + 6 Game)
-   - Violates Single Responsibility Principle
-
-2. **Hidden Registration Overwrites**
-   - ISystemRegistry registered twice: SystemRegistry → ParallelSystemRegistry
-   - IEventBus registered twice: SimpleEventBus → EventBus/NetworkEventBus
-   - Works by accident (execution order dependent)
-
-3. **Resource Duplication**
-   - LazyDependencyInjector GameObject created TWICE by different installers
-   - First instance unused, second instance registered in DI
-
-4. **Dead Code**
-   - InstallerRegistry class has zero usages
-
-### Revised Phase 2 Strategy
-Split CoreInstaller before migration:
-1. Create **FrameworkCoreInstaller** (Framework services + ParallelSystemRegistry)
-2. Create **GameCoreInstaller** (Game services + Event system)
-3. Update FrameworkCoreModule → use FrameworkCoreInstaller
-4. Update GameLayerModule → use GameCoreInstaller
-5. Update InfrastructureModule → add LazyDI + ProfilePresenter
-6. Remove 4 direct installer calls from GameBootstrapper
-7. Delete dead code (InstallerRegistry)
-
-**Benefits**: No conflicts, clear Framework/Game separation, testable independently
-
-### Phase 2 Documentation
-Created in MythHunter-Git repository:
-- `EPIC-07-Phase2-Complete-Analysis.md` (700+ lines, ready-to-use implementation code)
-- `EPIC-07-Phase2-Research-Findings.md` (registration conflicts analysis)
-- `EPIC-07-Phase2-Additional-Findings.md` (LazyDI duplication investigation)
-- `SESSION-2026-10-12-Summary.md` (complete session summary)
+## Documentation created
+In MythHunter-Git repository:
+- `EPIC-07-Phase2-Complete-Analysis.md` (architectural analysis)
+- `EPIC-07-Phase2-Research-Findings.md` (registration conflicts)
+- `EPIC-07-Phase2-Additional-Findings.md` (LazyDI duplication)
+- `SESSION-2026-10-12-Summary.md` (session summary)
+- `ENVIRONMENT-SETUP.md` (environment configuration)
+- `SMOKE-TESTS.md` (smoke test procedures)
 
 ## Next actions
-1. **Code review and merge PR #58** - Phase 1 is validated and ready
-2. **EPIC 07 Phase 2** (after PR #58 merge):
-   - Implement revised strategy (split CoreInstaller)
-   - Migrate 4 installers to modules with conflict resolution
-   - Remove direct installer calls
-   - Validate offline vs multiplayer mode configurations
-3. Complete EPIC 07: Document game composition patterns, validate startup/shutdown
+1. **Identify next roadmap milestone** — Candidate epics:
+   - EPIC 06: Serialization System
+   - EPIC 08: Advanced ECS Features
+   - Complete remaining EPIC 01 validation gates (detailed Movement/Visibility/Hero smoke checks, reverse-reference audit)
+2. Update roadmap master plan if needed
+3. Begin implementation of chosen milestone
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -89,8 +80,17 @@ Created in MythHunter-Git repository:
 - GitHub CI, timeouts or results from another SHA are not Unity validation.
 - Test results are valid only for the exact commit SHA tested.
 
-## Key Decisions
+## Historical Key Decisions
 - EPIC 07 (Game Layer Composition) prioritized before EPIC 06 (Serialization) to establish clear Framework/Game boundaries
 - Modular architecture enables optional features (Networking, Lobby, Debug Tools) to be loaded conditionally
 - Framework Core has zero game dependencies - universal RPG framework principle maintained
-- Phase 2 research uncovered hidden architectural issues requiring CoreInstaller split
+- Phase 2 research uncovered hidden architectural issues requiring CoreInstaller split — ALL RESOLVED ✅
+
+## Current dev HEAD validation status
+At commit `92c9abe`:
+- [x] Unity EditMode: 62/62 passed (100%)
+- [x] Full compilation: Clean, no errors
+- [x] Player Build: SUCCESS
+- [x] Game launch smoke test: PASSED (no crashes)
+- [ ] Detailed Movement/Visibility/Hero system smoke checks
+- [ ] Complete reverse-reference audit for ComponentCache/registry APIs
