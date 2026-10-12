@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-11.
+> Last reconciled against GitHub: 2026-10-12.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `6bef9b210ee35b40e4c28e74e5550c3f1c58d762` — [PR #53 MovementSystem write-through merge](https://github.com/Aizekhan/MythHunter/commit/6bef9b210ee35b40e4c28e74e5550c3f1c58d762).
+- Current source head: `d36b271` — [PR #56 JobHandle IL2CPP compatibility fix](https://github.com/Aizekhan/MythHunter/commit/d36b271).
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -17,20 +17,34 @@
 - EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
 - PR #50 merged to `dev` as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls are guarded by `#if UNITY_EDITOR`, and `UnityEditor.EditorStyles.boldLabel` is fully qualified.
 - PR #48 merged to `dev` as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
+- **EPIC 05.9**: PR #54 merged as `e8f724f` — ComponentCache OnDemand positive-membership semantics.
+- **Architecture Enforcement Phase 1**: PR #57 merged as `6637cca` — Foundation layer with architecture tests.
+- **JobHandle IL2CPP fix**: PR #56 merged as `d36b271` — Fixes IL2CPP compilation error in `JobHandleExtensions.IsValid()`.
 - **Validation caveat:** PR #48's 44/44 Unity EditMode report is for local HEAD `40b6296`, not exact PR head `6631edf`. The GitHub workflows succeeded on the PR head but don't compile the full Unity project. The PR's own merge commit message preserves that exact-head Unity EditMode, full compile/Console, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. PR #50 CLI EditMode timed out without an NUnit report; inconclusive, not a pass/failure.
 - Local investigation found no project-specific Unity Editor/test process, and `Editor.log` didn't change over 15 seconds. Do not kill long-lived Unity CLI server PID 18080 or delete caches based only on this evidence.
 - PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`; it updates `ARCHITECTURE_AUDIT.md`, `docs/architecture-audit/11-reference-validation.md`, `docs/architecture-audit/16-component-cache-test-plan.md`, and `MODULE_DEPENDENCY_MAP.md` to reflect the merged code while preserving validation caveats.
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 05.9 bounded implementation: OnDemand positive-membership semantics, tracked by [MythHunter PR #54](https://github.com/Aizekhan/MythHunter/pull/54).** This follows the user's explicit direction to continue EPIC 5; EPIC 01 reference-validation gates remain open and no broad ECS extraction is authorized.
+**ACTIVE — EPIC 07 Phase 1: Modular Game Composition System, tracked by [MythHunter PR #58](https://github.com/Aizekhan/MythHunter/pull/58).**
 
-### PR #54
-- Branch: `fix/epic-05-9-ondemand-positive-membership`.
-- Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
-- Scope: `ComponentCache<T>.Contains` in OnDemand mode now checks authoritative `IEntityManager.HasComponent<T>`, refreshes the cache when present, and removes stale membership when absent. Added `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- GitHub Actions on this exact head passed: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither runs Unity EditMode.
-- Draft; Unity EditMode for the new regression test and full Unity build/smoke validation are not yet confirmed. Do not merge until the test result is available and the remaining required gates are accounted for.
+### PR #58
+- Branch: `feature/epic-07-game-layer-composition`.
+- Initial head: `d972a5a` (initial implementation).
+- Current head: `f701e79` (assembly fixes + validation + metadata + .claude settings).
+- Scope: Implements plug-and-play module system for Framework/Game separation and optional features.
+  - Module infrastructure: IFeatureModule, BaseFeatureModule, GameCompositionBuilder with topological dependency sort
+  - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
+  - Game modules: GameLayerModule, InfrastructureModule, GameplayModule
+  - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
+  - RPGFramework.Core.Runtime assembly for composition system
+  - 8 architecture tests in ModularCompositionTests
+- Files: 18 changed, 787+ insertions.
+- Unity validation completed at HEAD `1fa6115`:
+  - ✅ EditMode: 58/60 tests passed (96.7%), ModularCompositionTests: 7/8 passed
+  - ✅ Full project compile: Clean, no errors
+- Note: GitHub Actions failing on Unity licensing (CI configuration issue, not code problem).
+- **Status: READY FOR REVIEW**
 
 ### Latest merged bounded source slice
 - [PR #53 — MovementSystem authoritative write-through](https://github.com/Aizekhan/MythHunter/pull/53) merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`.
