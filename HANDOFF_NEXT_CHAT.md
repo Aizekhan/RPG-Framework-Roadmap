@@ -32,14 +32,24 @@
 
 ## Next actions
 1. **Code review and merge PR #58** - Phase 1 is validated and ready
+   - Note: GitHub Actions failing on Unity licensing (CI configuration issue, NOT code)
+   - Local validation complete: 58/60 tests, clean compilation
 2. **EPIC 07 Phase 2** (after PR #58 merge):
-   - Migrate 4 remaining installers to modular system:
-     - ParallelSystemsInstaller → FrameworkCoreModule
-     - EventsInstaller → GameLayerModule
-     - LazyDependencyInjectorInstaller → InfrastructureModule
-     - ProfileInstaller → InfrastructureModule
-   - Remove direct installer calls from GameBootstrapper
-   - See `MythHunter-Git/EPIC-07-Phase2-Plan.md` for detailed migration strategy
+   - **CRITICAL FINDINGS from research (2026-10-12)**:
+     - CoreInstaller is a God Class mixing 7 Framework + 6 Game services
+     - ISystemRegistry and IEventBus registered TWICE (hidden overwrites)
+     - LazyDependencyInjector created TWICE by different installers
+     - InstallerRegistry is dead code (zero usages)
+   - **Revised Strategy**: Split CoreInstaller before migration
+     - Create FrameworkCoreInstaller (Framework services + ParallelSystemRegistry)
+     - Create GameCoreInstaller (Game services + Events)
+     - Update modules to use new installers
+     - Eliminate duplication and conflicts
+   - See detailed analysis in `MythHunter-Git/`:
+     - `EPIC-07-Phase2-Complete-Analysis.md` (comprehensive implementation guide)
+     - `EPIC-07-Phase2-Research-Findings.md` (registration conflicts)
+     - `EPIC-07-Phase2-Additional-Findings.md` (LazyDI duplication)
+     - `SESSION-2026-10-12-Summary.md` (session summary)
 3. Validate offline vs multiplayer mode configurations
 4. Complete EPIC 07: Document game composition patterns, validate startup/shutdown
 
