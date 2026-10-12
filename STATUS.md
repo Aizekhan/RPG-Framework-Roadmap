@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `d36b271` — [PR #56 JobHandle IL2CPP compatibility fix](https://github.com/Aizekhan/MythHunter/commit/d36b271).
+- Current source head: `0862793` — [PR #58 EPIC 07 Phase 1 - Modular Game Composition System](https://github.com/Aizekhan/MythHunter/commit/0862793).
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
