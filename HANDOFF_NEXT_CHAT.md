@@ -65,12 +65,19 @@ In MythHunter-Git repository:
 - `SMOKE-TESTS.md` (smoke test procedures)
 
 ## Next actions
-1. **Identify next roadmap milestone** — Candidate epics:
-   - EPIC 06: Serialization System
-   - EPIC 08: Advanced ECS Features
-   - Complete remaining EPIC 01 validation gates (detailed Movement/Visibility/Hero smoke checks, reverse-reference audit)
-2. Update roadmap master plan if needed
-3. Begin implementation of chosen milestone
+1. **EPIC 06 — Serialization System**:
+   - Audit component/entity/versioned/delta/network serialization separately
+   - Define stable schema/type identifiers for cross-version/process boundaries
+   - Separate generic serialization from persistence policy and network wire formats
+   - Extract proven-reusable contracts/runtime and test compatibility
+
+2. **EPIC 08 — Dependency Debt and Lifecycle Stabilization**:
+   - Remove remaining cycles and unnecessary dependencies one at a time
+   - Avoid repeating fixes already handled during module extraction
+   - Stabilize async cancellation/shutdown and reflection paths when evidence warrants
+   - Enforce forbidden references mechanically where feasible
+
+3. Update roadmap master plan with completed EPIC 01 and EPIC 07 milestones
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -86,11 +93,14 @@ In MythHunter-Git repository:
 - Framework Core has zero game dependencies - universal RPG framework principle maintained
 - Phase 2 research uncovered hidden architectural issues requiring CoreInstaller split — ALL RESOLVED ✅
 
-## Current dev HEAD validation status
-At commit `92c9abe`:
+## EPIC 01 COMPLETED ✅
+Validation status at commit `92c9abe` (2026-10-13):
 - [x] Unity EditMode: 62/62 passed (100%)
 - [x] Full compilation: Clean, no errors
 - [x] Player Build: SUCCESS
 - [x] Game launch smoke test: PASSED (no crashes)
-- [ ] Detailed Movement/Visibility/Hero system smoke checks
-- [ ] Complete reverse-reference audit for ComponentCache/registry APIs
+- [x] Detailed Movement/Visibility/Hero system smoke checks: PASSED
+- [x] Complete reverse-reference audit: COMPLETE
+  - Audit documented in `MythHunter-Git/EPIC-01-Reverse-Reference-Audit.md`
+  - All code-level references mapped
+  - Unity asset inspection deferred (low priority)

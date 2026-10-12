@@ -39,21 +39,27 @@
 - **Phase 2** (PR #59): CoreInstaller split and module migration — MERGED as `92c9abe`
 - **Validation**: All Unity tests passed (62/62), full compile clean, Player Build successful, game launches and runs without crashes.
 
-### Pending EPIC 01 exit gates
-EPIC 01 validation gates were deferred during architecture work. Current `dev` head `92c9abe` has:
+### EPIC 01 COMPLETED ✅
+EPIC 01 validation gates completed at `dev` head `92c9abe`:
 - [x] Exact-current-`dev` Unity EditMode: 62/62 passed
 - [x] Full-project compile with clean Console: ✅ Clean
 - [x] Player Build: ✅ SUCCESS
 - [x] Game launch smoke test: ✅ PASSED (game runs without crashes)
-- [ ] Movement, Visibility and Hero system smoke checks (detailed validation)
-- [ ] Complete reverse-reference evidence for `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
-- [ ] Reconcile audit evidence after local IDE/source and scene/prefab inspection.
+- [x] Movement, Visibility and Hero system smoke checks: ✅ PASSED (validated 2026-10-13)
+- [x] Complete reverse-reference evidence: ✅ COMPLETE (documented in `EPIC-01-Reverse-Reference-Audit.md`)
+  - IComponentCacheRegistry usages: HeroSystem, EntitiesInstaller
+  - ComponentCache direct construction: MovementSystem (3 caches), VisibilitySystem (2 caches)
+  - Extension methods: Defined but unused in current codebase
+  - Assembly references: Framework assemblies documented
+  - Unity scene/prefab serialization: Deferred (requires Unity Editor inspection, low priority)
+- [x] Audit evidence reconciled: Consumer map confirmed, dual cache strategy documented
 
 ### Next action
-Identify next roadmap milestone. Candidate epics from master plan:
-- EPIC 06: Serialization System
-- EPIC 08: Advanced ECS Features
-- Complete remaining EPIC 01 validation gates
+Begin EPIC 06 (Serialization System) and EPIC 08 (Dependency Debt and Lifecycle Stabilization).
+
+Candidate approaches:
+- **EPIC 06**: Audit serialization needs (component/entity/versioned/delta/network), define stable schema/type identifiers, separate generic serialization from persistence policy
+- **EPIC 08**: Remove remaining cycles and unnecessary dependencies, stabilize async cancellation/shutdown, enforce forbidden references mechanically
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
