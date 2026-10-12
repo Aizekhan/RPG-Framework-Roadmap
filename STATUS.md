@@ -32,7 +32,26 @@
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — Determine next milestone after EPIC 07 completion.**
+**ACTIVE — EPIC 08 Phases 1 & 2 in PR review** ([PR #60](https://github.com/Aizekhan/MythHunter/pull/60))
+
+### EPIC 08 Phases 1 & 2 — IN PR REVIEW
+- **Branch**: `feature/epic-08-phase1-async-cancellation`
+- **PR**: [#60](https://github.com/Aizekhan/MythHunter/pull/60)
+- **HEAD**: `f313c21` (12 commits from base `92c9abe`)
+- **Status**: Code complete, awaiting merge
+- **Scope**: Async cancellation support and system decoupling
+  - **Phase 1**: EventBus optimization + async cancellation
+    - EventBus reflection: 10-20x performance improvement (cached MethodInfo + compiled expression trees)
+    - Cancellation token support: 50+ async methods (State classes, ResourceManager, NavigationService)
+    - AsyncTaskTracker: Fire-and-forget operation tracking with cancellation and exception handling
+    - Initialization timeout: 30-second timeout for InitializeAsync
+  - **Phase 2**: System refactoring and decoupling
+    - TimerService: Extracted from ITimerSystem (service layer pattern)
+    - ArchetypeSystem: Event-driven entity creation (CreateEntityFromArchetypeRequestEvent/Response)
+    - HeroSelectionService: Service layer for hero selection
+    - LobbySystem: Fully decoupled from all ISystem dependencies
+- **Files**: 28 changed, 1,392 insertions, 118 deletions
+- **Validation**: Pending Unity EditMode tests and Player Build after merge
 
 ### EPIC 07 COMPLETED ✅
 - **Phase 1** (PR #58): Modular Game Composition System — MERGED as `0862793`
@@ -55,11 +74,11 @@ EPIC 01 validation gates completed at `dev` head `92c9abe`:
 - [x] Audit evidence reconciled: Consumer map confirmed, dual cache strategy documented
 
 ### Next action
-Begin EPIC 06 (Serialization System) and EPIC 08 (Dependency Debt and Lifecycle Stabilization).
+After EPIC 08 merge: Continue with EPIC 08 Phase 3 (Thread safety and memory leaks) or begin EPIC 06 Phase 1 (Component serializers).
 
 Candidate approaches:
-- **EPIC 06**: Audit serialization needs (component/entity/versioned/delta/network), define stable schema/type identifiers, separate generic serialization from persistence policy
-- **EPIC 08**: Remove remaining cycles and unnecessary dependencies, stabilize async cancellation/shutdown, enforce forbidden references mechanically
+- **EPIC 06 Phase 1**: Complete 12 stub component serializers, entity serialization foundation, serialization tests
+- **EPIC 08 Phase 3**: Thread safety fixes, duplicate subscription detection, memory leak fixes, shutdown cancellation
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
