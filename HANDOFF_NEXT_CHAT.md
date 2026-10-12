@@ -31,13 +31,17 @@
 - **PR #8** (Roadmap): EPIC 07 audit document (branch: `update/epic-07-phase1-progress`)
 
 ## Next actions
-1. Run Unity EditMode tests on PR #58 HEAD `d972a5a` to validate ModularCompositionTests (7 new tests)
-2. Full-project compile with clean Console
-3. Test conditional module loading:
-   - Offline configuration: FrameworkCore, GameLayer, Infrastructure, Gameplay only
-   - Multiplayer configuration: + NetworkingModule, LobbyModule
-4. Player Build validation
-5. After PR #58 validation, consider Phase 2: migrate remaining installers (EventsInstaller, ProfileInstaller, ParallelSystemsInstaller)
+1. **Code review and merge PR #58** - Phase 1 is validated and ready
+2. **EPIC 07 Phase 2** (after PR #58 merge):
+   - Migrate 4 remaining installers to modular system:
+     - ParallelSystemsInstaller → FrameworkCoreModule
+     - EventsInstaller → GameLayerModule
+     - LazyDependencyInjectorInstaller → InfrastructureModule
+     - ProfileInstaller → InfrastructureModule
+   - Remove direct installer calls from GameBootstrapper
+   - See `MythHunter-Git/EPIC-07-Phase2-Plan.md` for detailed migration strategy
+3. Validate offline vs multiplayer mode configurations
+4. Complete EPIC 07: Document game composition patterns, validate startup/shutdown
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
