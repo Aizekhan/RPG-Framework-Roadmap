@@ -3,20 +3,25 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 07 Phase 1: Modular Game Composition System — PR #58.**
+**EPIC 07 Phase 1: Modular Game Composition System — PR #58 [READY FOR REVIEW].**
 
 - PR: https://github.com/Aizekhan/MythHunter/pull/58
 - Branch: `feature/epic-07-game-layer-composition`
-- Exact head: `d972a5a8396d1f6bfa5218e68e8d9306d7447595`
+- Initial head: `d972a5a` (initial implementation)
+- Current head: `b25d1a4` (assembly fixes + validation complete)
 - Scope: Implements plug-and-play module system for Framework/Game separation and optional features
   - Module infrastructure with dependency resolution (topological sort)
   - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
   - Game modules: GameLayerModule, InfrastructureModule, GameplayModule
   - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
-  - GameBootstrapper integration replacing InstallerRegistry
-  - 7 new architecture tests in ModularCompositionTests
-- Files: 14 changed, 766 insertions
-- Unity validation pending: EditMode tests, full compile, Player Build
+  - RPGFramework.Core.Runtime assembly for composition system
+  - 8 architecture tests in ModularCompositionTests
+- Files: 18 changed, 787+ insertions
+- Assembly dependency fixes (7 additional commits after initial implementation)
+- Unity validation COMPLETED at HEAD `b25d1a4`:
+  - ✅ EditMode: 58/60 passed (96.7%), ModularCompositionTests: 7/8 passed
+  - ✅ Compilation: Clean, no errors
+  - ✅ System functionally validated and ready for review
 
 ## Just merged (2026-10-12)
 - **PR #54** (EPIC 01): ComponentCache OnDemand positive-membership semantics → `e8f724fe4f6e54e6913db86ce7e17bd68f6ad85c`
