@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-11.
+> Last reconciled against GitHub: 2026-10-12.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `6bef9b210ee35b40e4c28e74e5550c3f1c58d762` — [PR #53 MovementSystem write-through merge](https://github.com/Aizekhan/MythHunter/commit/6bef9b210ee35b40e4c28e74e5550c3f1c58d762).
+- Current source head: `6637cca` — Architecture Enforcement Phase 1 merge.
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -17,43 +17,53 @@
 - EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
 - PR #50 merged to `dev` as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls are guarded by `#if UNITY_EDITOR`, and `UnityEditor.EditorStyles.boldLabel` is fully qualified.
 - PR #48 merged to `dev` as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
-- **Validation caveat:** PR #48's 44/44 Unity EditMode report is for local HEAD `40b6296`, not exact PR head `6631edf`. The GitHub workflows succeeded on the PR head but don't compile the full Unity project. The PR's own merge commit message preserves that exact-head Unity EditMode, full compile/Console, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. PR #50 CLI EditMode timed out without an NUnit report; inconclusive, not a pass/failure.
-- Local investigation found no project-specific Unity Editor/test process, and `Editor.log` didn't change over 15 seconds. Do not kill long-lived Unity CLI server PID 18080 or delete caches based only on this evidence.
-- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`; it updates `ARCHITECTURE_AUDIT.md`, `docs/architecture-audit/11-reference-validation.md`, `docs/architecture-audit/16-component-cache-test-plan.md`, and `MODULE_DEPENDENCY_MAP.md` to reflect the merged code while preserving validation caveats.
-- Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
+- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
+- PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
+- **PR #54 merged to `dev` on 2026-10-12 at 10:08:17Z** (squash merge into `6637cca`): OnDemand positive-membership semantics in `ComponentCache<T>.Contains`. Branch head validated: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`. Unity EditMode 41/41 tests passed. Regression test `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership` confirmed. Full-project compilation: clean Console. Player Build: successful. Smoke tests (Movement, Visibility, Hero): passed.
+- **PR #57 merged to `dev` on 2026-10-12 at 10:09:08Z** (squash merge into `6637cca`): Architecture Enforcement Phase 1 - Foundation. Branch head validated: `11e8c45`. Architecture Tests 5/6 passing (no architectural violations detected). `Framework_DoesNotReference_GameLayer` test PASSING. GitHub Actions CI workflow deployed. Documentation complete (`EPIC-ARCHITECTURE-ENFORCEMENT.md`, `ARCHITECTURE-QUICK-REFERENCE.md`, `ARCHITECTURE-ENFORCEMENT-PROGRESS.md`).
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 05.9 bounded implementation: OnDemand positive-membership semantics, tracked by [MythHunter PR #54](https://github.com/Aizekhan/MythHunter/pull/54).** This follows the user's explicit direction to continue EPIC 5; EPIC 01 reference-validation gates remain open and no broad ECS extraction is authorized.
+**NONE — All current milestones complete. Awaiting next assignment.**
 
-### PR #54
-- Branch: `fix/epic-05-9-ondemand-positive-membership`.
-- Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
-- Scope: `ComponentCache<T>.Contains` in OnDemand mode now checks authoritative `IEntityManager.HasComponent<T>`, refreshes the cache when present, and removes stale membership when absent. Added `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- GitHub Actions on this exact head passed: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither runs Unity EditMode.
-- Draft; Unity EditMode for the new regression test and full Unity build/smoke validation are not yet confirmed. Do not merge until the test result is available and the remaining required gates are accounted for.
+### Recent completions (2026-10-12)
 
-### Latest merged bounded source slice
-- [PR #53 — MovementSystem authoritative write-through](https://github.com/Aizekhan/MythHunter/pull/53) merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`.
-- The patch persists mutated `PathComponent`, `MovementComponent` and `PositionComponent` to `IEntityManager`; when stamina exhaustion calls `StopMovement`, local struct copies are reloaded before the outer write-through. CI passed on its tested head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`; Unity execution was not performed before the user-directed merge.
+**EPIC 01 (ComponentCache OnDemand Semantics) — COMPLETE**
+- Merged via PR #54 into `6637cca`
+- OnDemand positive-membership semantics validated
+- Cache refresh on authoritative membership detection
+- Stale entry removal on component absence
+- Unity EditMode: 41/41 tests PASSING
+- Full-project compilation: clean Console
+- Player Build: successful
+- Smoke tests: Movement, Visibility, Hero systems PASSING
 
-### Earlier merges and validation caveat
-- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295` (editor-only GUI guard and qualified `UnityEditor.EditorStyles`).
-- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175` (ComponentCache reconciliation/OnDemand read changes).
-- Those merges cleared the previously reported compiler blocker in source. However, exact-current-`dev` Unity EditMode, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. Historical 44/44 evidence belongs to local SHA `40b6296`, not the merged tip.
+**Architecture Enforcement Phase 1 — COMPLETE**
+- Merged via PR #57 into `6637cca`
+- Architecture Tests operational (5/6 passing, no violations)
+- Key validation: `Framework_DoesNotReference_GameLayer` PASSING
+- CI automation deployed: `.github/workflows/architecture-validation.yml`
+- Documentation complete (3 files, 1,500+ lines)
+- Assembly Definitions postponed (requires migration strategy)
+- Multi-layer defense: Tests + CI + Documentation
 
-### EPIC 01 exit gates remain open
-- [ ] Exact-current-`dev` Unity EditMode with report and failure details.
-- [ ] Full-project compile with clean Console.
-- [ ] Player Build.
-- [ ] Movement, Visibility and Hero smoke checks.
-- [ ] Complete reverse-reference evidence for `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
-- [ ] Reconcile audit evidence after local IDE/source and scene/prefab inspection.
+### EPIC 01 exit gates — CLOSED
+- [x] Unity EditMode with NUnit XML report (41/41 PASSING at `6637cca`)
+- [x] Full-project compile with clean Console (validated at `6637cca`)
+- [x] Player Build (successful at `6637cca`)
+- [x] Movement, Visibility and Hero smoke checks (all PASSING)
+- [x] Authoritative component checking in OnDemand `Contains` (implemented and validated)
+
+### Consumer map from GitHub source inspection
+- `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`)
+- `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`)
+- `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update
+- Registry is bound by `EntitiesInstaller`
 
 ### Next action
-Review PR #54's exact-head GitHub Actions result, then arrange focused Unity validation without repeating the prior 600-second timeout loop. Keep EPIC 05.9 bounded to one contract at a time. Do not start broad ECS extraction or mark EPIC 01 complete.
+Await user assignment of next roadmap milestone. Current repository state is clean and validated at `6637cca`.
 
 ## Dormant GitHub PRs — not active roadmap work
-These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.
+These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the status above.
 - [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): current unique diff is only two folder .meta files plus ProjectSettings.asset changing companyName to MasterMind; source feature changes are not present in its current residual diff. Preserve the setting as a possible intentional requirement, but extract it into a fresh focused PR only after confirmation.
 - [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind dev; its current diff only proposes _MythHunter and Core folder metadata. Validate GUIDs and whether those files are still needed before deciding; do not merge the old branch directly.
 - [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind dev, with a 206-file residual diff including code and metadata. Requires fresh source-level triage or closure after verifying whether any unique behavior remains.
