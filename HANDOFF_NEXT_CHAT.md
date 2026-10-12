@@ -64,20 +64,109 @@ In MythHunter-Git repository:
 - `ENVIRONMENT-SETUP.md` (environment configuration)
 - `SMOKE-TESTS.md` (smoke test procedures)
 
-## Next actions
-1. **EPIC 06 — Serialization System**:
-   - Audit component/entity/versioned/delta/network serialization separately
-   - Define stable schema/type identifiers for cross-version/process boundaries
-   - Separate generic serialization from persistence policy and network wire formats
-   - Extract proven-reusable contracts/runtime and test compatibility
+## Session 2026-10-13 Completed
 
-2. **EPIC 08 — Dependency Debt and Lifecycle Stabilization**:
-   - Remove remaining cycles and unnecessary dependencies one at a time
-   - Avoid repeating fixes already handled during module extraction
-   - Stabilize async cancellation/shutdown and reflection paths when evidence warrants
-   - Enforce forbidden references mechanically where feasible
+### Achievements
+1. **EPIC 01 COMPLETED ✅**
+   - All validation gates passed
+   - Reverse-reference audit complete
+   - Documented in EPIC-01-Reverse-Reference-Audit.md
 
-3. Update roadmap master plan with completed EPIC 01 and EPIC 07 milestones
+2. **EPIC 06 & 08 Audits Completed ✅**
+   - EPIC-06-Serialization-Audit.md: Comprehensive serialization audit
+   - EPIC-08-Dependency-Lifecycle-Audit.md: Dependency and lifecycle audit
+   - EPIC-06-08-Implementation-Plan.md: Detailed 11-15 week implementation plan
+
+3. **Documentation Created**
+   - All audits committed to MythHunter-Git (commit 9e86a9f)
+   - SMOKE-TESTS.md updated with validation results
+   - ENVIRONMENT-SETUP.md created
+
+### Key Findings from Audits
+
+**EPIC 06 - Serialization:**
+- Current implementation: 40% complete
+- Critical gap: Entity serialization (0% complete)
+- 12 component serializers need implementation
+- Schema migration system needed
+
+**EPIC 08 - Dependency & Lifecycle:**
+- 50+ async methods without cancellation tokens
+- Reflection hotspots in EventBus (10-20x performance improvement possible)
+- 38 fire-and-forget operations need tracking
+- System-to-system coupling issues
+
+## Next Session Actions
+
+### Immediate Priority: EPIC 08 Phase 1 (Critical)
+
+**Week 1 Tasks:**
+1. Add CancellationToken to 50+ async methods
+   - EventBus.StartProcessingAsync()
+   - GameBootstrapper.InitializeAsync()
+   - All State classes (7 files)
+   - ResourceManager async methods
+   - NavigationService async methods
+
+2. Fix reflection performance in EventBus
+   - Cache MethodInfo objects
+   - Eliminate DynamicInvoke
+   - Expected: 10-20x performance improvement
+
+**Week 2 Tasks:**
+3. Implement AsyncTaskTracker for fire-and-forget operations
+4. Add initialization/shutdown timeouts
+
+### Follow-up: EPIC 06 Phase 1 (High Priority)
+
+**Week 3 Tasks:**
+1. Complete 12 stub component serializers
+   - PositionComponent, MovementComponent, PathComponent
+   - VisibilityComponent, HeroSelectionComponent, LobbyStateComponent
+   - TeamComponent, CombatStyleComponent, etc.
+
+2. Create comprehensive serialization tests
+
+### Implementation Plan
+
+Refer to EPIC-06-08-Implementation-Plan.md for complete 11-15 week roadmap:
+- Phase 1: Foundation & Critical Fixes (Weeks 1-3)
+- Phase 2: Entity Serialization & System Refactoring (Weeks 4-6)
+- Phase 3: Game State & Advanced Features (Weeks 7-10)
+- Phase 4: Polish & Optimization (Weeks 11-15)
+
+## Files Ready for Next Session
+
+**MythHunter-Git (dev branch, commit 9e86a9f):**
+- EPIC-01-Reverse-Reference-Audit.md
+- EPIC-06-Serialization-Audit.md
+- EPIC-08-Dependency-Lifecycle-Audit.md
+- EPIC-06-08-Implementation-Plan.md
+- SMOKE-TESTS.md
+- ENVIRONMENT-SETUP.md
+
+**Critical Files to Start With:**
+1. Assets/_MythHunter/Code/Events/EventBus.cs (lines 176-177, 560, 617-622)
+2. Assets/_MythHunter/Code/Core/Game/GameBootstrapper.cs (line 57)
+3. Assets/_MythHunter/Code/Resources/Core/ResourceManager.cs (lines 66, 101, 162)
+
+## Commands for Next Session
+
+```bash
+# Start in MythHunter-Git
+cd D:\MythHunter-Git
+
+# Check current state
+git status
+git log --oneline -5
+
+# Create feature branch for EPIC 08 Phase 1
+git checkout -b feature/epic-08-phase1-async-cancellation
+
+# Start with EventBus reflection fixes
+# Then add cancellation tokens
+# Then implement AsyncTaskTracker
+```
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
