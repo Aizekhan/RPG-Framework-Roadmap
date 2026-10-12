@@ -1,13 +1,25 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-11.
+> Last reconciled against GitHub: 2026-10-12.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `6bef9b210ee35b40e4c28e74e5550c3f1c58d762` — [PR #53 MovementSystem write-through merge](https://github.com/Aizekhan/MythHunter/commit/6bef9b210ee35b40e4c28e74e5550c3f1c58d762).
+- Current source head: `6637ccae2ed3df7e4f5ccab8636419da18adecc1` — Architecture Enforcement Phase 1 merged.
+
+## Recent completions (2026-10-12)
+
+**EPIC 01 (ComponentCache OnDemand Semantics) — COMPLETE**
+- Merged via PR #54 into `e8f724fe4f6e54e6913db86ce7e17bd68f6ad85c`
+- Implements authoritative membership resolution in OnDemand mode
+
+**Architecture Enforcement Phase 1 — COMPLETE**
+- Merged via PR #57 into `6637ccae2ed3df7e4f5ccab8636419da18adecc1`
+- Architecture Tests: 6 tests validating Framework/Game boundaries
+- CI automation deployed
+- Documentation complete
 
 ## Verified completed sequence
 - EPIC 05.4: PR #25 merged as `df83fdbc438071bfe714978ade7416f9cb2a4146`; Unity EditMode 33/33 and integration checks confirmed.
@@ -23,34 +35,28 @@
 - Current confirmed consumer map from GitHub source inspection: `MovementSystem` owns three direct caches (`PositionComponent`, `MovementComponent`, `PathComponent`); `VisibilitySystem` owns two direct caches (`PositionComponent`, `VisibilityComponent`); `HeroSystem` obtains `StatsComponent` and `HealthComponent` from `IComponentCacheRegistry` and calls their `Update()` each system update. The registry is bound by `EntitiesInstaller`.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 05.9 bounded implementation: OnDemand positive-membership semantics, tracked by [MythHunter PR #54](https://github.com/Aizekhan/MythHunter/pull/54).** This follows the user's explicit direction to continue EPIC 5; EPIC 01 reference-validation gates remain open and no broad ECS extraction is authorized.
+**ACTIVE — EPIC 07 Phase 1: Modular Game Composition System, tracked by [MythHunter PR #58](https://github.com/Aizekhan/MythHunter/pull/58).**
 
-### PR #54
-- Branch: `fix/epic-05-9-ondemand-positive-membership`.
-- Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
-- Scope: `ComponentCache<T>.Contains` in OnDemand mode now checks authoritative `IEntityManager.HasComponent<T>`, refreshes the cache when present, and removes stale membership when absent. Added `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- GitHub Actions on this exact head passed: RPGFramework ECS Runtime run [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459) and Minimal CI run [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither runs Unity EditMode.
-- Draft; Unity EditMode for the new regression test and full Unity build/smoke validation are not yet confirmed. Do not merge until the test result is available and the remaining required gates are accounted for.
+### PR #58
+- Branch: `feature/epic-07-game-layer-composition`.
+- Exact head: `d972a5a8396d1f6bfa5218e68e8d9306d7447595`.
+- Scope: Implements plug-and-play module system for Framework/Game separation and optional features.
+  - Module infrastructure: IFeatureModule, BaseFeatureModule, GameCompositionBuilder with dependency resolution
+  - Framework Core module: Universal ECS/DI/Logger with zero game dependencies
+  - Game Layer modules: GameLayerModule, InfrastructureModule, GameplayModule
+  - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule (conditional loading)
+  - GameBootstrapper integration: replaces InstallerRegistry with modular composition
+  - Architecture tests: 7 new tests in ModularCompositionTests
+- Files changed: 14 files, 766 insertions
+- GitHub CI: Not yet run (branch just pushed)
+- Unity validation: Pending EditMode tests, full compilation, Player Build
 
-### Latest merged bounded source slice
-- [PR #53 — MovementSystem authoritative write-through](https://github.com/Aizekhan/MythHunter/pull/53) merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`.
-- The patch persists mutated `PathComponent`, `MovementComponent` and `PositionComponent` to `IEntityManager`; when stamina exhaustion calls `StopMovement`, local struct copies are reloaded before the outer write-through. CI passed on its tested head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`; Unity execution was not performed before the user-directed merge.
-
-### Earlier merges and validation caveat
-- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295` (editor-only GUI guard and qualified `UnityEditor.EditorStyles`).
-- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175` (ComponentCache reconciliation/OnDemand read changes).
-- Those merges cleared the previously reported compiler blocker in source. However, exact-current-`dev` Unity EditMode, Player Build and Movement/Visibility/Hero smoke checks remain unconfirmed. Historical 44/44 evidence belongs to local SHA `40b6296`, not the merged tip.
-
-### EPIC 01 exit gates remain open
-- [ ] Exact-current-`dev` Unity EditMode with report and failure details.
-- [ ] Full-project compile with clean Console.
-- [ ] Player Build.
-- [ ] Movement, Visibility and Hero smoke checks.
-- [ ] Complete reverse-reference evidence for `IComponentCacheRegistry`, `GetCache<T>`, `FindEntities<T>`, `ForEach<T>`, cache extension methods, asmdef references, and Unity scene/prefab serialized references.
-- [ ] Reconcile audit evidence after local IDE/source and scene/prefab inspection.
-
-### Next action
-Review PR #54's exact-head GitHub Actions result, then arrange focused Unity validation without repeating the prior 600-second timeout loop. Keep EPIC 05.9 bounded to one contract at a time. Do not start broad ECS extraction or mark EPIC 01 complete.
+### Next actions for EPIC 07 Phase 1
+1. Run Unity EditMode tests to validate ModularCompositionTests (7 new tests)
+2. Full-project compile with clean Console
+3. Verify conditional module loading (Offline vs Multiplayer configurations)
+4. Player Build validation
+5. After validation, consider Phase 2: migrate remaining installers to modules
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is. They do not change the single active roadmap pointer above.

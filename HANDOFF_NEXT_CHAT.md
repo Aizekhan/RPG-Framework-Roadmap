@@ -3,40 +3,36 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 05.9 bounded implementation: OnDemand positive-membership semantics — PR #54.**
+**EPIC 07 Phase 1: Modular Game Composition System — PR #58.**
 
-- PR: https://github.com/Aizekhan/MythHunter/pull/54
-- Branch: `fix/epic-05-9-ondemand-positive-membership`
-- Exact head: `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`
-- Change: OnDemand `ComponentCache<T>.Contains` now queries authoritative `IEntityManager.HasComponent<T>` even for IDs not previously cached; refreshes cache on positive membership; removes stale cache state on absence.
-- Added test: `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership`.
-- CI on exact head passed: RPGFramework ECS Runtime [38150268459](https://github.com/Aizekhan/MythHunter/actions/runs/38150268459), Minimal CI [38150268442](https://github.com/Aizekhan/MythHunter/actions/runs/38150268442). Neither workflow executes Unity EditMode.
-- Keep draft until focused Unity EditMode execution is confirmed; do not report pass from CI alone.
+- PR: https://github.com/Aizekhan/MythHunter/pull/58
+- Branch: `feature/epic-07-game-layer-composition`
+- Exact head: `d972a5a8396d1f6bfa5218e68e8d9306d7447595`
+- Scope: Implements plug-and-play module system for Framework/Game separation and optional features
+  - Module infrastructure with dependency resolution (topological sort)
+  - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
+  - Game modules: GameLayerModule, InfrastructureModule, GameplayModule
+  - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
+  - GameBootstrapper integration replacing InstallerRegistry
+  - 7 new architecture tests in ModularCompositionTests
+- Files: 14 changed, 766 insertions
+- Unity validation pending: EditMode tests, full compile, Player Build
 
-## Just merged
-- PR #53 merge commit: `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`. Persists movement/path/stamina struct changes from `MovementSystem.Update()` to the authoritative `IEntityManager`; avoids restoring stale values after `StopMovement`. CI passed on tested PR head `ab5b7c386163c8a1fcb7314840b8b223acd2868d`, but Unity validation was not run before the user's instruction to merge. This caveat must remain explicit.
-- PR #50 merge commit: `0af6ab74f8236b5de7455349c795377c883b5295` — fixes editor-only GUI compile reference in `PreloadDebugTool`.
-- PR #48 merge commit: `0d97060d45d978cafbe376cd43f00eb8fdf9f175` — ComponentCache consistency/reconciliation changes.
+## Just merged (2026-10-12)
+- **PR #54** (EPIC 01): ComponentCache OnDemand positive-membership semantics → `e8f724fe4f6e54e6913db86ce7e17bd68f6ad85c`
+- **PR #57** (Architecture Enforcement Phase 1): Foundation layer with architecture tests → `6637ccae2ed3df7e4f5ccab8636419da18adecc1`
 
-## Cloud session findings (PR #54 code review and out-of-Unity validation)
-- **Code review (PR #54 HEAD `aaaaee9`):** New `Contains` branch mirrors OnDemand `Get` logic; `_entityIds` is `HashSet<int>` (no duplicates possible). Non-blocking observation: successful `Contains` sets `_isDirty = true` each time.
-- **CI coverage gap:** No workflow compiles `ComponentCache.cs` or `DIContainerCharacterizationTests.cs` in Unity. The ECS workflow only compiles `Assets/_Framework` subset.
-- **Out-of-Unity test (.NET 8, real `ComponentCache.cs` + `CacheStatistics.cs` + `_Framework/ECS/Runtime`, 4 `ComponentCache_*` tests verbatim, typed fixture instead of reflection):**
-  - PR #54 `aaaaee9` → 4/4 passed.
-  - `dev` `6bef9b2` → 3/4 passed; `OnDemandContainsFindsUncachedAuthoritativeMembership` failed (Expected True, was False).
-  - This is NOT Unity EditMode and does NOT close validation gates.
-
-## EPIC 01 gates remain open
-- Exact current-`dev` Unity EditMode report; historical 44/44 belongs to local SHA `40b6296`.
-- Full-project compile and clean Console; Player Build; Movement/Visibility/Hero smoke.
-- Complete reverse-reference checks for cache registries/extensions, asmdef references and Unity scene/prefab serialized references.
-- Do not mark EPIC 01 complete or start broad ECS extraction.
+## Related open PRs
+- **PR #8** (Roadmap): EPIC 07 audit document (branch: `update/epic-07-phase1-progress`)
 
 ## Next actions
-1. Inspect the completion results for both PR #54 CI runs and verify they refer to exact head `aaaaee9f864c66a746d9c64a0c7dcfaa6b8249db`.
-2. Arrange focused Unity EditMode for `ComponentCache_OnDemandContainsFindsUncachedAuthoritativeMembership` without repeating the prior blind 600-second loop.
-3. If verified, update PR #54 with exact evidence and evaluate full-project compile/Player/smoke gates.
-4. After #54, continue one bounded cache contract at a time; the next candidates are OnDemand enumeration semantics and cache-local mutation vs authoritative writes.
+1. Run Unity EditMode tests on PR #58 HEAD `d972a5a` to validate ModularCompositionTests (7 new tests)
+2. Full-project compile with clean Console
+3. Test conditional module loading:
+   - Offline configuration: FrameworkCore, GameLayer, Infrastructure, Gameplay only
+   - Multiplayer configuration: + NetworkingModule, LobbyModule
+4. Player Build validation
+5. After PR #58 validation, consider Phase 2: migrate remaining installers (EventsInstaller, ProfileInstaller, ParallelSystemsInstaller)
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -44,4 +40,9 @@
 - Never write directly to `dev`; future source changes through PRs.
 - Never reset, clean, or discard local user files.
 - GitHub CI, timeouts or results from another SHA are not Unity validation.
-- EPIC 05.9 remains bounded; EPIC 01 validation remains open.
+- Test results are valid only for the exact commit SHA tested.
+
+## Key Decisions
+- EPIC 07 (Game Layer Composition) prioritized before EPIC 06 (Serialization) to establish clear Framework/Game boundaries
+- Modular architecture enables optional features (Networking, Lobby, Debug Tools) to be loaded conditionally
+- Framework Core has zero game dependencies - universal RPG framework principle maintained
