@@ -8,7 +8,7 @@
 - PR: https://github.com/Aizekhan/MythHunter/pull/58
 - Branch: `feature/epic-07-game-layer-composition`
 - Initial head: `d972a5a` (initial implementation)
-- Current head: `b25d1a4` (assembly fixes + validation complete)
+- Current head: `1fa6115` (assembly fixes + validation + metadata)
 - Scope: Implements plug-and-play module system for Framework/Game separation and optional features
   - Module infrastructure with dependency resolution (topological sort)
   - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
@@ -18,7 +18,7 @@
   - 8 architecture tests in ModularCompositionTests
 - Files: 18 changed, 787+ insertions
 - Assembly dependency fixes (7 additional commits after initial implementation)
-- Unity validation COMPLETED at HEAD `b25d1a4`:
+- Unity validation COMPLETED at HEAD `b25d1a4` (metadata update: `1fa6115`):
   - ✅ EditMode: 58/60 passed (96.7%), ModularCompositionTests: 7/8 passed
   - ✅ Compilation: Clean, no errors
   - ✅ System functionally validated and ready for review

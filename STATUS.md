@@ -40,7 +40,7 @@
 ### PR #58
 - Branch: `feature/epic-07-game-layer-composition`.
 - Initial head: `d972a5a8396d1f6bfa5218e68e8d9306d7447595` (initial implementation).
-- Current head: `b25d1a4fe5c0e18b7e6e5d4e5e5e5e5e5e5e5e5e` (assembly fixes + validation).
+- Current head: `1fa6115` (assembly fixes + validation + metadata).
 - Scope: Implements plug-and-play module system for Framework/Game separation and optional features.
   - Module infrastructure: IFeatureModule, BaseFeatureModule, GameCompositionBuilder with dependency resolution
   - Framework Core module: Universal ECS/DI/Logger with zero game dependencies
@@ -49,7 +49,7 @@
   - RPGFramework.Core.Runtime assembly: New assembly for composition system types
   - Architecture tests: 8 tests in ModularCompositionTests (7/8 passing)
 - Files changed: 18 files (initial 14 + 4 assembly fixes), 787+ insertions
-- Assembly dependency fixes (7 commits):
+- Assembly dependency fixes (8 commits):
   - bf501e6: Corrected namespace references in modules
   - 4def783: Moved tests to MythHunter assembly
   - cb66d6b: Relocated tests to proper assembly location
@@ -57,7 +57,8 @@
   - 9c98406: Created RPGFramework.Core.Runtime assembly
   - b14ae2f: Moved tests to default Editor assembly
   - b25d1a4: Enabled Unity Engine references for logging
-- Unity validation completed at HEAD `b25d1a4`:
+  - 1fa6115: Unity-generated metadata normalization
+- Unity validation completed at HEAD `b25d1a4` (metadata update at `1fa6115`):
   - ✅ EditMode tests: 60 total, 58 passed (96.7%), 2 failed (1 pre-existing, 1 DontDestroyOnLoad limitation)
   - ✅ ModularCompositionTests: 7/8 passed (87.5%)
   - ✅ Full-project compilation: Clean, no errors
