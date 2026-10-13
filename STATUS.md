@@ -8,6 +8,7 @@
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
 - Current source head: `b9652f8` — Latest: [PR #66 Test Infrastructure Fixes](https://github.com/Aizekhan/MythHunter/pull/66).
+- **Ready to merge:** [PR #67 EPIC 10 Phase 2](https://github.com/Aizekhan/MythHunter/pull/67) at `0d120ae` ✅ CI PASSED (18/18 tests)
 
 ## Verified completed sequence
 
@@ -49,7 +50,7 @@
   - Stats: 72 files (+1988 −61)
 - **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
-### EPIC 10 (RPG Foundation Domain Modules) — Phase 1 ✅ COMPLETE
+### EPIC 10 (RPG Foundation Domain Modules) — Phase 2 ✅ COMPLETE (ready to merge)
 - **PR #65** merged as `8b5dc22` — Phase 1: Resource System extraction
   - Created `RPGFramework.Combat.Runtime` assembly
   - Generic resource pool: `ResourceComponent<TResourceType>` (HP, MP, Stamina, etc.)
@@ -69,8 +70,23 @@
   - Fixed missing using directives and method signatures
   - Stats: 23 files (+1139 −247)
   - Validation: Unity compilation clean ✅
-- **Status:** Phase 1 complete ✅, Phase 2 (Stat System) ready to begin
-
+- **Status:** Phase 2 complete ✅ (PR #67 ready to merge), Phase 3 ready to begin
+- **PR #67** ready to merge at `0d120ae` — Phase 2: Stat System extraction ✅ CI PASSED
+  - Created `RPGFramework.Stats.Runtime` assembly
+  - Generic stat container: `StatContainer<TStatType, TValue>` with modifier support
+  - Modifier types: Additive, Multiplicative, Override
+  - Calculation formula: `(base + additives) * multiplicatives` or override
+  - Priority system for modifier ordering
+  - Performance optimization: caching with dirty flags
+  - 18 comprehensive NUnit tests (100% pass rate)
+  - .NET 8.0 test harness + static boundary validator
+  - GitHub Actions workflow: `rpg-framework-stats.yml`
+  - Implementation plan: `EPIC-10-Phase2-Implementation-Plan.md` (500+ lines)
+  - Summary: `EPIC-10-Phase2-Summary.md` (600+ lines)
+  - Stats: 24 files (+2087 −1)
+  - Validation: .NET tests ✅ (18/18 PASSED), Static boundary ✅, GitHub Actions GREEN ✅
+  - Zero Unity dependencies (noEngineReferences: true)
+  - Zero MythHunter changes (additive only)
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
@@ -86,7 +102,6 @@
 Extract RPG domain logic from MythHunter into Framework modules:
 - **Phase 1:** Resource System (Health, Mana, Stamina pools) ✅ COMPLETE
 - **Phase 2:** Stat System (Stats, Attributes, Modifiers) — ACTIVE
-- **Phase 3:** Damage Calculation System (Damage types, resistances, calculations)
 - **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking)
 - **Phase 5:** Death/Life State System (Death detection, respawn contracts)
 
@@ -96,21 +111,19 @@ Extract RPG domain logic from MythHunter into Framework modules:
 - ✅ EPIC 08 complete (Lifecycle stabilization)
 - ✅ EPIC 09 Phase 1 complete (Generic pooling)
 - ✅ EPIC 10 Phase 1 complete (Resource System)
+- ✅ EPIC 10 Phase 2 complete (Stat System, ready to merge)
 
-### Phase 2 Status: Stat System
-- [ ] Audit existing stat system (StatType, StatsComponent, StatRegistry)
-- [ ] Design `IStatContainer<TStatType, TValue>` interface
-- [ ] Design `IStatModifier` (additive/multiplicative)
-- [ ] Extract stat calculation logic to Framework
+### Phase 3 Status: Damage Calculation System
+- [ ] Audit existing damage systems (DamageCalculationService, AttackSystem, DefenseSystem)
+- [ ] Design `IDamageCalculator` interface
+- [ ] Design damage types and resistance framework
+- [ ] Extract damage calculation formulas to Framework
 - [ ] Create MythHunter adapter
 - [ ] Tests and validation
 
 ### Next action
-Begin EPIC 10 Phase 2: Stat System extraction (audit existing MythHunter stat implementation).
+Merge PR #67, then begin EPIC 10 Phase 3: Damage Calculation System extraction.
 
-
-### Next action
-Begin Phase 1 implementation: Extract generic resource system from HealthComponent.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.

@@ -3,36 +3,37 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 10: RPG Foundation Domain Modules — Phase 2 (Stat System)**
+**EPIC 10: RPG Foundation Domain Modules — Phase 3 (Damage Calculation System)**
 
 ### Objective
-Extract stat/attribute system from MythHunter into reusable Framework module with modifier calculations.
+Extract damage calculation system from MythHunter into reusable Framework module.
 
-### Scope (Phase 2)
-1. **Audit existing stat system:**
-   - `StatType` enum (MythHunter game-specific stats)
-   - `StatsComponent` (current/base/max values)
-   - `StatRegistry` (global stat tracking)
-   - Stat modifier patterns
+### Scope (Phase 3)
+1. **Audit existing damage systems:**
+   - `DamageCalculationService` (damage formulas)
+   - `AttackSystem` / `DefenseSystem` (combat mechanics)
+   - Damage type enums and resistance calculations
+   - Critical hit, dodge, miss mechanics
 
 2. **Design Framework contracts:**
-   - `IStatContainer<TStatType, TValue>` (generic stat storage)
-   - `IStatModifier` (additive/multiplicative modifiers)
-   - Stat calculation formulas (base + modifiers)
+   - `IDamageCalculator` (generic damage calculation interface)
+   - Damage types framework (Physical, Magical, True damage, etc.)
+   - Resistance calculation formulas
+   - Damage modifier system (builds on Phase 2 stat modifiers)
 
 3. **Extract to Framework:**
-   - Create `RPGFramework.Stats.Runtime` assembly
-   - Generic stat component (reusable across any RPG)
-   - Modifier system (buffs/debuffs foundation)
+   - Create Framework damage calculation module
+   - Generic damage types and resistance framework
+   - Reusable damage formulas
 
 4. **Create MythHunter adapter:**
-   - Option A: Internal adapter (preserve existing API)
-   - Option B: Direct migration (use Framework directly)
+   - Preserve existing combat API
+   - Delegate to Framework damage calculator
 
 ### Why now?
-- EPIC 10 Phase 1 complete ✅ (Resource System)
-- Resource extraction pattern validated
-- Stat system depends on same EPIC 06 serialization foundation
+- EPIC 10 Phase 2 complete ✅ (Stat System with modifiers)
+- Damage calculations depend on stats and modifiers
+- Natural progression: Resources → Stats → Damage → Status Effects → Death
 
 ### Prerequisites
 - ✅ EPIC 06: Serialization foundation
@@ -40,30 +41,25 @@ Extract stat/attribute system from MythHunter into reusable Framework module wit
 - ✅ EPIC 08: Lifecycle stabilization
 - ✅ EPIC 09 Phase 1: Generic pooling
 - ✅ EPIC 10 Phase 1: Resource System
+- ✅ EPIC 10 Phase 2: Stat System (ready to merge)
 
 ### Next immediate actions
-1. **Search for stat systems:**
-   - Grep: `StatType`, `StatsComponent`, `StatRegistry`
-   - Check: `Assets/_MythHunter/Code/Stats/`, `Assets/_MythHunter/Code/Components/`
-
-2. **Audit stat patterns:**
-   - How are stats stored? (Current, Base, Max)
-   - How are modifiers applied? (Additive, Multiplicative)
+1. **Merge PR #67** (Phase 2 Stat System) — CI passed, ready to merge
+2. **Search for damage systems:**
+   - Grep: `DamageCalculationService`, `AttackSystem`, `DefenseSystem`
+   - Check: `Assets/_MythHunter/Code/Services/`, `Assets/_MythHunter/Code/Systems/`
+3. **Audit damage patterns:**
+   - How is damage calculated? (base damage + modifiers − defense)
+   - What damage types exist? (Physical, Magical, etc.)
+   - How do resistances work?
    - What's Framework-generic vs MythHunter-specific?
-
-3. **Design Framework interface:**
-   - `IStatContainer<TStatType, TValue>` — stat storage
-   - `IStatModifier` — modifier application
-   - Modifier calculation order (base + add → multiply)
-
-4. **Create implementation plan:** `EPIC-10-Phase2-Implementation-Plan.md`
-
-5. **Follow Phase 1 pattern:**
+4. **Create implementation plan:** `EPIC-10-Phase3-Implementation-Plan.md`
+5. **Follow Phase 1-2 pattern:**
    - Assembly definition (noEngineReferences: true)
    - .NET test harness
    - Static boundary validator
    - GitHub Actions workflow
-
+## Just completed (2026-10-13)
 ## Just completed (2026-10-13)
 
 ### EPIC 10 Phase 1 — ✅ COMPLETE (Resource System)
@@ -137,10 +133,11 @@ Extract stat/attribute system from MythHunter into reusable Framework module wit
 - Test results are valid only for the exact commit SHA tested.
 
 ## Key decisions carried forward
-- EPIC 10 Phase 1 complete ✅ — Resource System validates extraction pattern
+- EPIC 10 Phase 2 complete ✅ — Stat System validates modifier pattern
 - Framework has zero game dependencies — universal RPG framework principle maintained
 - Generic type parameters enable reusability (ResourceComponent<TResourceType>)
 - .NET test harness provides fast CI feedback (8 sec vs 10+ min Unity)
 - Static boundary validation prevents accidental Unity/MythHunter dependencies
 - Adapter pattern preserves MythHunter API during migration
 - Pre-existing test errors don't block Framework module validation
+- Modifier system foundation ready for Status Effect System (Phase 4)
