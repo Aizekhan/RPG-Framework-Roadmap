@@ -3,83 +3,107 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 07 Phase 1: Modular Game Composition System — PR #58 [READY FOR REVIEW].**
+**EPIC 06: Serialization Foundation — AUDIT PHASE**
 
-- PR: https://github.com/Aizekhan/MythHunter/pull/58
-- Branch: `feature/epic-07-game-layer-composition`
-- Initial head: `d972a5a` (initial implementation)
-- Current head: `f701e79` (assembly fixes + validation + metadata + .claude settings)
-- Scope: Implements plug-and-play module system for Framework/Game separation and optional features
-  - Module infrastructure with dependency resolution (topological sort)
-  - FrameworkCoreModule: Universal ECS/DI/Logger (zero game dependencies)
-  - Game modules: GameLayerModule, InfrastructureModule, GameplayModule
-  - Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
-  - RPGFramework.Core.Runtime assembly for composition system
-  - 8 architecture tests in ModularCompositionTests
-- Files: 18 changed, 787+ insertions
-- Assembly dependency fixes (7 additional commits after initial implementation)
-- Unity validation COMPLETED at HEAD `1fa6115` (metadata + settings updates: `f701e79`):
-  - ✅ EditMode: 58/60 passed (96.7%), ModularCompositionTests: 7/8 passed
-  - ✅ Compilation: Clean, no errors
-  - ✅ System functionally validated and ready for review
-- Note: GitHub Actions failing on Unity licensing (CI configuration issue, NOT code problem)
+### Objective
+Establish a reusable serialization foundation before EPIC 12 (Persistence) and EPIC 13 (Networking).
 
-## Just merged (2026-10-12)
-- **PR #56** (JobHandle IL2CPP fix): `d36b271` → Fixes IL2CPP compilation error in `JobHandleExtensions.IsValid()`
-- **PR #57** (Architecture Enforcement Phase 1): `6637cca` → Foundation layer with architecture tests
-- **PR #54** (EPIC 01): `e8f724f` → ComponentCache OnDemand positive-membership semantics
+### Scope
+1. **Audit current serialization** — Search codebase for:
+   - Component/entity serialization
+   - Versioned data structures
+   - Delta/snapshot serialization
+   - Network protocol serialization
+   - Save/load mechanisms
 
-## Related open PRs
-None currently - PR #58 is the active PR
+2. **Define stable identifiers** — Type IDs, schema versions, compatibility contracts
 
-## Phase 2 Research Completed (2026-10-12)
+3. **Separate concerns**:
+   - Generic serialization contracts (Framework)
+   - Persistence policies (Game Layer)
+   - Network wire formats (Networking Module)
 
-### Critical Findings
-Deep analysis of installer migration revealed **4 categories of architectural issues**:
+4. **Extract reusable contracts** — Only proven-reusable with compatibility tests
 
-1. **God Class Anti-pattern**
-   - CoreInstaller mixes 13 services (7 Framework + 6 Game)
-   - Violates Single Responsibility Principle
+### Why now?
+EPIC 07 (Game Layer Composition) and EPIC 08 (Lifecycle Stabilization) are complete. Serialization foundation is needed before:
+- EPIC 09 (Save/Load, Resources)
+- EPIC 12 (Persistence)
+- EPIC 13 (Networking)
 
-2. **Hidden Registration Overwrites**
-   - ISystemRegistry registered twice: SystemRegistry → ParallelSystemRegistry
-   - IEventBus registered twice: SimpleEventBus → EventBus/NetworkEventBus
-   - Works by accident (execution order dependent)
+### Prerequisites ✅
+- ✅ EPIC 07 complete: Modular composition system established
+- ✅ EPIC 08 complete: Lifecycle, threading, DI optimized
+- ✅ Clean separation between Framework and Game Layer
 
-3. **Resource Duplication**
-   - LazyDependencyInjector GameObject created TWICE by different installers
-   - First instance unused, second instance registered in DI
+### Next immediate actions
+1. **Search for serialization code**:
+   - Grep for: `Serialize`, `Deserialize`, `ISerializ`, `JsonConvert`, `BinaryFormatter`
+   - Check: Components, Entities, Save/Load, Network, Resources
 
-4. **Dead Code**
-   - InstallerRegistry class has zero usages
+2. **Map serialization patterns**:
+   - What gets serialized? (entities, components, game state)
+   - Where? (save files, network packets, resources)
+   - How? (JSON, binary, custom formats)
+   - Versioning strategy?
 
-### Revised Phase 2 Strategy
-Split CoreInstaller before migration:
-1. Create **FrameworkCoreInstaller** (Framework services + ParallelSystemRegistry)
-2. Create **GameCoreInstaller** (Game services + Event system)
-3. Update FrameworkCoreModule → use FrameworkCoreInstaller
-4. Update GameLayerModule → use GameCoreInstaller
-5. Update InfrastructureModule → add LazyDI + ProfilePresenter
-6. Remove 4 direct installer calls from GameBootstrapper
-7. Delete dead code (InstallerRegistry)
+3. **Identify Framework vs Game**:
+   - Generic serialization contracts → Framework
+   - Game-specific data → Game Layer
+   - Network protocol → Networking Module
 
-**Benefits**: No conflicts, clear Framework/Game separation, testable independently
+4. **Create audit document**: `EPIC-06-Serialization-Audit.md`
 
-### Phase 2 Documentation
-Created in MythHunter-Git repository:
-- `EPIC-07-Phase2-Complete-Analysis.md` (700+ lines, ready-to-use implementation code)
-- `EPIC-07-Phase2-Research-Findings.md` (registration conflicts analysis)
-- `EPIC-07-Phase2-Additional-Findings.md` (LazyDI duplication investigation)
-- `SESSION-2026-10-12-Summary.md` (complete session summary)
+## Just completed (2026-10-13)
 
-## Next actions
-1. **Code review and merge PR #58** - Phase 1 is validated and ready
-2. **EPIC 07 Phase 2** (after PR #58 merge):
-   - Implement revised strategy (split CoreInstaller)
-   - Migrate 4 installers to modules with conflict resolution
-   - Remove direct installer calls
-   - Validate offline vs multiplayer mode configurations
-3. Complete EPIC 07: Document game composition patterns, validate startup/shutdown
+### EPIC 07 Phase 2 — ✅ MERGED
+- **PR #59** merged as `92c9abe`
+- Split CoreInstaller → FrameworkCoreInstaller + GameCoreInstaller
+- Migrated 4 installers to modules
+- Removed InstallerRegistry dead code
+- Fixed LazyDI duplication
+- Resolved hidden registration conflicts
+
+### EPIC 08 — ✅ COMPLETE (All 4 Phases)
+
+**Phase 1-2: Async Cancellation & System Decoupling** — PR #60 (`8faddb9`)
+- AsyncTaskTracker for proper cancellation token lifecycle
+- Decoupled systems: ArchetypeSystem, HeroSelectionService, TimerService
+- EventBus async cancellation support
+- State machine async refactoring (all 7 states)
+- 37 files, 3,398+ insertions
+
+**Phase 3: Thread Safety & Memory Leaks** — PR #61 (`cad8439`)
+- ComponentCache thread safety (lock-free reads, write locks)
+- EventBus duplicate subscription prevention
+- Memory leak fixes (weak references, cleanup)
+- 5 files, 1,265+ insertions
+- Comprehensive thread safety and leak tests
+
+**Phase 4: Performance Optimization** — PR #62 (`e8bd55a`)
+- DI reflection optimization: 85-95% performance improvement
+- Type metadata caching
+- InitializationTransaction for deterministic rollback
+- Performance benchmarks and characterization tests
+- 6 files, 1,090+ insertions
+
+### EPIC 07 Phase 1 — ✅ MERGED (2026-10-12)
+- **PR #58** merged as `0862793`
+- Module infrastructure with topological dependency resolution
+- FrameworkCoreModule (zero game dependencies)
+- Game modules: GameLayerModule, InfrastructureModule, GameplayModule
+- Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
+- 18 files, 787+ insertions
+
+## Documentation created (2026-10-13)
+- `EPIC-01-Reverse-Reference-Audit.md` — Component cache usage patterns
+- `EPIC-06-Serialization-Audit.md` — Serialization patterns and boundaries
+- `EPIC-08-Dependency-Lifecycle-Audit.md` — Async, threading, DI issues
+- `EPIC-06-08-Implementation-Plan.md` — Complete implementation strategy
+- `SESSION-2026-10-13-Summary.md` — Full session summary
+- `EPIC-08-Performance-Benchmarks.md` — DI performance analysis
+- `SMOKE-TESTS.md` — Smoke test procedures
+- `ENVIRONMENT-SETUP.md` — Development environment setup
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -89,8 +113,8 @@ Created in MythHunter-Git repository:
 - GitHub CI, timeouts or results from another SHA are not Unity validation.
 - Test results are valid only for the exact commit SHA tested.
 
-## Key Decisions
-- EPIC 07 (Game Layer Composition) prioritized before EPIC 06 (Serialization) to establish clear Framework/Game boundaries
-- Modular architecture enables optional features (Networking, Lobby, Debug Tools) to be loaded conditionally
-- Framework Core has zero game dependencies - universal RPG framework principle maintained
-- Phase 2 research uncovered hidden architectural issues requiring CoreInstaller split
+## Key decisions carried forward
+- EPIC 07 prioritized before EPIC 06 to establish Framework/Game boundaries ✅
+- EPIC 08 completed before EPIC 06 to stabilize foundation ✅
+- Now EPIC 06 can proceed with clean module boundaries and stable lifecycle
+- Framework Core has zero game dependencies — universal RPG framework principle maintained
