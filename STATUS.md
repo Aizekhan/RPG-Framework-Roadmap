@@ -7,9 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `b9652f8` — Latest: [PR #66 Test Infrastructure Fixes](https://github.com/Aizekhan/MythHunter/pull/66).
-- **Ready to merge:** [PR #67 EPIC 10 Phase 2](https://github.com/Aizekhan/MythHunter/pull/67) at `0d120ae` ✅ CI PASSED (18/18 tests)
-
+- Current source head: `2fd0b99` — Latest merged: [PR #68 EPIC 10 Phase 3](https://github.com/Aizekhan/MythHunter/pull/68).
 ## Verified completed sequence
 
 ### EPIC 05 (Framework Runtime Modules)
@@ -50,7 +48,7 @@
   - Stats: 72 files (+1988 −61)
 - **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
-### EPIC 10 (RPG Foundation Domain Modules) — Phase 2 ✅ COMPLETE (ready to merge)
+### EPIC 10 (RPG Foundation Domain Modules) — Phase 3 ✅ COMPLETE
 - **PR #65** merged as `8b5dc22` — Phase 1: Resource System extraction
   - Created `RPGFramework.Combat.Runtime` assembly
   - Generic resource pool: `ResourceComponent<TResourceType>` (HP, MP, Stamina, etc.)
@@ -70,8 +68,7 @@
   - Fixed missing using directives and method signatures
   - Stats: 23 files (+1139 −247)
   - Validation: Unity compilation clean ✅
-- **Status:** Phase 2 complete ✅ (PR #67 ready to merge), Phase 3 ready to begin
-- **PR #67** ready to merge at `0d120ae` — Phase 2: Stat System extraction ✅ CI PASSED
+- **PR #67** merged as `999405c` — Phase 2: Stat System extraction ✅ CI PASSED
   - Created `RPGFramework.Stats.Runtime` assembly
   - Generic stat container: `StatContainer<TStatType, TValue>` with modifier support
   - Modifier types: Additive, Multiplicative, Override
@@ -87,6 +84,21 @@
   - Validation: .NET tests ✅ (18/18 PASSED), Static boundary ✅, GitHub Actions GREEN ✅
   - Zero Unity dependencies (noEngineReferences: true)
   - Zero MythHunter changes (additive only)
+- **PR #68** merged as `2fd0b99` — Phase 3: Damage Calculation System
+  - Created damage calculation module in `RPGFramework.Combat.Runtime`
+  - Damage types: `DamageType` enum (Physical, Magical, Pure)
+  - Damage calculator: `IDamageCalculator` interface + `DamageCalculator` implementation
+  - Damage formula: `(baseDamage * totalMultiplier) * (100 / (100 + effectiveDefense))`
+  - Critical hits, damage multipliers, armor penetration support
+  - Minimum damage guarantee (1 damage)
+  - `DamageResult` struct with detailed breakdown
+  - 30 comprehensive NUnit tests (100% pass rate)
+  - .NET 8.0 test harness + static boundary validator
+  - Implementation plan: `EPIC-10-Phase3-Implementation-Plan.md` (580+ lines)
+  - Stats: 24 files (+1580 −0)
+  - Validation: .NET tests ✅ (36/36 PASSED in 22ms), Static boundary ✅, GitHub Actions GREEN ✅
+  - Zero Unity dependencies (noEngineReferences: true)
+  - Zero MythHunter changes (additive only)
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
@@ -96,13 +108,14 @@
 - PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 10: RPG Foundation Domain Modules — Phase 2**
+**ACTIVE — EPIC 10: RPG Foundation Domain Modules — Phase 4**
 
 ### Scope
 Extract RPG domain logic from MythHunter into Framework modules:
 - **Phase 1:** Resource System (Health, Mana, Stamina pools) ✅ COMPLETE
-- **Phase 2:** Stat System (Stats, Attributes, Modifiers) — ACTIVE
-- **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking)
+- **Phase 2:** Stat System (Stats, Attributes, Modifiers) ✅ COMPLETE
+- **Phase 3:** Damage Calculation System (Damage types, resistances, calculations) ✅ COMPLETE
+- **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking) — ACTIVE
 - **Phase 5:** Death/Life State System (Death detection, respawn contracts)
 
 ### Prerequisites
@@ -111,18 +124,19 @@ Extract RPG domain logic from MythHunter into Framework modules:
 - ✅ EPIC 08 complete (Lifecycle stabilization)
 - ✅ EPIC 09 Phase 1 complete (Generic pooling)
 - ✅ EPIC 10 Phase 1 complete (Resource System)
-- ✅ EPIC 10 Phase 2 complete (Stat System, ready to merge)
+- ✅ EPIC 10 Phase 2 complete (Stat System)
+- ✅ EPIC 10 Phase 3 complete (Damage Calculation System)
 
-### Phase 3 Status: Damage Calculation System
-- [ ] Audit existing damage systems (DamageCalculationService, AttackSystem, DefenseSystem)
-- [ ] Design `IDamageCalculator` interface
-- [ ] Design damage types and resistance framework
-- [ ] Extract damage calculation formulas to Framework
+### Phase 4 Status: Status Effect System
+- [ ] Audit existing status effect systems (BuffSystem, DebuffSystem, StatusEffectManager)
+- [ ] Design `IStatusEffect` interface
+- [ ] Design buff/debuff duration and stacking framework
+- [ ] Extract status effect logic to Framework
 - [ ] Create MythHunter adapter
 - [ ] Tests and validation
 
 ### Next action
-Merge PR #67, then begin EPIC 10 Phase 3: Damage Calculation System extraction.
+Begin EPIC 10 Phase 4: Status Effect System extraction.
 
 
 ## Dormant GitHub PRs — not active roadmap work
