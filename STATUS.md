@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `8b5dc22` — Latest: [PR #65 EPIC 10 Phase 1 - Resource System extraction](https://github.com/Aizekhan/MythHunter/pull/65).
+- Current source head: `b9652f8` — Latest: [PR #66 Test Infrastructure Fixes](https://github.com/Aizekhan/MythHunter/pull/66).
 
 ## Verified completed sequence
 
@@ -60,7 +60,17 @@
   - Implementation plan: `EPIC-10-Phase1-Implementation-Plan.md` (570+ lines)
   - Stats: 18 files (+1785 insertions)
   - Validation: .NET tests ✅, Static boundary ✅, GitHub Actions GREEN ✅
+- **PR #66** merged as `b9652f8` — Test Infrastructure Fixes
+  - Fixed 100+ compilation errors from EPIC 08 interface evolution
+  - Updated test mocks: `IEvent`, `IMythLogger`, `IEntityManager`, `IEventPool`
+  - Converted event classes to structs (IEvent constraint compliance)
+  - Updated async tracking: `UniTaskVoid` → `UniTask`
+  - Removed duplicate serialization interfaces (namespace conflicts)
+  - Fixed missing using directives and method signatures
+  - Stats: 23 files (+1139 −247)
+  - Validation: Unity compilation clean ✅
 - **Status:** Phase 1 complete ✅, Phase 2 (Stat System) ready to begin
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
