@@ -3,37 +3,16 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 10: RPG Foundation Domain Modules — Phase 3 (Damage Calculation System)**
+**EPIC 10: RPG Foundation Domain Modules — Phase 4 (Status Effect System)**
 
 ### Objective
-Extract damage calculation system from MythHunter into reusable Framework module.
+Extract status effect system from MythHunter into reusable Framework module.
 
-### Scope (Phase 3)
-1. **Audit existing damage systems:**
-   - `DamageCalculationService` (damage formulas)
-   - `AttackSystem` / `DefenseSystem` (combat mechanics)
-   - Damage type enums and resistance calculations
-   - Critical hit, dodge, miss mechanics
-
-2. **Design Framework contracts:**
-   - `IDamageCalculator` (generic damage calculation interface)
-   - Damage types framework (Physical, Magical, True damage, etc.)
-   - Resistance calculation formulas
-   - Damage modifier system (builds on Phase 2 stat modifiers)
-
-3. **Extract to Framework:**
-   - Create Framework damage calculation module
-   - Generic damage types and resistance framework
-   - Reusable damage formulas
-
-4. **Create MythHunter adapter:**
-   - Preserve existing combat API
-   - Delegate to Framework damage calculator
-
-### Why now?
-- EPIC 10 Phase 2 complete ✅ (Stat System with modifiers)
-- Damage calculations depend on stats and modifiers
-- Natural progression: Resources → Stats → Damage → Status Effects → Death
+### Scope (Phase 4)
+1. **Audit existing status effect systems:**   - `BuffSystem` / `DebuffSystem` (buff and debuff mechanics)   - `StatusEffectManager` (effect duration, stacking, removal)   - Status effect types and stacking rules   - Duration tracking and expiration logic2. **Design Framework contracts:**   - `IStatusEffect` (generic status effect interface)   - Status effect types framework (Buff, Debuff, DOT, HOT, etc.)   - Duration and stacking system   - Effect modifier system (builds on Phase 2 stat modifiers)3. **Extract to Framework:**   - Create Framework status effect module   - Generic status effect types and stacking framework   - Reusable duration tracking4. **Create MythHunter adapter:**   - Preserve existing status effect API   - Delegate to Framework status effect manager
+- EPIC 10 Phase 3 complete ✅ (Damage Calculation System)
+- Status effects depend on stats, modifiers, and damage
+- Natural progression: Resources ✅ → Stats ✅ → Damage ✅ → Status Effects → Death
 
 ### Prerequisites
 - ✅ EPIC 06: Serialization foundation
@@ -43,25 +22,11 @@ Extract damage calculation system from MythHunter into reusable Framework module
 - ✅ EPIC 10 Phase 1: Resource System
 - ✅ EPIC 10 Phase 2: Stat System (ready to merge)
 
-### Next immediate actions
-1. **Merge PR #67** (Phase 2 Stat System) — CI passed, ready to merge
-2. **Search for damage systems:**
-   - Grep: `DamageCalculationService`, `AttackSystem`, `DefenseSystem`
-   - Check: `Assets/_MythHunter/Code/Services/`, `Assets/_MythHunter/Code/Systems/`
-3. **Audit damage patterns:**
-   - How is damage calculated? (base damage + modifiers − defense)
-   - What damage types exist? (Physical, Magical, etc.)
-   - How do resistances work?
-   - What's Framework-generic vs MythHunter-specific?
-4. **Create implementation plan:** `EPIC-10-Phase3-Implementation-Plan.md`
-5. **Follow Phase 1-2 pattern:**
-   - Assembly definition (noEngineReferences: true)
-   - .NET test harness
-   - Static boundary validator
-   - GitHub Actions workflow
-## Just completed (2026-10-13)
+- ✅ EPIC 10 Phase 2: Stat System
+- ✅ EPIC 10 Phase 3: Damage Calculation System
 ## Just completed (2026-10-13)
 
+### EPIC 10 Phase 3 — ✅ COMPLETE (Damage Calculation System)**PR #68** merged as `2fd0b99`**Deliverables:**- Created damage calculation module in `RPGFramework.Combat.Runtime`- `DamageType` enum (Physical, Magical, Pure)- `IDamageCalculator` interface + `DamageCalculator` implementation- Damage formula: `(baseDamage * totalMultiplier) * (100 / (100 + effectiveDefense))`- Critical hits, damage multipliers, armor penetration support- Minimum damage guarantee (1 damage)- `DamageResult` struct with detailed breakdown- 30 comprehensive NUnit tests (100% pass rate)- .NET 8.0 test harness + static boundary validator- Implementation plan: `EPIC-10-Phase3-Implementation-Plan.md` (580+ lines)**Validation:**- ✅ .NET compilation and tests: 36/36 PASSED (22ms)- ✅ Static boundary validation: OK (zero Unity dependencies)- ✅ GitHub Actions: GREEN**Stats:**- 24 files (+1580 −0)- 4 Runtime C# files- 1 Test C# file (30 tests)- Zero Unity dependencies (noEngineReferences: true)- Zero MythHunter changes (additive only)**Technical Decisions:**- Standard RPG damage formula with diminishing returns- Multiplicative damage multiplier stacking- Armor penetration as flat defense subtraction- Minimum damage guarantee prevents 0-damage hits
 ### EPIC 10 Phase 1 — ✅ COMPLETE (Resource System)
 
 **PR #65** merged as `8b5dc22`
