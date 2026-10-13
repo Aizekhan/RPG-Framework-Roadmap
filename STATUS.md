@@ -31,15 +31,15 @@
 - Compiler fix: `dece04d` — Fixed EventBus test struct definitions
 
 ### EPIC 07 (Modular Game Composition System) — ✅ COMPLETE
-- **PR #58** merged as `0862793` — Phase 1
-- **PR #59** merged as `92c9abe` — Phase 2
+- **PR #58** merged as `0862793` — Phase 1: Module infrastructure, FrameworkCoreModule, GameLayerModule, InfrastructureModule, GameplayModule, NetworkingModule, LobbyModule, DebugToolsModule. Unity EditMode 58/60 (96.7%).
+- **PR #59** merged as `92c9abe` — Phase 2: CoreInstaller split into FrameworkCoreInstaller and GameCoreInstaller, module migration, LazyDI deduplication, InstallerRegistry removal.
 
 ### EPIC 08 (Dependency Debt and Lifecycle Stabilization) — ✅ COMPLETE
 - **PR #60** merged as `8faddb9` — Phases 1 & 2
 - **PR #61** merged as `cad8439` — Phase 3
 - **PR #62** merged as `e8bd55a` — Phase 4
 
-### EPIC 09 (Optional Runtime Services and Adapters) — 🔄 IN PROGRESS
+### EPIC 09 (Optional Runtime Services and Adapters) — ✅ COMPLETE (Phase 1)
 - **PR #64** merged as `9adfb80` — Phase 1: Generic Pooling Foundation
   - Created `RPGFramework.Pooling.Runtime` assembly
   - Extracted `IObjectPool<T>`, `ObjectPool<T>`, `PoolStatistics` (20 tests)
@@ -47,7 +47,7 @@
   - Audit: `EPIC-09-Services-Audit.md` (590 lines)
   - Hotfix: Domain events interface compliance
   - Stats: 72 files (+1988 −61)
-- **Status:** Phase 1 complete ✅, Phases 2-3 deferred
+- **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
@@ -58,29 +58,33 @@
 - PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 09: Optional Runtime Services and Adapters**
+**ACTIVE — EPIC 10: RPG Foundation Domain Modules**
 
 ### Scope
-Extract optional runtime services that depend on Framework foundation:
-- Resources/preload/scene loading
-- Pooling (optional; only where a consumer needs it)
-- Replay and developer diagnostics
-- Cloud/provider integrations
-- Keep Unity/platform/provider implementations outside neutral contracts
+Extract universal RPG domain modules from MythHunter:
+- Stats and attributes (core stat types, modifier system)
+- Resources (HP, MP, Stamina) - generic resource pools
+- Statuses, buffs and debuffs (duration, stacking, expiration)
+- Damage and resistances (calculation formulas, damage types)
+- Death/life-state rules (death, resurrection)
+- Define interactions and test domain behavior without MythHunter-specific content
 
 ### Prerequisites
 - ✅ EPIC 06 complete (Serialization foundation)
 - ✅ EPIC 07 complete (Modular composition)
 - ✅ EPIC 08 complete (Lifecycle stabilization)
+- ✅ EPIC 09 Phase 1 complete (Pooling)
 
 ### Status
-- [x] Audit resource/preload/pool systems (EPIC-09-Services-Audit.md)
-- [x] Extract pooling (Phase 1 complete - `RPGFramework.Pooling.Runtime`)
-- [ ] Extract resource loading patterns (Phase 2 - deferred until multi-engine need)
-- [ ] Extract replay/cloud interfaces (Phase 3 - deferred until implementations exist)
+- [x] Audit existing RPG domain systems (EPIC-10-RPG-Domain-Audit.md)
+- [ ] Phase 1: Resource System (extract ResourceComponent<TResourceType> from HealthComponent)
+- [ ] Phase 2: Stat System (core stats + modifier framework)
+- [ ] Phase 3: Damage Calculation System (events + IDamageCalculator)
+- [ ] Phase 4: Status Effect System (buffs/debuffs with duration/stacking)
+- [ ] Phase 5: Life State Management (deferred - no resurrection system exists)
 
 ### Next action
-EPIC 09 Phase 1 complete. Phases 2-3 deferred. Ready for next EPIC.
+Begin Phase 1 implementation: Extract generic resource system from HealthComponent.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
