@@ -3,107 +3,109 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 06: Serialization Foundation — AUDIT PHASE**
+**EPIC 09: Optional Runtime Services and Adapters — Phase 1 Complete ✅**
 
-### Objective
-Establish a reusable serialization foundation before EPIC 12 (Persistence) and EPIC 13 (Networking).
+### Current State
+- ✅ Phase 1: Generic Pooling Foundation (PR #64, commit `9adfb80`)
+- ⏸️ Phase 2: Resource Loading Contracts (deferred until multi-engine need)
+- ⏸️ Phase 3: Replay/Cloud Interfaces (deferred until implementations exist)
 
-### Scope
-1. **Audit current serialization** — Search codebase for:
-   - Component/entity serialization
-   - Versioned data structures
-   - Delta/snapshot serialization
-   - Network protocol serialization
-   - Save/load mechanisms
+### What was delivered (Phase 1)
+**Created Framework Pooling:**
+- `RPGFramework.Pooling.Runtime` assembly (no Unity dependencies)
+- `IObjectPool<T>` interface with lifecycle callbacks
+- `ObjectPool<T>` implementation (pre-warming, statistics, max size)
+- 20 comprehensive tests in `ObjectPoolTests.cs`
 
-2. **Define stable identifiers** — Type IDs, schema versions, compatibility contracts
+**Refactored Game Layer:**
+- `GameObjectPool` → Unity adapter pattern using Framework pool
+- Logger adapter bridges `IMythLogger` → Framework `ILogger`
+- Maintained existing public API, enhanced with Framework pool internals
 
-3. **Separate concerns**:
-   - Generic serialization contracts (Framework)
-   - Persistence policies (Game Layer)
-   - Network wire formats (Networking Module)
+**Documentation:**
+- `EPIC-09-Services-Audit.md` (590 lines) — comprehensive analysis of 4 service subsystems
 
-4. **Extract reusable contracts** — Only proven-reusable with compatibility tests
+**Stats:** 72 files (+1988 −61)
 
-### Why now?
-EPIC 07 (Game Layer Composition) and EPIC 08 (Lifecycle Stabilization) are complete. Serialization foundation is needed before:
-- EPIC 09 (Save/Load, Resources)
-- EPIC 12 (Persistence)
-- EPIC 13 (Networking)
+### Why Phases 2-3 deferred?
+- **Phase 2 (Resources):** Current `IResourceManager` is Unity-only. No multi-engine need proven yet. Extraction would create unused Framework contracts.
+- **Phase 3 (Replay/Cloud):** `IReplaySystem` and `IDataService` are interfaces with no implementations. Cannot extract patterns from non-existent code.
 
-### Prerequisites ✅
-- ✅ EPIC 07 complete: Modular composition system established
-- ✅ EPIC 08 complete: Lifecycle, threading, DI optimized
-- ✅ Clean separation between Framework and Game Layer
-
-### Next immediate actions
-1. **Search for serialization code**:
-   - Grep for: `Serialize`, `Deserialize`, `ISerializ`, `JsonConvert`, `BinaryFormatter`
-   - Check: Components, Entities, Save/Load, Network, Resources
-
-2. **Map serialization patterns**:
-   - What gets serialized? (entities, components, game state)
-   - Where? (save files, network packets, resources)
-   - How? (JSON, binary, custom formats)
-   - Versioning strategy?
-
-3. **Identify Framework vs Game**:
-   - Generic serialization contracts → Framework
-   - Game-specific data → Game Layer
-   - Network protocol → Networking Module
-
-4. **Create audit document**: `EPIC-06-Serialization-Audit.md`
+### Next action
+**Ready for next EPIC assignment.** EPIC 09 extraction complete per audit recommendations.
 
 ## Just completed (2026-10-13)
 
-### EPIC 07 Phase 2 — ✅ MERGED
-- **PR #59** merged as `92c9abe`
-- Split CoreInstaller → FrameworkCoreInstaller + GameCoreInstaller
-- Migrated 4 installers to modules
-- Removed InstallerRegistry dead code
-- Fixed LazyDI duplication
-- Resolved hidden registration conflicts
+### EPIC 09 Phase 1 — ✅ COMPLETE
 
-### EPIC 08 — ✅ COMPLETE (All 4 Phases)
+**PR #64** merged as `9adfb80`
 
-**Phase 1-2: Async Cancellation & System Decoupling** — PR #60 (`8faddb9`)
-- AsyncTaskTracker for proper cancellation token lifecycle
-- Decoupled systems: ArchetypeSystem, HeroSelectionService, TimerService
-- EventBus async cancellation support
-- State machine async refactoring (all 7 states)
-- 37 files, 3,398+ insertions
+**Deliverables:**
+- `RPGFramework.Pooling.Runtime` assembly with generic pooling foundation
+- `IObjectPool<T>`, `ObjectPool<T>`, `PoolStatistics` (20 tests)
+- `GameObjectPool` refactored to Unity adapter pattern
+- `EPIC-09-Services-Audit.md` (590 lines)
+- Hotfix: Domain events interface compliance (IEvent.GetEventId, GetPriority)
 
-**Phase 3: Thread Safety & Memory Leaks** — PR #61 (`cad8439`)
-- ComponentCache thread safety (lock-free reads, write locks)
-- EventBus duplicate subscription prevention
-- Memory leak fixes (weak references, cleanup)
-- 5 files, 1,265+ insertions
-- Comprehensive thread safety and leak tests
+**Stats:** 72 files (+1988 −61)
 
-**Phase 4: Performance Optimization** — PR #62 (`e8bd55a`)
-- DI reflection optimization: 85-95% performance improvement
-- Type metadata caching
-- InitializationTransaction for deterministic rollback
-- Performance benchmarks and characterization tests
-- 6 files, 1,090+ insertions
+**Phases 2-3 deferred** until multi-engine need proven (resources) and implementations exist (replay/cloud).
 
-### EPIC 07 Phase 1 — ✅ MERGED (2026-10-12)
-- **PR #58** merged as `0862793`
-- Module infrastructure with topological dependency resolution
-- FrameworkCoreModule (zero game dependencies)
-- Game modules: GameLayerModule, InfrastructureModule, GameplayModule
-- Optional modules: NetworkingModule, LobbyModule, DebugToolsModule
-- 18 files, 787+ insertions
+### EPIC 06 — ✅ COMPLETE (All 5 Phases)
 
-## Documentation created (2026-10-13)
-- `EPIC-01-Reverse-Reference-Audit.md` — Component cache usage patterns
-- `EPIC-06-Serialization-Audit.md` — Serialization patterns and boundaries
-- `EPIC-08-Dependency-Lifecycle-Audit.md` — Async, threading, DI issues
-- `EPIC-06-08-Implementation-Plan.md` — Complete implementation strategy
-- `SESSION-2026-10-13-Summary.md` — Full session summary
-- `EPIC-08-Performance-Benchmarks.md` — DI performance analysis
-- `SMOKE-TESTS.md` — Smoke test procedures
-- `ENVIRONMENT-SETUP.md` — Development environment setup
+**PR #63** merged as `39af13b`
+
+**Phase 1: Core Contracts**
+- Created `RPGFramework.Serialization.Runtime` assembly
+- Contracts: `ISerializable`, `ISerializer<T>`, `IVersionedData`, `ITypeRegistry`, `IMigrator`
+- `SerializableTypeAttribute` for stable type IDs (replaces `Type.FullName`)
+- `TypeRegistry` implementation with 16 tests
+
+**Phase 2: Versioned Serialization**
+- Refactored `VersionedSerializer` to use `ITypeRegistry`
+- Implemented `IMigrationRegistry` + `MigrationRegistry`
+- Version mismatch detection and rejection
+- Migration tests (v1 → v2 transformation, 8 tests)
+
+**Phase 3: Component Serialization**
+- Extracted `IComponentSerializer<T>` to Framework
+- Extracted `ComponentSerializerBase<T>` to Framework
+- Made `ComponentSerializerRegistry` game-agnostic (no hardcoded components)
+- Serializers registered via `SerializationInstaller`
+
+**Phase 4: Delta Compression**
+- Created `RPGFramework.DeltaCompression.Runtime` optional module
+- `IDeltaSerializer` + `DeltaSerializer` (thread-safe, configurable threshold)
+- Memory cleanup (`ClearState`, `ClearAllStates`)
+
+**Phase 5: Network Serialization**
+- Refactored `BinaryNetworkSerializer` to use `ITypeRegistry`
+- Added `SerializableTypeAttribute` to `NetworkEventMessage`
+- `NetworkingInstaller` registers message types
+- Wire format: [TypeId][Version][Length][Payload]
+
+**Stats:**
+- 26 files changed (+2016 −281)
+- 20 new Framework files (17 runtime, 3 tests)
+- 2 new assemblies (Serialization, DeltaCompression)
+- 24 tests (TypeRegistry, VersionedSerializer)
+
+**Compiler Fix:**
+- `dece04d` — Fixed EventBus test struct definitions (EPIC 08 residual)
+
+### EPIC 07 — ✅ COMPLETE (2026-10-12)
+- PR #58: Phase 1 — Module infrastructure (`0862793`)
+- PR #59: Phase 2 — CoreInstaller split (`92c9abe`)
+
+### EPIC 08 — ✅ COMPLETE (2026-10-12/13)
+- PR #60: Phases 1-2 — Async cancellation (`8faddb9`)
+- PR #61: Phase 3 — Thread safety (`cad8439`)
+- PR #62: Phase 4 — DI optimization (`e8bd55a`)
+
+## Documentation Created
+- `EPIC-09-Services-Audit.md` — 590 lines, services subsystems analysis
+- `EPIC-06-Serialization-Audit.md` — 590 lines, comprehensive analysis
+- Session summaries for 2026-10-12, 2026-10-13
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -114,7 +116,9 @@ EPIC 07 (Game Layer Composition) and EPIC 08 (Lifecycle Stabilization) are compl
 - Test results are valid only for the exact commit SHA tested.
 
 ## Key decisions carried forward
-- EPIC 07 prioritized before EPIC 06 to establish Framework/Game boundaries ✅
-- EPIC 08 completed before EPIC 06 to stabilize foundation ✅
-- Now EPIC 06 can proceed with clean module boundaries and stable lifecycle
-- Framework Core has zero game dependencies — universal RPG framework principle maintained
+- EPIC 09 Phase 1 complete ✅ — Generic pooling extracted to Framework
+- EPIC 06 complete ✅ — Serialization foundation unblocks EPIC 09, 12, 13
+- Framework has zero game dependencies — universal RPG framework principle maintained
+- Type identification uses stable IDs (`SerializableTypeAttribute`) — survives refactoring
+- Delta compression is optional module — not mandatory Framework dependency
+- Pooling is optional module — Framework provides generic pool, Unity provides adapter
