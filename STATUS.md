@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `ff9351d` — Latest: [PR #62 EPIC 08 Phase 4](https://github.com/Aizekhan/MythHunter/pull/62).
+- Current source head: `39af13b` — Latest: [PR #63 EPIC 06 Serialization Foundation](https://github.com/Aizekhan/MythHunter/pull/63).
 
 ## Verified completed sequence
 
@@ -19,48 +19,39 @@
 - EPIC 05.8: PR #30 merged as `e7ecbd854a7ff2c8b30a8308597b452ec570fd7c`.
 - EPIC 05.9: PR #54 merged as `e8f724f` — ComponentCache OnDemand positive-membership semantics.
 
+### EPIC 06 (Serialization Foundation) — ✅ COMPLETE
+- **PR #63** merged as `39af13b` — All 5 phases complete:
+  - **Phase 1:** Core contracts (ISerializable, ITypeRegistry, SerializableTypeAttribute, IMigrator)
+  - **Phase 2:** VersionedSerializer with migration support
+  - **Phase 3:** Component serialization (Framework-agnostic registry)
+  - **Phase 4:** Delta compression module (optional)
+  - **Phase 5:** Network serialization refactored (stable type IDs)
+- Files: 26 changed (+2016 −281), 20 new Framework files, 24 tests
+- Assemblies: RPGFramework.Serialization.Runtime, RPGFramework.DeltaCompression.Runtime
+- Compiler fix: `dece04d` — Fixed EventBus test struct definitions
+
 ### EPIC 07 (Modular Game Composition System) — ✅ COMPLETE
-- **PR #58** merged as `0862793` — Phase 1: Module infrastructure, FrameworkCoreModule, GameLayerModule, InfrastructureModule, GameplayModule, NetworkingModule, LobbyModule, DebugToolsModule. Unity EditMode 58/60 (96.7%).
-- **PR #59** merged as `92c9abe` — Phase 2: CoreInstaller split into FrameworkCoreInstaller and GameCoreInstaller, module migration, LazyDI deduplication, InstallerRegistry removal. Unity EditMode validated, clean compile.
+- **PR #58** merged as `0862793` — Phase 1
+- **PR #59** merged as `92c9abe` — Phase 2
 
 ### EPIC 08 (Dependency Debt and Lifecycle Stabilization) — ✅ COMPLETE
-- **PR #60** merged as `8faddb9` — Phases 1 & 2: AsyncTaskTracker for cancellation token lifecycle, system decoupling (ArchetypeSystem, HeroSelectionService, TimerService), EventBus async cancellation, state machine async refactoring.
-- **PR #61** merged as `cad8439` — Phase 3: ComponentCache thread safety (lock-free reads, write locks), EventBus duplicate subscription prevention, memory leak fixes (weak references, unsubscribe cleanup).
-- **PR #62** merged as `e8bd55a` — Phase 4: DI reflection optimization (type cache, lazy metadata), InitializationTransaction for deterministic rollback. Performance benchmarks show 85-95% improvement.
-
-### Earlier milestones
-- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
-- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
-- **Architecture Enforcement Phase 1**: PR #57 merged as `6637cca` — Foundation layer with architecture tests.
-- **JobHandle IL2CPP fix**: PR #56 merged as `d36b271` — Fixes IL2CPP compilation error in `JobHandleExtensions.IsValid()`.
-- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
-- PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
+- **PR #60** merged as `8faddb9` — Phases 1 & 2
+- **PR #61** merged as `cad8439` — Phase 3
+- **PR #62** merged as `e8bd55a` — Phase 4
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 06: Serialization Foundation**
+**ACTIVE — EPIC 09: Optional Runtime Services and Adapters**
 
 ### Scope
-Audit and extract serialization foundation:
-- Audit component/entity/versioned/delta/network serialization separately
-- Define stable schema/type identifiers when data crosses version/process boundaries
-- Separate generic serialization from persistence policy and network wire formats
-- Extract only proven-reusable contracts/runtime and test compatibility
+Extract optional runtime services (resources, pooling, replay, cloud) with clear Framework/Game boundaries.
 
 ### Status
-- [ ] Audit current serialization implementations
-- [ ] Define stable schema/type identifiers
-- [ ] Separate generic serialization from persistence/network
-- [ ] Extract reusable contracts and test
+- [ ] Audit resource/preload/pool systems
+- [ ] Define framework contracts vs Unity adapters
+- [ ] Extract reusable patterns
 
 ### Next action
-Begin EPIC 06 audit: search and map current serialization implementations in MythHunter codebase, identify Framework vs Game boundaries, define extraction scope.
-
-## Dormant GitHub PRs — not active roadmap work
-These historical PRs predate the current architecture effort and must not be merged as-is.
-- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): residual diff only folder .meta files.
-- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind dev.
-- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind dev.
-- [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4): long-open dev → main integration PR.
+Begin EPIC 09 audit: map resource management and pooling systems.
 
 ## Conflict rule
-If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation. Test results are valid only for the exact commit SHA tested.
+If STATUS, master plan, audit files, PR metadata, or current `dev` disagree, stop work and reconcile them before implementation.
