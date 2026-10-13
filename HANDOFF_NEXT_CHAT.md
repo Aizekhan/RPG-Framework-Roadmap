@@ -3,161 +3,130 @@
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md` and the linked MythHunter audit source. This handoff is an execution guide, not a second status database.
 
 ## Active roadmap item
-**EPIC 10: RPG Foundation Domain Modules — Audit Complete**
+**EPIC 10: RPG Foundation Domain Modules — Phase 2 (Stat System)**
 
 ### Objective
-Extract universal RPG domain modules that define core game mechanics without MythHunter-specific content.
+Extract stat/attribute system from MythHunter into reusable Framework module with modifier calculations.
 
-### Audit Complete (2026-10-13)
-**Document:** `EPIC-10-RPG-Domain-Audit.md` (MythHunter repository)
+### Scope (Phase 2)
+1. **Audit existing stat system:**
+   - `StatType` enum (MythHunter game-specific stats)
+   - `StatsComponent` (current/base/max values)
+   - `StatRegistry` (global stat tracking)
+   - Stat modifier patterns
 
-**Key Findings:**
-1. **Framework-Ready (Extract As-Is):**
-   - HealthComponent → ResourceComponent<TResourceType>
-   - DamageAppliedEvent, HealingAppliedEvent, EntityDeathEvent
-   - DamageType enum (Physical, Magical, Pure)
+2. **Design Framework contracts:**
+   - `IStatContainer<TStatType, TValue>` (generic stat storage)
+   - `IStatModifier` (additive/multiplicative modifiers)
+   - Stat calculation formulas (base + modifiers)
 
-2. **Requires Refactoring (Split Framework/Game):**
-   - StatType enum → CoreStatType (Framework) + MythHunterStatType (Game)
-   - StatsComponent → IStatContainer<TStatType, TValue>
-   - CombatStatsComponent → Basic stats (Framework) + Rage/Concentration (Game)
+3. **Extract to Framework:**
+   - Create `RPGFramework.Stats.Runtime` assembly
+   - Generic stat component (reusable across any RPG)
+   - Modifier system (buffs/debuffs foundation)
 
-3. **Design New System (Missing Implementation):**
-   - Generic modifier system (no add/remove/recalculate API)
-   - Status effect system (no duration/stack tracking)
-   - Damage calculator (no exposed formula engine)
+4. **Create MythHunter adapter:**
+   - Option A: Internal adapter (preserve existing API)
+   - Option B: Direct migration (use Framework directly)
 
-### Phased Extraction Plan
-
-**Phase 1: Resource System (High Priority — Nearly Complete)**
-- Extract ResourceComponent<TResourceType> from HealthComponent
-- Create RPGFramework.Combat.Runtime assembly
-- MythHunter adapter: HealthComponent → ResourceComponent<Health>
-- Tests: Resource creation, depletion, regeneration
-
-**Phase 2: Stat System (Medium Priority — Requires Refactoring)**
-- IStatContainer<TStatType, TValue> storage
-- IStatModifier (additive/multiplicative)
-- IStatModifierRegistry (add/remove/recalculate)
-- Split StatType enum (Framework vs Game)
-
-**Phase 3: Damage Calculation (Medium Priority — Design New)**
-- Extract event structures (DamageAppliedEvent, etc.)
-- IDamageCalculator interface
-- MythHunter implementation with Rage/Concentration
-
-**Phase 4: Status Effect System (High Priority — Design New)**
-- StatusEffectComponent (Duration, StackCount)
-- IStatusEffectDefinition, IStatusEffectRegistry
-- StatusEffectSystem (apply/tick/expire)
-
-**Phase 5: Life State Management (Deferred)**
-- No resurrection system exists in MythHunter
-- EntityDeathEvent already extracted in Phase 3
+### Why now?
+- EPIC 10 Phase 1 complete ✅ (Resource System)
+- Resource extraction pattern validated
+- Stat system depends on same EPIC 06 serialization foundation
 
 ### Prerequisites
-- ✅ EPIC 06: Serialization foundation (supports component serialization)
+- ✅ EPIC 06: Serialization foundation
 - ✅ EPIC 07: Modular composition
 - ✅ EPIC 08: Lifecycle stabilization
-- ✅ EPIC 09 Phase 1: Pooling (available if needed)
+- ✅ EPIC 09 Phase 1: Generic pooling
+- ✅ EPIC 10 Phase 1: Resource System
 
 ### Next immediate actions
-1. **Create Phase 1 implementation plan:**
-   - Read HealthComponent source (Assets/_MythHunter/Code/Components/Combat/HealthComponent.cs)
-   - Design ResourceComponent<TResourceType> generic structure
-   - Define acceptance criteria (Unity EditMode tests, game bootstrap smoke)
+1. **Search for stat systems:**
+   - Grep: `StatType`, `StatsComponent`, `StatRegistry`
+   - Check: `Assets/_MythHunter/Code/Stats/`, `Assets/_MythHunter/Code/Components/`
 
-2. **Create feature branch:**
-   - `feature/epic-10-phase-1-resource-system`
-   - Based on current dev (9adfb80)
+2. **Audit stat patterns:**
+   - How are stats stored? (Current, Base, Max)
+   - How are modifiers applied? (Additive, Multiplicative)
+   - What's Framework-generic vs MythHunter-specific?
 
-3. **Implementation steps:**
-   - Create Assets/_Framework/Combat/Runtime/ directory
-   - Add RPGFramework.Combat.Runtime.asmdef
-   - Extract ResourceComponent<TResourceType> (CurrentValue, MaxValue, RegenRate)
-   - Add ResourceComponentTests.cs (EditMode tests)
-   - Update .NET test harness and CI paths
+3. **Design Framework interface:**
+   - `IStatContainer<TStatType, TValue>` — stat storage
+   - `IStatModifier` — modifier application
+   - Modifier calculation order (base + add → multiply)
 
-4. **Validation gates:**
-   - Static boundary/GUID validation
-   - .NET tests pass (resource lifecycle)
-   - Unity EditMode tests pass
-   - MythHunter game bootstrap smoke test clean
-   - No regression in existing HealthComponent usage
+4. **Create implementation plan:** `EPIC-10-Phase2-Implementation-Plan.md`
+
+5. **Follow Phase 1 pattern:**
+   - Assembly definition (noEngineReferences: true)
+   - .NET test harness
+   - Static boundary validator
+   - GitHub Actions workflow
 
 ## Just completed (2026-10-13)
 
-### EPIC 09 Phase 1 — ✅ COMPLETE
+### EPIC 10 Phase 1 — ✅ COMPLETE (Resource System)
+
+**PR #65** merged as `8b5dc22`
+
+**Deliverables:**
+- Created `RPGFramework.Combat.Runtime` assembly
+- `ResourceComponent<TResourceType>` — generic resource pool (HP, MP, Stamina, etc.)
+- `ResourceType` enum — 6 standard RPG resources (Health, Mana, Stamina, Energy, Rage, Focus)
+- 8 comprehensive NUnit tests
+- .NET 8.0 test harness for CI
+- Static boundary validator (Python)
+- GitHub Actions workflow (`rpg-framework-combat.yml`)
+
+**Documentation:**
+- `EPIC-10-RPG-Domain-Audit.md` (650+ lines) — comprehensive audit of Stats, Resources, Buffs, Damage, Death systems
+- `EPIC-10-Phase1-Implementation-Plan.md` (570+ lines) — design rationale, adapter options, rollback plan
+- `EPIC-10-Phase1-Summary.md` — complete delivery documentation
+- `EPIC-10-Phase1-Final-Recommendation.md` — merge recommendation with risk analysis
+
+**Validation:**
+- ✅ .NET compilation and tests: 8/8 PASSED
+- ✅ Static boundary validation: OK (zero Unity dependencies)
+- ✅ GitHub Actions: GREEN
+- ⏳ Unity EditMode: blocked by pre-existing errors (70+ errors unrelated to PR #65)
+
+**Stats:**
+- 18 files (+1785 insertions)
+- 2 Runtime C# files
+- 1 Test C# file (8 tests)
+- Zero Unity dependencies (noEngineReferences: true)
+- Zero MythHunter changes (additive only)
+
+**Technical Decisions:**
+- Generic type parameter: `where TResourceType : struct, IConvertible`
+- Parameterless serialization (ISerializable contract)
+- No value capping (Framework provides storage; game enforces policy)
+- IResourceManager deferred to Phase 1.5/2 (YAGNI principle)
+
+### EPIC 09 Phase 1 — ✅ COMPLETE (2026-10-13)
 
 **PR #64** merged as `9adfb80`
 
 **Deliverables:**
-- `RPGFramework.Pooling.Runtime` assembly with generic pooling foundation
-- `IObjectPool<T>`, `ObjectPool<T>`, `PoolStatistics` (20 tests)
-- `GameObjectPool` refactored to Unity adapter pattern
-- `EPIC-09-Services-Audit.md` (590 lines)
-- Hotfix: Domain events interface compliance (IEvent.GetEventId, GetPriority)
+- Created `RPGFramework.Pooling.Runtime` assembly
+- Extracted `IObjectPool<T>`, `ObjectPool<T>`, `PoolStatistics`
+- Refactored `GameObjectPool` to Unity adapter pattern
+- 20 tests
+- Audit: `EPIC-09-Services-Audit.md` (590 lines)
 
-**Stats:** 72 files (+1988 −61)
+**Status:** Phases 2-3 deferred until proven need
 
-**Phases 2-3 deferred** until multi-engine need proven (resources) and implementations exist (replay/cloud).
+### EPIC 06-08 — ✅ COMPLETE (2026-10-12/13)
+- EPIC 06: Serialization Foundation (5 phases, PR #63)
+- EPIC 07: Modular Game Composition (2 phases, PRs #58, #59)
+- EPIC 08: Lifecycle Stabilization (4 phases, PRs #60-62)
 
-### EPIC 06 — ✅ COMPLETE (All 5 Phases)
-
-**PR #63** merged as `39af13b`
-
-**Phase 1: Core Contracts**
-- Created `RPGFramework.Serialization.Runtime` assembly
-- Contracts: `ISerializable`, `ISerializer<T>`, `IVersionedData`, `ITypeRegistry`, `IMigrator`
-- `SerializableTypeAttribute` for stable type IDs (replaces `Type.FullName`)
-- `TypeRegistry` implementation with 16 tests
-
-**Phase 2: Versioned Serialization**
-- Refactored `VersionedSerializer` to use `ITypeRegistry`
-- Implemented `IMigrationRegistry` + `MigrationRegistry`
-- Version mismatch detection and rejection
-- Migration tests (v1 → v2 transformation, 8 tests)
-
-**Phase 3: Component Serialization**
-- Extracted `IComponentSerializer<T>` to Framework
-- Extracted `ComponentSerializerBase<T>` to Framework
-- Made `ComponentSerializerRegistry` game-agnostic (no hardcoded components)
-- Serializers registered via `SerializationInstaller`
-
-**Phase 4: Delta Compression**
-- Created `RPGFramework.DeltaCompression.Runtime` optional module
-- `IDeltaSerializer` + `DeltaSerializer` (thread-safe, configurable threshold)
-- Memory cleanup (`ClearState`, `ClearAllStates`)
-
-**Phase 5: Network Serialization**
-- Refactored `BinaryNetworkSerializer` to use `ITypeRegistry`
-- Added `SerializableTypeAttribute` to `NetworkEventMessage`
-- `NetworkingInstaller` registers message types
-- Wire format: [TypeId][Version][Length][Payload]
-
-**Stats:**
-- 26 files changed (+2016 −281)
-- 20 new Framework files (17 runtime, 3 tests)
-- 2 new assemblies (Serialization, DeltaCompression)
-- 24 tests (TypeRegistry, VersionedSerializer)
-
-**Compiler Fix:**
-- `dece04d` — Fixed EventBus test struct definitions (EPIC 08 residual)
-
-### EPIC 07 — ✅ COMPLETE (2026-10-12)
-- PR #58: Phase 1 — Module infrastructure (`0862793`)
-- PR #59: Phase 2 — CoreInstaller split (`92c9abe`)
-
-### EPIC 08 — ✅ COMPLETE (2026-10-12/13)
-- PR #60: Phases 1-2 — Async cancellation (`8faddb9`)
-- PR #61: Phase 3 — Thread safety (`cad8439`)
-- PR #62: Phase 4 — DI optimization (`e8bd55a`)
-
-## Documentation Created
-- `EPIC-10-RPG-Domain-Audit.md` — Comprehensive audit of Stats, Resources, Buffs, Damage, Death systems
-- `EPIC-09-Services-Audit.md` — 590 lines, services subsystems analysis
-- `EPIC-06-Serialization-Audit.md` — 590 lines, comprehensive analysis
-- Session summaries for 2026-10-12, 2026-10-13
+## Documentation Created (EPIC 10 Phase 1)
+- `EPIC-10-RPG-Domain-Audit.md` (650+ lines)
+- `EPIC-10-Phase1-Implementation-Plan.md` (570+ lines)
+- `EPIC-10-Phase1-Summary.md`
+- `EPIC-10-Phase1-Final-Recommendation.md`
 
 ## Hard guardrails
 - Exactly one ACTIVE roadmap item, in STATUS.md.
@@ -168,9 +137,10 @@ Extract universal RPG domain modules that define core game mechanics without Myt
 - Test results are valid only for the exact commit SHA tested.
 
 ## Key decisions carried forward
-- EPIC 10 audit complete ✅ — HealthComponent ready for Framework extraction
-- EPIC 09 Phase 1 complete ✅ — Generic pooling extracted to Framework
-- EPIC 06 complete ✅ — Serialization foundation unblocks EPIC 10 component serialization
+- EPIC 10 Phase 1 complete ✅ — Resource System validates extraction pattern
 - Framework has zero game dependencies — universal RPG framework principle maintained
-- Type identification uses stable IDs (`SerializableTypeAttribute`) — survives refactoring
-- Optional modules pattern established — Pooling, DeltaCompression, Combat (upcoming)
+- Generic type parameters enable reusability (ResourceComponent<TResourceType>)
+- .NET test harness provides fast CI feedback (8 sec vs 10+ min Unity)
+- Static boundary validation prevents accidental Unity/MythHunter dependencies
+- Adapter pattern preserves MythHunter API during migration
+- Pre-existing test errors don't block Framework module validation
