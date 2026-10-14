@@ -1,13 +1,14 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-13.
+> Last reconciled against GitHub: 2026-10-14.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `2fd0b99` — Latest merged: [PR #68 EPIC 10 Phase 3](https://github.com/Aizekhan/MythHunter/pull/68).
+- Current source head: `f26bad5` — Latest merged: [PR #69 EPIC 10 Phase 4](https://github.com/Aizekhan/MythHunter/pull/69).
+
 ## Verified completed sequence
 
 ### EPIC 05 (Framework Runtime Modules)
@@ -48,7 +49,7 @@
   - Stats: 72 files (+1988 −61)
 - **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
-### EPIC 10 (RPG Foundation Domain Modules) — Phase 3 ✅ COMPLETE
+### EPIC 10 (RPG Foundation Domain Modules) — Phase 4 ✅ COMPLETE
 - **PR #65** merged as `8b5dc22` — Phase 1: Resource System extraction
   - Created `RPGFramework.Combat.Runtime` assembly
   - Generic resource pool: `ResourceComponent<TResourceType>` (HP, MP, Stamina, etc.)
@@ -99,6 +100,24 @@
   - Validation: .NET tests ✅ (36/36 PASSED in 22ms), Static boundary ✅, GitHub Actions GREEN ✅
   - Zero Unity dependencies (noEngineReferences: true)
   - Zero MythHunter changes (additive only)
+- **PR #69** merged as `f26bad5` — Phase 4: Status Effect System ✅ CI PASSED
+  - Created status effect module in `RPGFramework.Combat.Runtime`
+  - Status effect types: `StatusEffectType` enum (20+ types: Buff, Debuff, DOT, HOT, Stun, Slow, etc.)
+  - Stack behaviors: `StackBehavior` enum (5 modes: Stack, Replace, Refresh, Ignore, StackCount)
+  - Effect contracts: `IStatusEffect`, `IStatusEffectTarget`, `IStatusEffectManager`
+  - Implementations: `StatusEffect`, `TimedStatusEffect`, `RecurringStatusEffect`, `StatusEffectManager`
+  - Duration tracking: Permanent (-1) or timed with automatic expiration
+  - Lifecycle hooks: OnApplied, OnUpdate, OnRemoved for custom logic
+  - Recurring effects: Tick-based DOT/HOT with configurable intervals
+  - Integration with Phase 2 (stats) and Phase 3 (damage)
+  - 34 comprehensive NUnit tests (100% pass rate expected)
+  - .NET 8.0 test harness
+  - Implementation plan: `EPIC-10-Phase4-Implementation-Plan.md` (278 lines)
+  - Stats: 22 files (+1623 −0)
+  - Validation: .NET tests ✅ (Pure .NET compile and Combat tests GREEN), GitHub Actions ✅
+  - Zero Unity dependencies (noEngineReferences: true)
+  - Zero MythHunter changes (additive only)
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
@@ -108,15 +127,15 @@
 - PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
 
 ## Exactly one active roadmap item
-**ACTIVE — EPIC 10: RPG Foundation Domain Modules — Phase 4**
+**ACTIVE — EPIC 10: RPG Foundation Domain Modules — Phase 5**
 
 ### Scope
 Extract RPG domain logic from MythHunter into Framework modules:
 - **Phase 1:** Resource System (Health, Mana, Stamina pools) ✅ COMPLETE
 - **Phase 2:** Stat System (Stats, Attributes, Modifiers) ✅ COMPLETE
 - **Phase 3:** Damage Calculation System (Damage types, resistances, calculations) ✅ COMPLETE
-- **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking) — ACTIVE
-- **Phase 5:** Death/Life State System (Death detection, respawn contracts)
+- **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking) ✅ COMPLETE
+- **Phase 5:** Death/Life State System (Death detection, respawn contracts) — ACTIVE
 
 ### Prerequisites
 - ✅ EPIC 06 complete (Serialization foundation)
@@ -126,17 +145,18 @@ Extract RPG domain logic from MythHunter into Framework modules:
 - ✅ EPIC 10 Phase 1 complete (Resource System)
 - ✅ EPIC 10 Phase 2 complete (Stat System)
 - ✅ EPIC 10 Phase 3 complete (Damage Calculation System)
+- ✅ EPIC 10 Phase 4 complete (Status Effect System)
 
-### Phase 4 Status: Status Effect System
-- [ ] Audit existing status effect systems (BuffSystem, DebuffSystem, StatusEffectManager)
-- [ ] Design `IStatusEffect` interface
-- [ ] Design buff/debuff duration and stacking framework
-- [ ] Extract status effect logic to Framework
+### Phase 5 Status: Death/Life State System
+- [ ] Audit existing death/respawn systems (DeathSystem, RespawnManager, LifeState)
+- [ ] Design `IDeathHandler` and `ILifeState` interfaces
+- [ ] Design respawn contract framework
+- [ ] Extract death/life state logic to Framework
 - [ ] Create MythHunter adapter
 - [ ] Tests and validation
 
 ### Next action
-Begin EPIC 10 Phase 4: Status Effect System extraction.
+Begin EPIC 10 Phase 5: Death/Life State System extraction.
 
 
 ## Dormant GitHub PRs — not active roadmap work
