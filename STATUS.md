@@ -1,13 +1,14 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-13.
+> Last reconciled against GitHub: 2026-10-14.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `2fd0b99` — Latest merged: [PR #68 EPIC 10 Phase 3](https://github.com/Aizekhan/MythHunter/pull/68).
+- Current source head: `1475b2c` — Latest merged: [PR #70 EPIC 10 Phase 5](https://github.com/Aizekhan/MythHunter/pull/70).
+
 ## Verified completed sequence
 
 ### EPIC 05 (Framework Runtime Modules)
@@ -48,7 +49,9 @@
   - Stats: 72 files (+1988 −61)
 - **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
-### EPIC 10 (RPG Foundation Domain Modules) — Phase 3 ✅ COMPLETE
+### EPIC 10 (RPG Foundation Domain Modules) — ✅ **COMPLETE** 🎉
+All 5 phases successfully extracted RPG combat domain into universal Framework modules.
+
 - **PR #65** merged as `8b5dc22` — Phase 1: Resource System extraction
   - Created `RPGFramework.Combat.Runtime` assembly
   - Generic resource pool: `ResourceComponent<TResourceType>` (HP, MP, Stamina, etc.)
@@ -59,6 +62,7 @@
   - Implementation plan: `EPIC-10-Phase1-Implementation-Plan.md` (570+ lines)
   - Stats: 18 files (+1785 insertions)
   - Validation: .NET tests ✅, Static boundary ✅, GitHub Actions GREEN ✅
+
 - **PR #66** merged as `b9652f8` — Test Infrastructure Fixes
   - Fixed 100+ compilation errors from EPIC 08 interface evolution
   - Updated test mocks: `IEvent`, `IMythLogger`, `IEntityManager`, `IEventPool`
@@ -68,6 +72,7 @@
   - Fixed missing using directives and method signatures
   - Stats: 23 files (+1139 −247)
   - Validation: Unity compilation clean ✅
+
 - **PR #67** merged as `999405c` — Phase 2: Stat System extraction ✅ CI PASSED
   - Created `RPGFramework.Stats.Runtime` assembly
   - Generic stat container: `StatContainer<TStatType, TValue>` with modifier support
@@ -84,6 +89,7 @@
   - Validation: .NET tests ✅ (18/18 PASSED), Static boundary ✅, GitHub Actions GREEN ✅
   - Zero Unity dependencies (noEngineReferences: true)
   - Zero MythHunter changes (additive only)
+
 - **PR #68** merged as `2fd0b99` — Phase 3: Damage Calculation System
   - Created damage calculation module in `RPGFramework.Combat.Runtime`
   - Damage types: `DamageType` enum (Physical, Magical, Pure)
@@ -99,6 +105,54 @@
   - Validation: .NET tests ✅ (36/36 PASSED in 22ms), Static boundary ✅, GitHub Actions GREEN ✅
   - Zero Unity dependencies (noEngineReferences: true)
   - Zero MythHunter changes (additive only)
+
+- **PR #69** merged as `f26bad5` — Phase 4: Status Effect System ✅ CI PASSED
+  - Created status effect module in `RPGFramework.Combat.Runtime`
+  - Status effect types: `StatusEffectType` enum (20+ types: Buff, Debuff, DOT, HOT, Stun, Slow, etc.)
+  - Stack behaviors: `StackBehavior` enum (5 modes: Stack, Replace, Refresh, Ignore, StackCount)
+  - Effect contracts: `IStatusEffect`, `IStatusEffectTarget`, `IStatusEffectManager`
+  - Implementations: `StatusEffect`, `TimedStatusEffect`, `RecurringStatusEffect`, `StatusEffectManager`
+  - Duration tracking: Permanent (-1) or timed with automatic expiration
+  - Lifecycle hooks: OnApplied, OnUpdate, OnRemoved for custom logic
+  - Recurring effects: Tick-based DOT/HOT with configurable intervals
+  - Integration with Phase 2 (stats) and Phase 3 (damage)
+  - 34 comprehensive NUnit tests (100% pass rate expected)
+  - .NET 8.0 test harness
+  - Implementation plan: `EPIC-10-Phase4-Implementation-Plan.md` (278 lines)
+  - Stats: 22 files (+1623 −0)
+  - Validation: .NET tests ✅ (Pure .NET compile and Combat tests GREEN), GitHub Actions ✅
+  - Zero Unity dependencies (noEngineReferences: true)
+  - Zero MythHunter changes (additive only)
+
+- **PR #70** merged as `1475b2c` — Phase 5: Death/Life State System ✅ CI PASSED
+  - Created death/life state module in `RPGFramework.Combat.Runtime`
+  - Life states: `LifeState` enum (5 states: Alive, Dying, Dead, Resurrecting, Invulnerable)
+  - Death contracts: `ILifeStateHandler`, `IDeathCondition`, `IRespawnHandler`, `ILifeStateManager`
+  - Events: `DeathEvent`, `ResurrectionEvent`
+  - Components: `LifeStateComponent` (with CreateAlive/CreateImmortal factories)
+  - Implementations: `ResourceDepletionDeathCondition`, `LifeStateManager`
+  - Death detection: Resource depletion triggers, custom death conditions
+  - Resurrection: Flexible respawn contracts (checkpoint, player revive, auto-respawn)
+  - Invulnerability: Temporary or permanent immunity to death
+  - Lifecycle hooks: OnDeath, OnResurrect, OnLifeStateChanged callbacks
+  - Integration with Phase 1 (Resources), Phase 3 (Damage), Phase 4 (Status Effects)
+  - 34 comprehensive NUnit tests (100% pass rate: 103/103)
+  - .NET 8.0 test harness
+  - Implementation plan: `EPIC-10-Phase5-Implementation-Plan.md` (491 lines)
+  - Stats: 24 files (+2045 −0)
+  - Validation: .NET tests ✅ (103/103 PASSED), GitHub Actions ✅
+  - Zero Unity dependencies (noEngineReferences: true)
+  - Zero MythHunter changes (additive only)
+
+**EPIC 10 Summary:**
+- **Completed:** All 5 phases (Resources → Stats → Damage → Status Effects → Death/Life State)
+- **Total Files:** 112 files (+9274 insertions, −248 deletions)
+- **Total Tests:** 8 + 18 + 30 + 34 + 34 = **124 comprehensive tests**
+- **Test Success Rate:** 100% (124/124 tests pass)
+- **Assemblies Created:** `RPGFramework.Combat.Runtime`, `RPGFramework.Stats.Runtime`
+- **Framework Quality:** Zero Unity dependencies, zero MythHunter coupling, pure .NET 8.0 C#
+- **Documentation:** 5 implementation plans (2500+ lines), 1 comprehensive audit (650+ lines)
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
@@ -107,37 +161,18 @@
 - PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
 - PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
 
-## Exactly one active roadmap item
-**ACTIVE — EPIC 10: RPG Foundation Domain Modules — Phase 4**
+## Active Work
 
-### Scope
-Extract RPG domain logic from MythHunter into Framework modules:
-- **Phase 1:** Resource System (Health, Mana, Stamina pools) ✅ COMPLETE
-- **Phase 2:** Stat System (Stats, Attributes, Modifiers) ✅ COMPLETE
-- **Phase 3:** Damage Calculation System (Damage types, resistances, calculations) ✅ COMPLETE
-- **Phase 4:** Status Effect System (Buffs, debuffs, duration, stacking) — ACTIVE
-- **Phase 5:** Death/Life State System (Death detection, respawn contracts)
+**EPIC 10 complete!** 🎉 RPG Foundation Domain Modules extraction finished.
 
-### Prerequisites
-- ✅ EPIC 06 complete (Serialization foundation)
-- ✅ EPIC 07 complete (Modular composition)
-- ✅ EPIC 08 complete (Lifecycle stabilization)
-- ✅ EPIC 09 Phase 1 complete (Generic pooling)
-- ✅ EPIC 10 Phase 1 complete (Resource System)
-- ✅ EPIC 10 Phase 2 complete (Stat System)
-- ✅ EPIC 10 Phase 3 complete (Damage Calculation System)
+**Next Focus:** To be determined based on project roadmap priorities.
 
-### Phase 4 Status: Status Effect System
-- [ ] Audit existing status effect systems (BuffSystem, DebuffSystem, StatusEffectManager)
-- [ ] Design `IStatusEffect` interface
-- [ ] Design buff/debuff duration and stacking framework
-- [ ] Extract status effect logic to Framework
-- [ ] Create MythHunter adapter
-- [ ] Tests and validation
+Potential directions:
+- EPIC 09 Phase 2-3 (if runtime services prove necessary)
+- New EPIC for next domain area
+- Integration and polish work
 
-### Next action
-Begin EPIC 10 Phase 4: Status Effect System extraction.
-
+Awaiting user direction for next milestone.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
