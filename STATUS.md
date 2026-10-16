@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `72b370e` — Latest: EPIC 11 complete with .meta files
+- Current source head: `7203deb` — Latest: EPIC 12 Phase 1 complete (Core Combat Integration)
 
 ## Verified completed sequence
 
@@ -118,6 +118,26 @@ All 5 phases successfully extracted gameplay systems into universal RPG Framewor
   - `RPGFramework.Abilities.Runtime`
   - `RPGFramework.Progression.Runtime`
 
+### EPIC 12 (MythHunter Framework Integration) — 🔄 **IN PROGRESS**
+
+First integration of extracted Framework modules into MythHunter game layer.
+
+- **PR #76** merged as `c52304d` — Phase 1: Core Combat Integration
+  - **Components:** MythHunterStatsComponent, MythHunterResourceComponent, CombatStateComponent
+  - **Adapters:** MythHunterDamageAdapter (bridges Framework DamageCalculator)
+  - **Migration:** CombatComponentMigration (safe migration with rollback support)
+  - **Integration:** CombatSystemIntegration (backward-compatible helper)
+  - **Tests:** 43 comprehensive tests (10 + 13 + 20)
+  - **Files:** 32 files (+3936 insertions)
+  - **Blockers Resolved:** ResourceComponent API refactoring (Option 2 - custom wrapper)
+  - **Validation:** Unity compilation ✅ SUCCESS
+  - **Framework Integration:** Stats (StatContainer), Combat (DamageCalculator), ECS (IEntityManager)
+
+**EPIC 12 Phase 1 Summary:**
+- ✅ **Complete:** Core Combat Integration with Framework-based components
+- **Quality:** Clean separation, backward compatible, fully tested
+- **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -128,17 +148,18 @@ All 5 phases successfully extracted gameplay systems into universal RPG Framewor
 
 ## Active Work
 
-**EPIC 11 complete!** 🎉 All 5 gameplay modules successfully extracted.
+**ACTIVE — EPIC 12 Phase 2: CombatSystem Integration**
 
-**Next Focus:** To be determined based on project roadmap priorities.
+**Goal:** Update `CombatSystem` to use new Framework-based components
 
-Potential directions:
-- EPIC 12: New domain area extraction
-- Integration and polish work for extracted systems
-- MythHunter adapters for Framework modules
-- Performance optimization and advanced features
+**Tasks:**
+1. Update `CombatSystem` to use `CombatSystemIntegration` helper
+2. Replace direct `CombatStatsComponent` access with helper calls
+3. Run entity migration using `CombatComponentMigration`
+4. Validate in-game combat still works
+5. Remove old `CombatStatsComponent` after validation
 
-Awaiting user direction for next milestone.
+**Context:** Phase 1 established the integration pattern and created all necessary adapters. Phase 2 connects the existing game systems to use them.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
