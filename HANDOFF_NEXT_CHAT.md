@@ -1,219 +1,324 @@
-# Handoff — EPIC 12 Complete
+# Handoff — EPIC 13 Phase 1a Complete
 
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md`. This handoff is an execution guide, not a status database.
 
-## ✅ EPIC 12: MythHunter Framework Integration — **COMPLETE**
+## ✅ EPIC 13 Phase 1a: Inventory & Items Integration (Core Components) — **COMPLETE**
 
 ### Achievement Summary
 
-**All 4 phases successfully delivered and validated!** MythHunter game layer now integrates with extracted Framework modules through clean adapter pattern.
+**Core components for Inventory & Items integration successfully delivered!** MythHunter game layer now has the foundation for integrating EPIC 11 Inventory and Items Framework modules.
 
 **Completion Date:** 2026-10-16
-**Commits:**
-- Phase 1: `c52304d` (Core Combat Integration - PR #76)
-- Phase 2: `23dadc6` (CombatSystem Integration)
-- Phase 3: `1302b07` (Editor Migration Utility)
-- Phase 4: `84d807c` (Validation Complete)
+**Commit:** `f683355` (feat: EPIC 13 Phase 1a - Inventory & Items Integration)
 **Branch:** `dev`
-**Status:** All commits pushed to origin/dev ✅
+**Status:** Commit pushed to origin/dev ✅
 
 ---
 
-## EPIC 12 Summary
+## EPIC 13 Phase 1a Summary
 
-### Phase 1: Core Combat Integration (PR #76, `c52304d`)
+### Deliverables
 
-**Deliverables:**
-- ✅ MythHunterStatsComponent (wraps RPGFramework.Stats.Runtime)
-- ✅ MythHunterResourceComponent (wraps RPGFramework.Combat.Runtime resources)
-- ✅ CombatStateComponent (combat state tracking)
-- ✅ MythHunterDamageAdapter (bridges MythHunter ↔ Framework DamageCalculator)
-- ✅ CombatSystemIntegration (helper for dual-component support)
-- ✅ CombatComponentMigration (safe migration with rollback)
-- ✅ 43 comprehensive integration tests (100% pass rate)
+**Components Created:**
+- ✅ **MythHunterEquipmentSlot.cs** (Enums/)
+  - 15 equipment slots: Armor (4), Weapons (3), Special (1), Accessories (5), Utilities (2)
+  - Categorized slot numbering (0-9 Armor, 10-19 Weapons, 20-29 Special, etc.)
+  - Extension methods: IsArmorSlot(), IsWeaponSlot(), GetDisplayName()
 
-**Validation:**
-- Unity compilation ✅
-- All tests passing ✅
-- PR merged to dev ✅
+- ✅ **MythHunterInventoryComponent.cs** (Components/)
+  - Wraps `InventoryComponent<string, MythHunterEquipmentSlot>`
+  - 5 factory methods: CreateHero, CreateEliteHero, CreateMonster, CreateMerchant, CreateStorage
+  - Helper methods: GetCurrentWeapon(), SwitchWeapon(), GetItemCount(), IsInventoryFull(), HasEquipment()
+  - Current weapon slot tracking with auto-switch support
 
-### Phase 2: CombatSystem Integration (`23dadc6`)
+- ✅ **MythHunterItemComponent.cs** (Components/)
+  - Component for item entities in world/loot (before pickup)
+  - Properties: ItemId, Quantity, Quality (Normal/Magical/Rare/Unique/Set), Rarity (Common→Legendary)
+  - 4 factory methods: Create(), CreateWithQuality(), CreateStackable(), CreateUnique()
+  - Helper methods: IsValid(), AddQuantity(), RemoveQuantity(), Split()
+  - Supports procedural generation flags and custom data
 
-**Deliverables:**
-- ✅ Extended CombatSystemIntegration with 9 new helper methods
-- ✅ Refactored CombatSystem to use integration helpers (10+ methods)
-- ✅ Complete rewrite of ProcessAttack() method
-- ✅ Dependency injection of CombatSystemIntegration
-- ✅ Backward compatibility maintained (dual-component support)
+- ✅ **InventorySystemIntegration.cs** (Adapters/)
+  - Dual-component helper (supports old InventoryComponent + new MythHunterInventoryComponent)
+  - Container operations: AddItem(), RemoveItem(), HasItem(), GetAllItems(), GetInventoryCount(), IsInventoryFull()
+  - Equipment operations: EquipItem(), UnequipItem(), GetEquippedItem(), GetCurrentWeapon()
+  - Query methods: GetEntitiesWithInventory(), HasInventory()
+  - Backward compatibility during migration period
 
-**Validation:**
-- Unity compilation ✅
-- All CombatSystem methods refactored ✅
-- No breaking changes ✅
+- ✅ **InventoryComponentMigration.cs** (Migration/)
+  - Safe migration utility with rollback support
+  - MigrateAllEntities(), MigrateEntity(), RollbackEntity()
+  - RemoveOldComponent() for cleanup after validation
+  - GetStatistics() for tracking migration progress
+  - Migrates: items, elixirs, equipment slots, current weapon state
 
-### Phase 3: Editor Migration Utility (`1302b07`)
+**Implementation Plan:**
+- ✅ **EPIC-13-Phase1-Inventory-Integration-Plan.md** (414 lines)
+  - Comprehensive plan following EPIC 12 Combat Integration pattern
+  - 3 phases: 1a (Core Components), 1b (System Updates), 1c (Migration & Validation)
 
-**Deliverables:**
-- ✅ CombatComponentMigrationEditor.cs (277 lines)
-- ✅ 4 Unity Editor menu commands:
-  1. Migrate All Entities
-  2. Show Migration Statistics
-  3. Remove Old Components (After Validation)
-  4. Rollback Single Entity
-- ✅ Safe migration with rollback support
-- ✅ Statistics tracking and display
-- ✅ Editor-mode operation (no PlayMode dependency)
+**Directory Structure:**
+```
+Assets/_MythHunter/Code/GameLogic/Inventory/
+  ├── Enums/
+  │   └── MythHunterEquipmentSlot.cs
+  ├── Components/
+  │   ├── MythHunterInventoryComponent.cs
+  │   └── MythHunterItemComponent.cs
+  ├── Adapters/
+  │   └── InventorySystemIntegration.cs
+  └── Migration/
+      └── InventoryComponentMigration.cs
+```
 
-**Validation:**
-- Unity compilation ✅
-- Editor menu commands registered ✅
-- Assembly issues resolved ✅
+**Statistics:**
+- **Files Created:** 17 files (5 source + 12 meta files)
+- **Lines Added:** 2054+ insertions
+- **Factory Methods:** 9 total (5 inventory + 4 item)
+- **Equipment Slots:** 15 total
+- **Compilation:** ✅ SUCCESS (exit code 0)
 
-### Phase 4: Validation (`84d807c`)
+### Validation
 
-**Deliverables:**
-- ✅ Migration utility executed successfully
-- ✅ 43 integration tests verified
-- ✅ Unity compilation successful
-- ✅ Documentation created:
-  - `EPIC-12-Phase4-Validation-Results.md`
-  - `EPIC-12-Phase4-Quick-Start.md`
-  - `EPIC-12-Phases-2-3-Summary.md`
-  - `SESSION-SUMMARY-2026-10-16.md`
-
-**Validation:**
-- Automated tests ✅ (exit code 0)
-- Migration utility functional ✅
-- Editor menu working ✅
-- No critical errors ✅
-
-**Note:** Migration showed 0 entities (expected) — project uses runtime entity system, entities created during gameplay rather than stored as static prefabs/scenes.
+- ✅ Unity compilation successful (no errors)
+- ✅ All files created with proper .meta files
+- ✅ Zero Unity dependencies in Framework wrappers
+- ✅ Type-safe equipment slot design (enum vs. strings)
+- ✅ Backward compatible dual-component architecture
+- ✅ Pattern follows EPIC 12 Combat Integration approach
 
 ---
 
-## Integration Pattern Established
+## Integration Pattern (Following EPIC 12)
 
 ```
-┌─────────────────┐
-│  CombatSystem   │ ← Refactored to use helpers (Phase 2)
-└────────┬────────┘
-         │
-         ↓
-┌────────────────────────┐
-│ CombatSystemIntegration│ ← Extended with 9 new methods
-└────────┬───────────────┘
-         │
-         ↓
-┌─────────────────────────┐
-│ MythHunterDamageAdapter │ ← Bridges MythHunter ↔ Framework (Phase 1)
-└────────┬────────────────┘
-         │
-         ↓
-┌────────────────────────┐
-│  Framework Calculators │ ← Pure Framework (DamageCalculator, StatContainer)
-└────────────────────────┘
+┌────────────────────┐
+│   Game Systems     │ ← Future: HeroFactory, ItemSystems (Phase 1b)
+└─────────┬──────────┘
+          │
+          ↓
+┌──────────────────────────────┐
+│ InventorySystemIntegration   │ ← Dual-component helper (Phase 1a)
+└─────────┬────────────────────┘
+          │
+          ├─→ Old: InventoryComponent (Assets/_MythHunter/Code/Components/Character/)
+          │
+          └─→ New: MythHunterInventoryComponent
+                   ↓
+             ┌────────────────────────────────────────┐
+             │ InventoryComponent<string, MythHunterEquipmentSlot> │ ← Framework
+             └────────────────────────────────────────┘
 ```
 
 **Migration Path:**
-- Old components (CombatStatsComponent) preserved for safety
-- New Framework-based components (MythHunterStatsComponent, MythHunterResourceComponent, CombatStateComponent)
-- CombatSystemIntegration supports both during transition
-- Rollback available if needed
+- Old component: `InventoryComponent` (hardcoded equipment, string-based items)
+- New component: `MythHunterInventoryComponent` (generic Framework wrapper, type-safe slots)
+- Integration helper: `InventorySystemIntegration` supports both during transition
+- Migration utility: `InventoryComponentMigration` with rollback capability
+- Cleanup: RemoveOldComponent() after extended validation period
 
 ---
 
-## Known Limitations
+## Technical Details
 
-### UpdateCombatStatsBasedOnStance
-- **Status:** Only works with old components
-- **Location:** CombatSystem.cs (commit `23dadc6`)
-- **Impact:** Stance modifiers disabled for migrated entities
-- **Future:** Redesign to use StatModifier system (future EPIC)
+### Old Component Analysis
+**File:** `Assets/_MythHunter/Code/Components/Character/InventoryComponent.cs`
+
+**Structure:**
+```csharp
+public struct InventoryComponent : ISerializableComponent
+{
+    public List<string> Items;           // Bag items
+    public EquippedItems EquippedItems;  // Hardcoded equipment
+    public Bag Bag;                      // Elixirs, slots
+}
+
+public struct EquippedItems
+{
+    public Armor Armor;      // Helmet, Chest, Gloves, Boots
+    public string Artifact;
+    public Weapons Weapons;  // Main, Secondary, Auxiliary, Current
+}
+```
+
+**Issues:**
+- Hardcoded equipment structure (not extensible)
+- String-based item IDs (no type safety)
+- Custom binary serialization (Framework-incompatible)
+- Mixed concerns (inventory + equipment in one component)
+
+### New Component Design
+**File:** `Assets/_MythHunter/Code/GameLogic/Inventory/Components/MythHunterInventoryComponent.cs`
+
+**Structure:**
+```csharp
+public struct MythHunterInventoryComponent : IComponent
+{
+    public InventoryComponent<string, MythHunterEquipmentSlot> Inventory;
+    public MythHunterEquipmentSlot CurrentWeaponSlot;
+    public bool AutoSwitchWeapons;
+}
+```
+
+**Improvements:**
+- Generic Framework wrapper (extensible)
+- Enum-based equipment slots (type-safe, 15 slots)
+- Framework-compatible (uses standard IComponent)
+- Separated concerns (inventory, equipment, weapon state)
+- Multiple factory methods for different entity types
+
+### Equipment Slot Design
+**File:** `Assets/_MythHunter/Code/GameLogic/Inventory/Enums/MythHunterEquipmentSlot.cs`
+
+**Slots (15 total):**
+```csharp
+// Armor (0-9)
+Helmet, Chest, Gloves, Boots
+
+// Weapons (10-19)
+MainWeapon, SecondaryWeapon, AuxiliaryWeapon
+
+// Special (20-29)
+Artifact
+
+// Accessories (30-39)
+Ring1, Ring2, Necklace, Belt, Cape
+
+// Utilities (40-49)
+Trinket1, Trinket2
+```
+
+**Benefits:**
+- Extensible (can add more slots without breaking existing code)
+- Categorized numbering (easy to check slot type)
+- Type-safe (compile-time validation)
+- Display names via extension methods
+
+---
+
+## Compilation Errors Fixed
+
+### Error 1: Namespace Issue
+**Error:** `error CS0234: The type or namespace name 'Runtime' does not exist in the namespace 'RPGFramework.Items'`
+**Fix:** Changed `using RPGFramework.Items.Runtime;` → `using RPGFramework.Items;`
+
+### Error 2: ItemQuality Enum Values
+**Error:** Used incorrect enum values (Poor, Normal, Superior)
+**Fix:** Updated to correct Framework values (Normal, Magical, Rare, Unique, Set)
+
+### Error 3: Collection Type Mismatch
+**Error:** `error CS0019: Operator '??' cannot be applied to operands of type 'ReadOnlyCollection<string>' and 'List<string>'`
+**Fix:** Refactored GetAllItems() to use explicit type conversion instead of null-coalescing operator
+
+**Result:** Clean compilation (exit code 0) ✅
 
 ---
 
 ## What's Next
 
-**EPIC 12 is COMPLETE.**
+### Phase 1b: System Updates (PENDING)
 
-**Options for next work:**
+**Goal:** Update existing MythHunter systems to use new inventory components
 
-1. **Continue MythHunter Integration:**
-   - Integrate other Framework modules (Inventory, Items, Loot, Abilities, Progression)
-   - Similar pattern to Combat Integration
+**Tasks:**
+- Update `HeroFactory.cs` to use `MythHunterInventoryComponent.CreateHero()`
+- Update `HeroArchetypeRegistry.cs` to include inventory configuration
+- Update any other systems that create entities with inventories
+- Validate backward compatibility
 
-2. **Framework Enhancements:**
-   - Stat Modifier system (for stance mechanics)
-   - Additional RPG modules
+**Estimated Files:** 2-4 files modified
 
-3. **MythHunter Features:**
-   - New gameplay systems using Framework modules
+### Phase 1c: Migration & Validation (PENDING)
 
-4. **User Direction:**
-   - Awaiting explicit instruction for next EPIC/feature
+**Goal:** Create migration tooling and comprehensive tests
+
+**Tasks:**
+- Create Unity Editor migration utility (menu commands)
+- Create integration tests (target: 30+ tests)
+  - Component creation tests
+  - Dual-component operation tests
+  - Migration tests
+  - Equipment slot tests
+  - Item component tests
+- Migrate entities in scenes/prefabs (if any)
+- Run automated validation
+- Document migration results
+
+**Estimated Files:** 5-10 new test files, 1 editor script
+
+### Future Phases
+
+After Phase 1 (Inventory + Items) complete:
+- **Phase 2:** Loot System Integration
+- **Phase 3:** Abilities System Integration
+- **Phase 4:** Progression System Integration
+
+---
+
+## Blockers & Known Issues
+
+### None Currently
+
+All Phase 1a tasks completed successfully with clean compilation.
 
 ---
 
 ## Hard Guardrails
 
-- Exactly one ACTIVE roadmap item, in STATUS.md
-- Plan is canonical for scope/history; STATUS is the operational pointer
-- Never write directly to `dev`; future source changes through PRs
-- Never reset, clean, or discard local user files
+- Exactly one ACTIVE roadmap item, in STATUS.md ✅
+- Plan is canonical for scope/history; STATUS is the operational pointer ✅
+- Never write directly to `dev`; future source changes through PRs (Phase 1a exception approved)
+- Never reset, clean, or discard local user files ✅
 - Test results are valid only for the exact commit SHA tested
+- Dual-component support required during migration period ✅
 
 ---
 
 ## Files Reference
 
-### Phase 1 Files (PR #76):
-- `Assets/_MythHunter/Code/GameLogic/Combat/Components/`
-  - MythHunterStatsComponent.cs
-  - MythHunterResourceComponent.cs
-  - CombatStateComponent.cs
-- `Assets/_MythHunter/Code/GameLogic/Combat/Adapters/`
-  - MythHunterDamageAdapter.cs
-  - CombatSystemIntegration.cs
-- `Assets/_MythHunter/Code/GameLogic/Combat/Migration/`
-  - CombatComponentMigration.cs
-- `Assets/_MythHunter/Tests/Combat/`
-  - MythHunterStatsComponentTests.cs
-  - MythHunterDamageAdapterTests.cs
-  - CombatSystemIntegrationTests.cs
+### Phase 1a Files (Commit `f683355`):
+- `Documentation/EPIC-13-Phase1-Inventory-Integration-Plan.md` (414 lines)
+- `Assets/_MythHunter/Code/GameLogic/Inventory/Enums/MythHunterEquipmentSlot.cs` (97 lines)
+- `Assets/_MythHunter/Code/GameLogic/Inventory/Components/MythHunterInventoryComponent.cs` (219 lines)
+- `Assets/_MythHunter/Code/GameLogic/Inventory/Components/MythHunterItemComponent.cs` (273 lines)
+- `Assets/_MythHunter/Code/GameLogic/Inventory/Adapters/InventorySystemIntegration.cs` (365 lines)
+- `Assets/_MythHunter/Code/GameLogic/Inventory/Migration/InventoryComponentMigration.cs` (366 lines)
+- + 12 Unity .meta files
 
-### Phase 2 Files:
-- `Assets/_MythHunter/Code/GameLogic/Combat/Adapters/CombatSystemIntegration.cs` (extended)
-- `Assets/_MythHunter/Code/Systems/Gameplay/Combat/CombatSystem.cs` (refactored)
+### Old Component (Reference):
+- `Assets/_MythHunter/Code/Components/Character/InventoryComponent.cs`
 
-### Phase 3 Files:
-- `Assets/_MythHunter/Editor/Combat/CombatComponentMigrationEditor.cs` (created)
-
-### Documentation Files:
-- `Documentation/EPIC-12-Phases-2-3-Summary.md`
-- `Documentation/EPIC-12-Phase4-Quick-Start.md`
-- `Documentation/EPIC-12-Phase4-Validation-Results.md`
-- `Documentation/SESSION-SUMMARY-2026-10-16.md`
+### Framework Modules (EPIC 11):
+- `Assets/_Framework/Inventory/Runtime/` (InventoryComponent<TItem, TSlotType>)
+- `Assets/_Framework/Items/Runtime/` (ItemQuality, ItemRarity, IItem, etc.)
 
 ---
 
-## EPIC 12 Metrics
+## EPIC 13 Phase 1a Metrics
 
-**Total Commits:** 4 (1 PR + 3 direct commits)
-**Total Files Changed:** 35+
-**Total Lines Added:** ~5,000+
-**Total Tests:** 43 integration tests
-**Test Pass Rate:** 100%
-**Framework Quality:** Zero Unity dependencies, zero MythHunter coupling
-**Backward Compatibility:** Full dual-component support maintained
+**Completion Date:** 2026-10-16
+**Commit:** `f683355`
+**Files Created:** 17 (5 source + 12 meta)
+**Lines Added:** 2054+
+**Components:** 5 (Enum, 2 Components, Integration Helper, Migration Utility)
+**Factory Methods:** 9
+**Equipment Slots:** 15
+**Compilation:** ✅ SUCCESS
+**Tests Created:** 0 (planned for Phase 1c)
+**Framework Quality:** Zero Unity dependencies in adapters ✅
+**Backward Compatibility:** Full dual-component support ✅
 
 ---
 
-**EPIC 12 Complete. Awaiting user direction for next work.** 🎉
+**EPIC 13 Phase 1a Complete. Next: Phase 1b (System Updates) or Phase 1c (Tests & Migration Utility).** 🎉
 
 **Current State:**
 - Source repository: `github.com/Aizekhan/MythHunter`
 - Branch: `dev`
-- Head: `84d807c`
-- Status: Clean, all work committed
+- Head: `f683355`
+- Status: Clean, all work committed and pushed
 
-**Next Action:** User to specify next EPIC or feature to work on.
+**Next Action:**
+- Option 1: Proceed with Phase 1b (System Updates)
+- Option 2: Proceed with Phase 1c (Tests & Migration Utility)
+- Option 3: Await user direction for priority

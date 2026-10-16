@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `84d807c` — Latest: EPIC 12 Phases 2-3-4 complete (Combat Integration validated)
+- Current source head: `f683355` — Latest: EPIC 13 Phase 1a complete (Inventory & Items Integration core components)
 
 ## Verified completed sequence
 
@@ -169,6 +169,26 @@ First integration of extracted Framework modules into MythHunter game layer.
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
+### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS**
+
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer.
+
+- **Commit `f683355`** — Phase 1a: Core Components
+  - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
+  - **Enums:** MythHunterEquipmentSlot (15 slots: Armor, Weapons, Accessories, Utilities)
+  - **Adapters:** InventorySystemIntegration (dual-component helper)
+  - **Migration:** InventoryComponentMigration (safe migration with rollback)
+  - **Factory Methods:** CreateHero, CreateEliteHero, CreateMonster, CreateMerchant, CreateStorage
+  - **Files:** 17 files (+2054 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS
+  - **Framework Integration:** Inventory (`InventoryComponent<TItem, TSlotType>`), Items (ItemQuality, ItemRarity)
+  - **Pattern:** Follows EPIC 12 Combat Integration dual-component approach
+
+**EPIC 13 Phase 1a Summary:**
+- ✅ **COMPLETE:** Core components created and compiling
+- **Next:** Phase 1b (System Updates) → Phase 1c (Migration & Tests)
+- **Quality:** Type-safe equipment slots, backward compatible, zero Unity dependencies in adapters
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -179,15 +199,27 @@ First integration of extracted Framework modules into MythHunter game layer.
 
 ## Active Work
 
-**EPIC 12 (MythHunter Framework Integration) — ✅ COMPLETE**
+**EPIC 13 (Inventory & Items Integration) — 🔄 IN PROGRESS**
 
-All 4 phases successfully completed on 2026-10-16:
-- Phase 1: Core Combat Integration (PR #76, `c52304d`)
-- Phase 2: CombatSystem Integration (`23dadc6`)
-- Phase 3: Editor Migration Utility (`1302b07`)
-- Phase 4: Validation Complete (`84d807c`)
+Current focus: Integrating EPIC 11 gameplay modules into MythHunter game layer.
 
-**Next:** Awaiting user direction for next EPIC or feature work.
+**Phase 1a: Core Components — ✅ COMPLETE** (2026-10-16, commit `f683355`)
+- ✅ Created MythHunterEquipmentSlot enum (15 slots)
+- ✅ Created MythHunterInventoryComponent wrapper with 5 factory methods
+- ✅ Created MythHunterItemComponent for world/loot items
+- ✅ Created InventorySystemIntegration dual-component helper
+- ✅ Created InventoryComponentMigration utility
+- ✅ Unity compilation validated (SUCCESS)
+- ✅ Commit pushed to origin/dev
+
+**Phase 1b: System Updates — PENDING**
+- Update HeroFactory.cs to use new component
+- Update HeroArchetypeRegistry.cs
+
+**Phase 1c: Migration & Validation — PENDING**
+- Create Unity Editor migration utility
+- Create integration tests (target: 30+ tests)
+- Validate with automated tests
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
