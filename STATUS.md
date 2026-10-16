@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `a8f3da6` — Latest: EPIC 12 Phases 2-3 complete + Phase 4 Quick Start guide
+- Current source head: `ba0eaf1` — Latest: EPIC 12 Phases 2-3 complete + full documentation
 
 ## Verified completed sequence
 
