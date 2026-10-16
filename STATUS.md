@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `79640ad` — Latest: EPIC 13 Phase 1c complete (Migration Utility & Tests)
+- Current source head: `51ce245` — Latest: EPIC 13 Phase 2a complete (Loot System Core Integration)
 
 ## Verified completed sequence
 
@@ -169,9 +169,9 @@ First integration of extracted Framework modules into MythHunter game layer.
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
-### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phase 1 Complete)
+### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1 & 2a Complete)
 
-Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items) complete with all 3 sub-phases finished.
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items) complete. Phase 2a (Loot Core Integration) complete.
 
 - **Commit `f683355`** — Phase 1a: Core Components
   - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
@@ -209,8 +209,24 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 - **Total Files:** 24 files (+2818 insertions, -6 deletions)
 - **Total Tests:** 15 integration tests
 - **Editor Utilities:** 4 migration menu commands
-- **Next:** Phase 2 (Loot System Integration) or Extended Validation
 - **Quality:** Type-safe equipment slots, backward compatible, zero Unity dependencies in adapters, comprehensive tests
+
+- **Commit `51ce245`** — Phase 2a: Loot System Integration (Core Components)
+  - **Components:** MythHunterLootComponent (171 lines, 4 factory methods)
+  - **Adapters:** LootSystemIntegration (395 lines)
+  - **Factory Methods:** CreateEnemy, CreateBoss, CreateChest, CreateEvent
+  - **Integration:** ILootGenerator, ILootTableRegistry, MythHunterItemComponent (Phase 1)
+  - **Files:** 8 files (+967 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Pattern:** Greenfield integration (no legacy loot code to migrate)
+  - **Documentation:** EPIC-13-Phase2-Loot-Integration-Plan.md (332 lines)
+
+**EPIC 13 Phase 2a Summary:**
+- ✅ **COMPLETE:** Core loot integration (greenfield, simpler than Phase 1)
+- **Total Files:** 8 files (+967 insertions)
+- **Total Tests:** 0 (Phase 2c pending)
+- **Next:** Phase 2b (System Updates) or Phase 2c (Tests & Validation)
+- **Quality:** Zero Unity dependencies, Framework loot integration, Item entity creation
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
@@ -222,9 +238,9 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 
 ## Active Work
 
-**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE**
+**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE, ✅ Phase 2a COMPLETE**
 
-Phase 1 (Inventory & Items Integration) successfully completed! All 3 sub-phases finished.
+Phase 1 (Inventory & Items Integration) and Phase 2a (Loot Core Integration) successfully completed!
 
 **Phase 1a: Core Components — ✅ COMPLETE** (2026-10-16, commit `f683355`)
 - ✅ Created MythHunterEquipmentSlot enum (15 slots)
@@ -251,9 +267,19 @@ Phase 1 (Inventory & Items Integration) successfully completed! All 3 sub-phases
 - ✅ Unity compilation validated (SUCCESS, exit code 0)
 - ✅ Commit pushed to origin/dev
 
+**Phase 2a: Loot System Core Integration — ✅ COMPLETE** (2026-10-16, commit `51ce245`)
+- ✅ Created MythHunterLootComponent with 4 factory methods (CreateEnemy, CreateBoss, CreateChest, CreateEvent)
+- ✅ Created LootSystemIntegration helper (395 lines)
+- ✅ Integration with Framework ILootGenerator and ILootTableRegistry
+- ✅ Item entity creation from loot drops (uses Phase 1 MythHunterItemComponent)
+- ✅ Created EPIC-13-Phase2-Loot-Integration-Plan.md (332 lines)
+- ✅ Unity compilation validated (SUCCESS, exit code 0)
+- ✅ Commit pushed to origin/dev
+- ✅ Pattern: Greenfield integration (no migration needed)
+
 **Next Phase Options:**
-- **EPIC 13 Phase 2:** Loot System Integration (Recommended - follows same pattern)
-- **Extended Validation:** Run EditMode tests, perform runtime migration
+- **EPIC 13 Phase 2b:** Loot System Updates (Recommended - complete Phase 2)
+- **EPIC 13 Phase 2c:** Tests & Validation (~10-12 tests)
 - **EPIC 13 Phase 3:** Abilities System Integration
 - **EPIC 13 Phase 4:** Progression System Integration
 
