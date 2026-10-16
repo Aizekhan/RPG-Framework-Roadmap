@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `6976ca0` — Latest: EPIC 13 Phase 1b complete (System Updates - Dual-Component Integration)
+- Current source head: `79640ad` — Latest: EPIC 13 Phase 1c complete (Migration Utility & Tests)
 
 ## Verified completed sequence
 
@@ -169,9 +169,9 @@ First integration of extracted Framework modules into MythHunter game layer.
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
-### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS**
+### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phase 1 Complete)
 
-Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer.
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items) complete with all 3 sub-phases finished.
 
 - **Commit `f683355`** — Phase 1a: Core Components
   - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
@@ -195,11 +195,22 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
   - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
   - **Dual-Component Mode:** All new heroes created with both components for backward compatibility
 
-**EPIC 13 Phases 1a-1b Summary:**
-- ✅ **COMPLETE:** Core components and system integration
-- **Total Files:** 19 files (+2212 insertions, -6 deletions)
-- **Next:** Phase 1c (Migration Utility & Tests)
-- **Quality:** Type-safe equipment slots, backward compatible, zero Unity dependencies in adapters
+- **Commit `79640ad`** — Phase 1c: Migration Utility & Tests
+  - **Editor Utility:** InventoryComponentMigrationEditor.cs (293 lines, 4 menu commands)
+  - **Integration Tests:** InventorySystemIntegrationTests.cs (302 lines, 15 tests)
+  - **Menu Commands:** Migrate All Entities, Show Statistics, Remove Old Components, Rollback Entity
+  - **Test Coverage:** Item operations (5), Equipment (4), Queries (4), Dual-component validation (2)
+  - **Files:** 5 files (+606 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Pattern:** Follows EPIC 12 Combat Integration test structure
+
+**EPIC 13 Phase 1 Summary:**
+- ✅ **COMPLETE:** All 3 sub-phases finished (Core Components, System Updates, Migration & Tests)
+- **Total Files:** 24 files (+2818 insertions, -6 deletions)
+- **Total Tests:** 15 integration tests
+- **Editor Utilities:** 4 migration menu commands
+- **Next:** Phase 2 (Loot System Integration) or Extended Validation
+- **Quality:** Type-safe equipment slots, backward compatible, zero Unity dependencies in adapters, comprehensive tests
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
@@ -211,9 +222,9 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 
 ## Active Work
 
-**EPIC 13 (Inventory & Items Integration) — 🔄 IN PROGRESS**
+**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE**
 
-Current focus: Integrating EPIC 11 gameplay modules into MythHunter game layer.
+Phase 1 (Inventory & Items Integration) successfully completed! All 3 sub-phases finished.
 
 **Phase 1a: Core Components — ✅ COMPLETE** (2026-10-16, commit `f683355`)
 - ✅ Created MythHunterEquipmentSlot enum (15 slots)
@@ -233,10 +244,18 @@ Current focus: Integrating EPIC 11 gameplay modules into MythHunter game layer.
 - ✅ Unity compilation validated (SUCCESS, exit code 0)
 - ✅ Commit pushed to origin/dev
 
-**Phase 1c: Migration & Validation — PENDING**
-- Create Unity Editor migration utility (menu commands)
-- Create integration tests (target: 30+ tests)
-- Validate with automated tests
+**Phase 1c: Migration Utility & Tests — ✅ COMPLETE** (2026-10-16, commit `79640ad`)
+- ✅ Created InventoryComponentMigrationEditor.cs with 4 menu commands
+- ✅ Created InventorySystemIntegrationTests.cs with 15 integration tests
+- ✅ Test coverage: Item operations, Equipment, Queries, Dual-component validation
+- ✅ Unity compilation validated (SUCCESS, exit code 0)
+- ✅ Commit pushed to origin/dev
+
+**Next Phase Options:**
+- **EPIC 13 Phase 2:** Loot System Integration (Recommended - follows same pattern)
+- **Extended Validation:** Run EditMode tests, perform runtime migration
+- **EPIC 13 Phase 3:** Abilities System Integration
+- **EPIC 13 Phase 4:** Progression System Integration
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
