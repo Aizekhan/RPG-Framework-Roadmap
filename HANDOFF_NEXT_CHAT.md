@@ -1,128 +1,231 @@
-# Handoff — EPIC 11 Complete
+# Handoff — EPIC 12 Phase 1 Complete
 
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md`. This handoff is an execution guide, not a status database.
 
-## 🎉 EPIC 11: Optional Gameplay Modules — **COMPLETE**
+## ✅ EPIC 12 Phase 1: Core Combat Integration — **COMPLETE**
 
 ### Achievement Summary
 
-**All 5 phases of EPIC 11 successfully delivered!** The complete gameplay domain (inventory, items, loot, abilities, progression) has been extracted into universal, reusable RPG Framework modules.
+**Phase 1 successfully delivered!** The first MythHunter-Framework integration is complete, establishing the adapter pattern for bridging MythHunter game layer with extracted RPG Framework modules.
 
 **Completion Date:** 2026-10-16
-**Final Commit:** `72b370e` — Unity .meta files added
-**Duration:** ~2 weeks (2026-10-14 to 2026-10-16)
+**Final Commit:** `c52304d` (merged via PR #76)
+**Branch:** `dev`
 
-### Complete Phase Sequence
+### Deliverables
 
-✅ **Phase 1: Inventory System** (Commit `58fa490`)
-✅ **Phase 2: Item System** (Commit `9842621`)
-✅ **Phase 3: Loot System** (Commit `3e717b7`)
-✅ **Phase 4: Ability System** (Commit `a0851a8`)
-✅ **Phase 5: Progression System** (Commit `14bdf4f`)
+**PR #76** merged as `c52304d` — Core Combat Integration
 
-### Metrics Summary
+**Components Created:**
+- `MythHunterStatsComponent` — Wraps Framework `StatContainer` for MythHunter combat stats
+- `MythHunterResourceComponent` — Custom wrapper for Health, Mana, Stamina, Rage, Concentration
+- `CombatStateComponent` — Combat state tracking (IsInCombat, target, last attack time)
 
-**Code:**
-- **5 new assemblies** created
-- **Comprehensive test coverage** across all modules
-- **CI workflows** for automated validation
+**Adapters Created:**
+- `MythHunterDamageAdapter` — Bridges MythHunter components ↔ Framework `DamageCalculator`
+- `CombatSystemIntegration` — Backward-compatible helper for gradual migration
 
-**Assemblies:**
-- `RPGFramework.Inventory.Runtime`
-- `RPGFramework.Items.Runtime`
-- `RPGFramework.Loot.Runtime`
-- `RPGFramework.Abilities.Runtime`
-- `RPGFramework.Progression.Runtime`
+**Migration Created:**
+- `CombatComponentMigration` — Safe migration from old `CombatStatsComponent` to new Framework-based components
+- Rollback support for safety
+- Statistics tracking (NotMigrated, Migrated, MigratedAndCleaned)
 
-**Quality:**
-- ✅ **Zero Unity dependencies** (noEngineReferences: true)
-- ✅ **Zero MythHunter coupling** (pure Framework code)
-- ✅ **100% .NET 8.0 C#** (cross-platform ready)
-- ✅ **GitHub Actions workflows** (automated CI validation)
+**Tests:**
+- 43 comprehensive tests across 3 test suites
+- `MythHunterStatsComponentTests.cs` — 10 tests
+- `MythHunterDamageAdapterTests.cs` — 13 tests
+- `CombatSystemIntegrationTests.cs` — 20 tests
+
+**Files:** 32 files (+3,936 insertions)
+
+**Validation:**
+- ✅ Unity compilation success (exit code 0)
+- ✅ Framework API correctly integrated
+- ✅ Backward compatibility maintained
+- ✅ Clean separation: Game layer ↔ Framework calculators
+
+---
+
+## Critical Context: Framework API Blocker Resolution
+
+### The Problem
+
+Phase 1 initially hit a **critical blocker** during Unity compilation. The implementation made incorrect assumptions about Framework APIs:
+
+**API Misunderstandings:**
+1. `ResourceComponent<T>` — Single resource struct with direct fields (NOT a container)
+2. `IEntityManager` — Has `GetEntitiesWith<T>()`, `AddComponent<T>()` (NO SetComponent or EntityExists)
+3. `DamageCalculator` — Uses `CalculateDamageWithResult(baseDamage, defense, critChance, critMultiplier, multipliers[], armorPenetration)`
+
+### The Solution
+
+**Implemented Option 2 (Custom Wrapper):**
+
+```csharp
+public struct MythHunterResourceComponent : IComponent, ISerializableComponent
+{
+    // Direct fields for game-layer convenience
+    public float HealthCurrent;
+    public float HealthMax;
+    public float ManaCurrent;
+    public float ManaMax;
+    public float StaminaCurrent;
+    public float StaminaMax;
+    public float RageCurrent;
+    public float RageMax;
+    public float ConcentrationCurrent;
+    public float ConcentrationMax;
+}
+```
+
+**Refactoring Commits:**
+- `ca81e0f` — MythHunterResourceComponent refactored to Option 2
+- `b14f6cf` — ISerializableComponent namespace fix
+- `9d2c1d9` — All Framework API fixes (IEntityManager, DamageCalculator)
+- `a950af5` — Unity .meta files committed
+
+**Files Refactored (7 total):**
+1. `MythHunterResourceComponent.cs`
+2. `MythHunterDamageAdapter.cs`
+3. `CombatSystemIntegration.cs`
+4. `CombatComponentMigration.cs`
+5. `MythHunterDamageAdapterTests.cs`
+6. `CombatComponentMigrationTests.cs`
+7. `CombatSystemIntegrationTests.cs`
+
+**Key Learnings:**
+- Framework ResourceComponent is NOT a container — it's a simple struct with `Current`, `Max`, `RegenRate`, `LastRegenTime`
+- IEntityManager uses `AddComponent<T>()` for both add and update (no separate SetComponent)
+- No EntityExists method — check with `HasComponent<T>()` or catch exceptions
+- DamageCalculator takes critChance/critMultiplier as parameters, not from stats
+
+---
+
+## Pattern Established
+
+**Framework Integration Pattern:**
+
+```
+┌─────────────────┐
+│  CombatSystem   │ ← Game Layer (MythHunter-specific)
+└────────┬────────┘
+         │
+         ↓
+┌────────────────────────┐
+│ CombatSystemIntegration│ ← Backward-compatible helper
+└────────┬───────────────┘
+         │
+         ↓
+┌─────────────────────────┐
+│ MythHunterDamageAdapter │ ← Adapter bridging MythHunter ↔ Framework
+└────────┬────────────────┘
+         │
+         ↓
+┌────────────────────────┐
+│  Framework Calculators │ ← Pure Framework (DamageCalculator, StatContainer)
+└────────────────────────┘
+```
+
+**Separation of Concerns:**
+- **Game Layer:** MythHunter components with custom wrappers for convenience
+- **Adapters:** Bridge game types to Framework calculators
+- **Framework Core:** Pure, reusable calculators with no game dependencies
+- **Helpers:** Backward compatibility during migration
 
 ---
 
 ## Just Completed (2026-10-16)
 
-### EPIC 11 Phase 5 — ✅ COMPLETE (Progression System)
+### Phase 1 Complete — Core Combat Integration
 
-**Commit `14bdf4f`** — XP, Leveling, Stats, Unlocks
+**What Works:**
+✅ Framework-based components created and tested
+✅ Damage adapter bridges MythHunter ↔ Framework DamageCalculator
+✅ Integration helper provides backward compatibility
+✅ Migration utility enables safe component transition
+✅ All 43 tests passing
+✅ Unity compilation successful
+✅ Clean architectural separation maintained
 
-**Deliverables:**
-- Created `RPGFramework.Progression.Runtime` assembly
-- Contracts: `IProgressionTracker`, `ILevelTable`, `IStatGrowthFormula`, `IUnlockManager`
-- Data structures: `ExperienceData`, `LevelInfo`, `StatGrowthData`, `UnlockData`
-- Level curve types: Linear, Exponential, Polynomial, Custom
-- Stat growth curves: Linear, Exponential, Polynomial
-- Unlock system for level-based features (abilities, items, etc.)
-- Implementations: `ProgressionTracker`, `LevelTable`, `StatGrowthFormula`, `UnlockManager`
-- Events: `ExperienceGainedEvent`, `LevelUpEvent`, `StatIncreasedEvent`, `UnlockAchievedEvent`
-- 27 comprehensive NUnit tests
-- GitHub Actions workflow: `rpg-framework-progression.yml`
-
-**Technical Features:**
-- Flexible XP curve formulas (supports any progression speed)
-- Automatic stat growth on level up
-- Unlock tracking per entity
-- Multiple growth formulas for different stat types
-- Max level capping with overflow handling
-- Progress percentage calculation for UI
+**What's Next:**
+The components and adapters are ready. Now we need to **update the actual CombatSystem** to use them.
 
 ---
 
-## Complete EPIC 11 History
+## Active Work
 
-### Phase 4 — ✅ COMPLETE (Ability System)
+**🔄 EPIC 12 Phase 2: CombatSystem Integration — IN PROGRESS**
 
-**Commit `a0851a8`** — Abilities, Cooldowns, Resource Costs
+### Goal
 
-**Deliverables:**
-- Created `RPGFramework.Abilities.Runtime` assembly
-- Ability contracts: `IAbility`, `ICooldownManager`, `IAbilityExecutor`
-- Cooldown tracking with duration management
-- Resource cost integration (HP, MP, Stamina from EPIC 10 Phase 1)
-- Events: `AbilityExecutedEvent`, `AbilityCanceledEvent`, `CooldownStartedEvent`, `CooldownExpiredEvent`
-- Integration with Combat and Resource systems
+Update `CombatSystem` to use new Framework-based components and adapters.
 
-### Phase 3 — ✅ COMPLETE (Loot System)
+### Tasks
 
-**Commit `3e717b7`** — Loot Tables, Drop Pools, Rarity Distribution
+1. **Locate CombatSystem** — Find `Assets/_MythHunter/Code/GameLogic/Combat/CombatSystem.cs` (or similar)
+2. **Update CombatSystem** — Replace direct `CombatStatsComponent` access with `CombatSystemIntegration` helper
+3. **Run Migration** — Use `CombatComponentMigration.MigrateAllEntities()` at appropriate point
+4. **Validate Combat** — Test in-game combat still works correctly
+5. **Remove Old Component** — After validation, use `CombatComponentMigration.RemoveOldComponents()`
 
-**Deliverables:**
-- Created `RPGFramework.Loot.Runtime` assembly
-- Loot contracts: `ILootTable`, `ILootEntry`, `ILootGenerator`, `ILootTableRegistry`
-- Data structures: `LootDrop`, `LootResult`
-- Weighted probability system for drops
-- Rarity-based drop chances
-- Events: `LootGeneratedEvent`, `LootDroppedEvent`
-- Integration with Item System
+### Integration Points
 
-### Phase 2 — ✅ COMPLETE (Item System)
+**Helper Methods Available in `CombatSystemIntegration`:**
 
-**Commit `9842621`** — Items, Equipment, Consumables
+```csharp
+// Combat State
+bool IsInCombat(int entityId)
+void SetCombatState(int entityId, bool inCombat, int targetId = -1)
+int GetCombatTarget(int entityId)
 
-**Deliverables:**
-- Created `RPGFramework.Items.Runtime` assembly
-- Item contracts: `IItem`, `IItemInstance`, `IEquipment`, `IConsumable`, `IItemRegistry`
-- Enums: `ItemType`, `ItemRarity`, `ItemQuality`
-- Equipment stat modifiers (integration with EPIC 10 Phase 2)
-- Item instance management with unique IDs
-- Component: `ItemComponent` for ECS
-- Events: `ItemCreatedEvent`, `ItemDestroyedEvent`, `ItemUsedEvent`
+// Stats
+float GetAttackPower(int entityId)
+float GetDefense(int entityId)
+float GetCriticalChance(int entityId)
+float GetCriticalMultiplier(int entityId)
 
-### Phase 1 — ✅ COMPLETE (Inventory System)
+// Resources
+float GetRage(int entityId)
+void AddRage(int entityId, float amount)
+float GetConcentration(int entityId)
 
-**Commit `58fa490`** — Containers, Equipment Slots, Stacking
+// Damage
+float ApplyDamage(int attackerId, int targetId, float damageMultiplier = 1.0f)
+bool WouldKill(int targetId, float damage)
+float GetDamageReduction(int entityId)
 
-**Deliverables:**
-- Created `RPGFramework.Inventory.Runtime` assembly
-- Generic containers: `IInventoryContainer<TItem>`
-- Equipment slots: `IEquipmentSlot<TSlotType, TItem>`
-- Item stacking: `IItemStack` with split/merge
-- Component: `InventoryComponent<TItem, TSlotType>`
-- Events: `ItemAddedEvent`, `ItemRemovedEvent`, `ItemEquippedEvent`, `ItemUnequippedEvent`
-- 24 comprehensive tests (100% pass rate)
-- GitHub Actions workflow: `rpg-framework-inventory.yml`
+// Utilities
+bool HasNewComponents(int entityId)
+bool HasOldComponents(int entityId)
+```
+
+**Example Integration:**
+
+```csharp
+// Old code:
+var stats = _entityManager.GetComponent<CombatStatsComponent>(entityId);
+bool inCombat = stats.IsInCombat;
+
+// New code:
+bool inCombat = _combatIntegration.IsInCombat(entityId);
+```
+
+### Migration Strategy
+
+**Phase 2a: Update CombatSystem**
+- Replace all `CombatStatsComponent` direct access with helper calls
+- Test compilation
+- Run in Unity Editor to verify no runtime errors
+
+**Phase 2b: Migrate Entities**
+- Run `CombatComponentMigration.MigrateAllEntities()` during game startup
+- Validate combat functionality in-game
+- Check statistics with `GetStatistics()`
+
+**Phase 2c: Remove Old Components**
+- After validation period, run `RemoveOldComponents()`
+- Remove old `CombatStatsComponent` definition (optional)
+- Update tests to use only new components
 
 ---
 
@@ -138,77 +241,55 @@
 
 ## Key Decisions Carried Forward
 
-### EPIC 11 Principles Validated
+### EPIC 12 Phase 1 Principles Validated
 
-✅ **Universal RPG Framework:** All 5 phases designed with zero game-specific coupling
-✅ **Generic type parameters:** Enable maximum reusability
-✅ **Fast .NET CI feedback:** Test harness provides validation in seconds
-✅ **Static boundary validation:** Prevents accidental Unity/MythHunter dependencies
-✅ **Adapter pattern ready:** MythHunter can wrap Framework modules when needed
-✅ **Additive extraction:** Zero breaking changes to existing MythHunter code
-✅ **Interface-based design:** Extensibility and testability built-in
+✅ **Adapter Pattern:** Clean separation between game layer and Framework calculators
+✅ **Custom Wrappers:** Game-layer convenience without Framework coupling
+✅ **Backward Compatibility:** Gradual migration without breaking existing systems
+✅ **Safe Migration:** Rollback support and statistics tracking
+✅ **Test Coverage:** Comprehensive tests for all integration points
+✅ **API Correctness:** Framework APIs used correctly after blocker resolution
 
-### Cross-Module Integration
+### Framework API Reference
 
-**EPIC 11 Internal:**
-- **Inventory ↔ Items:** Items stored in containers, equipped in slots
-- **Items ↔ Loot:** Loot tables generate items as drops
-- **Abilities ↔ Items:** Items can grant abilities, abilities can cost resources
-- **Progression ↔ Abilities:** Abilities unlock at specific levels
+**For future integrations, remember:**
 
-**EPIC 10 ↔ EPIC 11:**
-- **Resources (10.1) ↔ Abilities (11.4):** Abilities consume HP/MP/Stamina
-- **Stats (10.2) ↔ Items (11.2):** Equipment modifies stats
-- **Stats (10.2) ↔ Progression (11.5):** Stat growth on level up
-- **Damage (10.3) ↔ Loot (11.3):** Death triggers loot generation
-- **Status Effects (10.4) ↔ Items (11.2):** Consumables apply status effects
+```csharp
+// ResourceComponent<T> — Single resource struct
+public struct ResourceComponent<TResourceType> where TResourceType : struct, Enum
+{
+    public float Current;
+    public float Max;
+    public float RegenRate;
+    public float LastRegenTime;
+}
 
-All cross-module integrations work seamlessly through interfaces.
+// IEntityManager — Core methods
+void AddComponent<T>(int entityId, T component) where T : struct, IComponent
+T GetComponent<T>(int entityId) where T : struct, IComponent
+bool HasComponent<T>(int entityId) where T : struct, IComponent
+void RemoveComponent<T>(int entityId) where T : struct, IComponent
+IEnumerable<int> GetEntitiesWith<T>() where T : struct, IComponent
 
----
-
-## Combined EPIC 10 + EPIC 11 Summary
-
-**Total Modules Extracted:** 10 assemblies
-- Combat.Runtime (Resources, Damage, Status Effects, Death/Life)
-- Stats.Runtime (Stat System with Modifiers)
-- Inventory.Runtime (Containers, Equipment Slots, Stacking)
-- Items.Runtime (Items, Equipment, Consumables, Registry)
-- Loot.Runtime (Loot Tables, Drop Generation)
-- Abilities.Runtime (Abilities, Cooldowns)
-- Progression.Runtime (XP, Leveling, Unlocks)
-- + Core infrastructure (ECS, Pooling, Serialization)
-
-**Framework Foundation:** Complete core RPG functionality extracted and reusable
+// IDamageCalculator — Damage calculation
+DamageResult CalculateDamageWithResult(
+    float baseDamage,
+    float defense,
+    float critChance,
+    float critMultiplier,
+    float[] multipliers = null,
+    float armorPenetration = 0f
+)
+```
 
 ---
 
-## Next Steps
-
-**EPIC 11 complete!** 🎉
-
-Awaiting direction for next milestone. Potential paths:
-
-1. **EPIC 12: New domain area** (AI, quests, dialogue, crafting, etc.)
-2. **Integration Epic:** MythHunter adapters for all extracted systems
-3. **Polish Epic:** Performance tuning, advanced features, documentation
-4. **Validation Epic:** End-to-end gameplay testing, stress testing
-
-User should decide next priority based on project goals.
-
----
-
-## Documentation Archive (EPIC 11)
+## Documentation Archive (EPIC 12 Phase 1)
 
 Local documentation in `/Documentation`:
-- `EPIC-11-Gameplay-Domain-Audit.md`
-- `EPIC-11-Phase1-Implementation-Plan.md`
-- `EPIC-11-Phase2-Implementation-Plan.md`
-- `EPIC-11-Phase3-Implementation-Plan.md`
-- `EPIC-11-Phase4-Implementation-Plan.md`
-- `EPIC-11-Phase5-Implementation-Plan.md`
-- `EPIC-11-NEW-CHAT-HANDOFF.md`
+- `HANDOFF-epic12-phase1-BLOCKER.md` — Blocker analysis and resolution
+- `EPIC-12-Integration-Phase1.md` — Phase 1 implementation plan
 
 ---
 
-**Milestone Complete.** Ready for next challenge. 🚀
+**Phase 1 Complete. Phase 2 Ready.** 🚀
