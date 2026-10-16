@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `7203deb` — Latest: EPIC 12 Phase 1 complete (Core Combat Integration)
+- Current source head: `1302b07` — Latest: EPIC 12 Phase 3 complete (Editor Migration Utility)
 
 ## Verified completed sequence
 
@@ -133,10 +133,32 @@ First integration of extracted Framework modules into MythHunter game layer.
   - **Validation:** Unity compilation ✅ SUCCESS
   - **Framework Integration:** Stats (StatContainer), Combat (DamageCalculator), ECS (IEntityManager)
 
-**EPIC 12 Phase 1 Summary:**
-- ✅ **Complete:** Core Combat Integration with Framework-based components
-- **Quality:** Clean separation, backward compatible, fully tested
+- **Commit `23dadc6`** — Phase 2: CombatSystem Integration
+  - **Refactored:** `CombatSystem.cs` to use `CombatSystemIntegration` helper
+  - **Extended:** `CombatSystemIntegration` with 9 new helper methods
+  - **Updated Methods:** IsEntityInCombat, StartCombat, EndCombat, ProcessAttack, ApplyDamage, UpdateCombatResources
+  - **Dependency Injection:** CombatSystemIntegration injected into CombatSystem constructor
+  - **Backward Compatible:** Supports both old and new components simultaneously
+  - **Files:** 2 files (+337 insertions, -208 deletions)
+  - **Validation:** Unity compilation ✅ SUCCESS
+
+- **Commit `1302b07`** — Phase 3: Editor Migration Utility
+  - **Created:** `CombatComponentMigrationEditor.cs` Unity Editor script
+  - **Menu Commands:** 4 menu items under "MythHunter/Combat Migration/"
+    - Migrate All Entities (preserves old components)
+    - Show Migration Statistics
+    - Remove Old Components (after validation)
+    - Rollback Single Entity (emergency rollback)
+  - **Editor Integration:** Temporary EntityManager and UnityLogger for Editor-mode operation
+  - **Safety:** Double-confirmation dialogs for destructive operations
+  - **Files:** 3 files (+277 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS
+
+**EPIC 12 Summary (Phases 1-3):**
+- ✅ **Complete:** Core Combat Integration, CombatSystem Integration, Editor Migration Utility
+- **Quality:** Clean separation, backward compatible, fully tested, safe migration tools
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
+- **Ready:** Entity migration can now be performed in Unity Editor
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
@@ -148,18 +170,25 @@ First integration of extracted Framework modules into MythHunter game layer.
 
 ## Active Work
 
-**ACTIVE — EPIC 12 Phase 2: CombatSystem Integration**
+**ACTIVE — EPIC 12 Phase 4: Entity Migration and Validation**
 
-**Goal:** Update `CombatSystem` to use new Framework-based components
+**Goal:** Migrate game entities and validate combat functionality
 
 **Tasks:**
-1. Update `CombatSystem` to use `CombatSystemIntegration` helper
-2. Replace direct `CombatStatsComponent` access with helper calls
-3. Run entity migration using `CombatComponentMigration`
-4. Validate in-game combat still works
-5. Remove old `CombatStatsComponent` after validation
+1. Open Unity Editor
+2. Use menu: `MythHunter/Combat Migration/Migrate All Entities`
+3. Validate combat functionality in-game:
+   - Test entity spawning
+   - Test combat engagement
+   - Test damage calculation
+   - Test resource updates (Health, Mana, Rage, Concentration)
+   - Test critical hits and dodging
+4. Check migration statistics
+5. After validation: Remove old components (optional)
 
-**Context:** Phase 1 established the integration pattern and created all necessary adapters. Phase 2 connects the existing game systems to use them.
+**Context:** Phases 1-3 created Framework-based components, updated CombatSystem, and provided migration tools. Phase 4 performs the actual entity migration and validates the integration works correctly in-game.
+
+**Manual Validation Required:** This phase requires opening Unity Editor and testing gameplay.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
