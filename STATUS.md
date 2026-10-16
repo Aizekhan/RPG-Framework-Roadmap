@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-14.
+> Last reconciled against GitHub: 2026-10-16.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `1475b2c` — Latest merged: [PR #70 EPIC 10 Phase 5](https://github.com/Aizekhan/MythHunter/pull/70).
+- Current source head: `72b370e` — Latest: EPIC 11 complete with .meta files
 
 ## Verified completed sequence
 
@@ -20,19 +20,12 @@
 - EPIC 05.9: PR #54 merged as `e8f724f` — ComponentCache OnDemand positive-membership semantics.
 
 ### EPIC 06 (Serialization Foundation) — ✅ COMPLETE
-- **PR #63** merged as `39af13b` — All 5 phases complete:
-  - **Phase 1:** Core contracts (`ISerializable`, `ITypeRegistry`, `SerializableTypeAttribute`, `IMigrator`)
-  - **Phase 2:** VersionedSerializer with migration support
-  - **Phase 3:** Component serialization (Framework-agnostic registry)
-  - **Phase 4:** Delta compression module (optional)
-  - **Phase 5:** Network serialization refactored (stable type IDs)
-- Files: 26 changed (+2016 −281), 20 new Framework files, 24 tests
+- **PR #63** merged as `39af13b` — All 5 phases complete
 - Assemblies: `RPGFramework.Serialization.Runtime`, `RPGFramework.DeltaCompression.Runtime`
-- Compiler fix: `dece04d` — Fixed EventBus test struct definitions
 
 ### EPIC 07 (Modular Game Composition System) — ✅ COMPLETE
-- **PR #58** merged as `0862793` — Phase 1: Module infrastructure, FrameworkCoreModule, GameLayerModule, InfrastructureModule, GameplayModule, NetworkingModule, LobbyModule, DebugToolsModule. Unity EditMode 58/60 (96.7%).
-- **PR #59** merged as `92c9abe` — Phase 2: CoreInstaller split into FrameworkCoreInstaller and GameCoreInstaller, module migration, LazyDI deduplication, InstallerRegistry removal.
+- **PR #58** merged as `0862793` — Phase 1
+- **PR #59** merged as `92c9abe` — Phase 2
 
 ### EPIC 08 (Dependency Debt and Lifecycle Stabilization) — ✅ COMPLETE
 - **PR #60** merged as `8faddb9` — Phases 1 & 2
@@ -41,142 +34,115 @@
 
 ### EPIC 09 (Optional Runtime Services and Adapters) — ✅ COMPLETE (Phase 1)
 - **PR #64** merged as `9adfb80` — Phase 1: Generic Pooling Foundation
-  - Created `RPGFramework.Pooling.Runtime` assembly
-  - Extracted `IObjectPool<T>`, `ObjectPool<T>`, `PoolStatistics` (20 tests)
-  - Refactored `GameObjectPool` to Unity adapter pattern
-  - Audit: `EPIC-09-Services-Audit.md` (590 lines)
-  - Hotfix: Domain events interface compliance
-  - Stats: 72 files (+1988 −61)
 - **Status:** Phase 1 complete ✅, Phases 2-3 deferred until proven need
 
 ### EPIC 10 (RPG Foundation Domain Modules) — ✅ **COMPLETE** 🎉
 All 5 phases successfully extracted RPG combat domain into universal Framework modules.
 
-- **PR #65** merged as `8b5dc22` — Phase 1: Resource System extraction
-  - Created `RPGFramework.Combat.Runtime` assembly
-  - Generic resource pool: `ResourceComponent<TResourceType>` (HP, MP, Stamina, etc.)
-  - Standard RPG resources: `ResourceType` enum (6 types)
-  - 8 comprehensive NUnit tests
-  - .NET test harness + static boundary validator
-  - Audit: `EPIC-10-RPG-Domain-Audit.md` (650+ lines)
-  - Implementation plan: `EPIC-10-Phase1-Implementation-Plan.md` (570+ lines)
-  - Stats: 18 files (+1785 insertions)
-  - Validation: .NET tests ✅, Static boundary ✅, GitHub Actions GREEN ✅
-
+- **PR #65** merged as `8b5dc22` — Phase 1: Resource System
 - **PR #66** merged as `b9652f8` — Test Infrastructure Fixes
-  - Fixed 100+ compilation errors from EPIC 08 interface evolution
-  - Updated test mocks: `IEvent`, `IMythLogger`, `IEntityManager`, `IEventPool`
-  - Converted event classes to structs (IEvent constraint compliance)
-  - Updated async tracking: `UniTaskVoid` → `UniTask`
-  - Removed duplicate serialization interfaces (namespace conflicts)
-  - Fixed missing using directives and method signatures
-  - Stats: 23 files (+1139 −247)
-  - Validation: Unity compilation clean ✅
-
-- **PR #67** merged as `999405c` — Phase 2: Stat System extraction ✅ CI PASSED
-  - Created `RPGFramework.Stats.Runtime` assembly
-  - Generic stat container: `StatContainer<TStatType, TValue>` with modifier support
-  - Modifier types: Additive, Multiplicative, Override
-  - Calculation formula: `(base + additives) * multiplicatives` or override
-  - Priority system for modifier ordering
-  - Performance optimization: caching with dirty flags
-  - 18 comprehensive NUnit tests (100% pass rate)
-  - .NET 8.0 test harness + static boundary validator
-  - GitHub Actions workflow: `rpg-framework-stats.yml`
-  - Implementation plan: `EPIC-10-Phase2-Implementation-Plan.md` (500+ lines)
-  - Summary: `EPIC-10-Phase2-Summary.md` (600+ lines)
-  - Stats: 24 files (+2087 −1)
-  - Validation: .NET tests ✅ (18/18 PASSED), Static boundary ✅, GitHub Actions GREEN ✅
-  - Zero Unity dependencies (noEngineReferences: true)
-  - Zero MythHunter changes (additive only)
-
-- **PR #68** merged as `2fd0b99` — Phase 3: Damage Calculation System
-  - Created damage calculation module in `RPGFramework.Combat.Runtime`
-  - Damage types: `DamageType` enum (Physical, Magical, Pure)
-  - Damage calculator: `IDamageCalculator` interface + `DamageCalculator` implementation
-  - Damage formula: `(baseDamage * totalMultiplier) * (100 / (100 + effectiveDefense))`
-  - Critical hits, damage multipliers, armor penetration support
-  - Minimum damage guarantee (1 damage)
-  - `DamageResult` struct with detailed breakdown
-  - 30 comprehensive NUnit tests (100% pass rate)
-  - .NET 8.0 test harness + static boundary validator
-  - Implementation plan: `EPIC-10-Phase3-Implementation-Plan.md` (580+ lines)
-  - Stats: 24 files (+1580 −0)
-  - Validation: .NET tests ✅ (36/36 PASSED in 22ms), Static boundary ✅, GitHub Actions GREEN ✅
-  - Zero Unity dependencies (noEngineReferences: true)
-  - Zero MythHunter changes (additive only)
-
-- **PR #69** merged as `f26bad5` — Phase 4: Status Effect System ✅ CI PASSED
-  - Created status effect module in `RPGFramework.Combat.Runtime`
-  - Status effect types: `StatusEffectType` enum (20+ types: Buff, Debuff, DOT, HOT, Stun, Slow, etc.)
-  - Stack behaviors: `StackBehavior` enum (5 modes: Stack, Replace, Refresh, Ignore, StackCount)
-  - Effect contracts: `IStatusEffect`, `IStatusEffectTarget`, `IStatusEffectManager`
-  - Implementations: `StatusEffect`, `TimedStatusEffect`, `RecurringStatusEffect`, `StatusEffectManager`
-  - Duration tracking: Permanent (-1) or timed with automatic expiration
-  - Lifecycle hooks: OnApplied, OnUpdate, OnRemoved for custom logic
-  - Recurring effects: Tick-based DOT/HOT with configurable intervals
-  - Integration with Phase 2 (stats) and Phase 3 (damage)
-  - 34 comprehensive NUnit tests (100% pass rate expected)
-  - .NET 8.0 test harness
-  - Implementation plan: `EPIC-10-Phase4-Implementation-Plan.md` (278 lines)
-  - Stats: 22 files (+1623 −0)
-  - Validation: .NET tests ✅ (Pure .NET compile and Combat tests GREEN), GitHub Actions ✅
-  - Zero Unity dependencies (noEngineReferences: true)
-  - Zero MythHunter changes (additive only)
-
-- **PR #70** merged as `1475b2c` — Phase 5: Death/Life State System ✅ CI PASSED
-  - Created death/life state module in `RPGFramework.Combat.Runtime`
-  - Life states: `LifeState` enum (5 states: Alive, Dying, Dead, Resurrecting, Invulnerable)
-  - Death contracts: `ILifeStateHandler`, `IDeathCondition`, `IRespawnHandler`, `ILifeStateManager`
-  - Events: `DeathEvent`, `ResurrectionEvent`
-  - Components: `LifeStateComponent` (with CreateAlive/CreateImmortal factories)
-  - Implementations: `ResourceDepletionDeathCondition`, `LifeStateManager`
-  - Death detection: Resource depletion triggers, custom death conditions
-  - Resurrection: Flexible respawn contracts (checkpoint, player revive, auto-respawn)
-  - Invulnerability: Temporary or permanent immunity to death
-  - Lifecycle hooks: OnDeath, OnResurrect, OnLifeStateChanged callbacks
-  - Integration with Phase 1 (Resources), Phase 3 (Damage), Phase 4 (Status Effects)
-  - 34 comprehensive NUnit tests (100% pass rate: 103/103)
-  - .NET 8.0 test harness
-  - Implementation plan: `EPIC-10-Phase5-Implementation-Plan.md` (491 lines)
-  - Stats: 24 files (+2045 −0)
-  - Validation: .NET tests ✅ (103/103 PASSED), GitHub Actions ✅
-  - Zero Unity dependencies (noEngineReferences: true)
-  - Zero MythHunter changes (additive only)
+- **PR #67** merged as `999405c` — Phase 2: Stat System
+- **PR #68** merged as `2fd0b99` — Phase 3: Damage Calculation
+- **PR #69** merged as `f26bad5` — Phase 4: Status Effects
+- **PR #70** merged as `1475b2c` — Phase 5: Death/Life State System
 
 **EPIC 10 Summary:**
-- **Completed:** All 5 phases (Resources → Stats → Damage → Status Effects → Death/Life State)
 - **Total Files:** 112 files (+9274 insertions, −248 deletions)
-- **Total Tests:** 8 + 18 + 30 + 34 + 34 = **124 comprehensive tests**
-- **Test Success Rate:** 100% (124/124 tests pass)
+- **Total Tests:** 124 comprehensive tests (100% pass rate)
 - **Assemblies Created:** `RPGFramework.Combat.Runtime`, `RPGFramework.Stats.Runtime`
 - **Framework Quality:** Zero Unity dependencies, zero MythHunter coupling, pure .NET 8.0 C#
-- **Documentation:** 5 implementation plans (2500+ lines), 1 comprehensive audit (650+ lines)
+
+### EPIC 11 (Optional Gameplay Modules) — ✅ **COMPLETE** 🎉
+
+All 5 phases successfully extracted gameplay systems into universal RPG Framework modules.
+
+- **Commit `58fa490`** — Phase 1: Inventory System extraction
+  - Created `RPGFramework.Inventory.Runtime` assembly
+  - Generic containers: `IInventoryContainer<TItem>`, `IEquipmentSlot<TSlotType, TItem>`, `IItemStack`
+  - Component: `InventoryComponent<TItem, TSlotType>` with factory methods
+  - Events: `ItemAddedEvent`, `ItemRemovedEvent`, `ItemEquippedEvent`, `ItemUnequippedEvent`
+  - 24 comprehensive NUnit tests (100% pass rate: 24/24 in 52ms)
+  - Stats: 43 files (+3647 insertions)
+  - Validation: .NET tests ✅, Static boundary ✅, GitHub Actions GREEN ✅
+
+- **Commit `9842621`** — Phase 2: Item System extraction
+  - Created `RPGFramework.Items.Runtime` assembly
+  - Item contracts: `IItem`, `IItemInstance`, `IEquipment`, `IConsumable`, `IItemRegistry`
+  - Enums: `ItemType`, `ItemRarity`, `ItemQuality`
+  - Implementations: `Item`, `ItemInstance`, `Equipment`, `Consumable`, `ItemRegistry`
+  - Component: `ItemComponent` for ECS integration
+  - Events: `ItemCreatedEvent`, `ItemDestroyedEvent`, `ItemUsedEvent`
+  - Stats: Added comprehensive item system with quality tiers and instance management
+
+- **Commit `3e717b7`** — Phase 3: Loot System extraction
+  - Created `RPGFramework.Loot.Runtime` assembly
+  - Loot contracts: `ILootTable`, `ILootEntry`, `ILootGenerator`, `ILootTableRegistry`
+  - Data structures: `LootDrop`, `LootResult`
+  - Implementations: `LootTable`, `LootEntry`, `LootGenerator`, `LootTableRegistry`
+  - Rarity-based drop chances with weighted probability
+  - Events: `LootGeneratedEvent`, `LootDroppedEvent`
+  - Integration with Item System for loot generation
+
+- **Commit `a0851a8`** — Phase 4: Ability System extraction
+  - Created `RPGFramework.Abilities.Runtime` assembly
+  - Ability contracts: `IAbility`, `ICooldownManager`, `IAbilityExecutor`
+  - Cooldown management with duration tracking
+  - Resource cost integration (with EPIC 10 Phase 1)
+  - Events: `AbilityExecutedEvent`, `AbilityCanceledEvent`, `CooldownStartedEvent`, `CooldownExpiredEvent`
+  - Integration with Combat and Resource systems
+
+- **Commit `14bdf4f`** — Phase 5: Progression System (XP, Leveling, Stats, Unlocks)
+  - Created `RPGFramework.Progression.Runtime` assembly
+  - Contracts: `IProgressionTracker`, `ILevelTable`, `IStatGrowthFormula`, `IUnlockManager`
+  - Data structures: `ExperienceData`, `LevelInfo`, `StatGrowthData`, `UnlockData`
+  - Enums: `LevelCurveType`, `GrowthCurveType`
+  - Implementations: `ProgressionTracker`, `LevelTable`, `StatGrowthFormula`, `UnlockManager`
+  - Multiple XP curves: Linear, Exponential, Polynomial, Custom
+  - Stat growth formulas with configurable curves
+  - Unlock system for level-based features
+  - Events: `ExperienceGainedEvent`, `LevelUpEvent`, `StatIncreasedEvent`, `UnlockAchievedEvent`
+  - 27 comprehensive NUnit tests (100% pass rate)
+  - Stats: 26 files (+1581 insertions)
+  - Validation: .NET tests ✅, GitHub Actions GREEN ✅
+
+- **Commit `72b370e`** — Unity .meta files committed (91 files)
+
+**EPIC 11 Summary:**
+- **Completed:** All 5 phases (Inventory → Items → Loot → Abilities → Progression)
+- **Total Modules:** 5 new assemblies created
+- **Framework Quality:** Zero Unity dependencies, zero MythHunter coupling, pure .NET 8.0 C#
+- **Assemblies Created:**
+  - `RPGFramework.Inventory.Runtime`
+  - `RPGFramework.Items.Runtime`
+  - `RPGFramework.Loot.Runtime`
+  - `RPGFramework.Abilities.Runtime`
+  - `RPGFramework.Progression.Runtime`
 
 ### Earlier milestones
-- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`: `PreloadDebugTool.RenderGUI` GUI calls guarded by `#if UNITY_EDITOR`.
-- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`: Incremental membership reconciliation, rotating refresh batches, OnDemand live reads and ComponentCache characterization tests.
-- **Architecture Enforcement Phase 1**: PR #57 merged as `6637cca` — Foundation layer with architecture tests.
-- **JobHandle IL2CPP fix**: PR #56 merged as `d36b271` — Fixes IL2CPP compilation error in `JobHandleExtensions.IsValid()`.
-- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`.
-- PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`: MovementSystem authoritative write-through.
+- PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
+- PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
+- **Architecture Enforcement Phase 1**: PR #57 merged as `6637cca`
+- **JobHandle IL2CPP fix**: PR #56 merged as `d36b271`
+- PR #52 merged documentation reconciliation at `54a35204dab5ced9a825bb4e7946ab8efdb31ce3`
+- PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`
 
 ## Active Work
 
-**EPIC 10 complete!** 🎉 RPG Foundation Domain Modules extraction finished.
+**EPIC 11 complete!** 🎉 All 5 gameplay modules successfully extracted.
 
 **Next Focus:** To be determined based on project roadmap priorities.
 
 Potential directions:
-- EPIC 09 Phase 2-3 (if runtime services prove necessary)
-- New EPIC for next domain area
-- Integration and polish work
+- EPIC 12: New domain area extraction
+- Integration and polish work for extracted systems
+- MythHunter adapters for Framework modules
+- Performance optimization and advanced features
 
 Awaiting user direction for next milestone.
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
-- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1): residual diff only folder .meta files.
-- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3): 1 commit ahead and 244 behind dev.
-- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5): 9 commits ahead and 224 behind dev.
-- [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4): long-open dev → main integration PR.
+- [PR #1 — CombatSystem V2](https://github.com/Aizekhan/MythHunter/pull/1)
+- [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3)
+- [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5)
+- [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4)
