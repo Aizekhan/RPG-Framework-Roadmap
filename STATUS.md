@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `5b571ba` — Latest: EPIC 13 Phase 2b complete (Loot System Updates)
+- Current source head: `f12bac3` — Latest: EPIC 13 Phase 2c complete (Loot System Tests)
 
 ## Verified completed sequence
 
