@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `f683355` — Latest: EPIC 13 Phase 1a complete (Inventory & Items Integration core components)
+- Current source head: `6976ca0` — Latest: EPIC 13 Phase 1b complete (System Updates - Dual-Component Integration)
 
 ## Verified completed sequence
 
@@ -184,9 +184,21 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
   - **Framework Integration:** Inventory (`InventoryComponent<TItem, TSlotType>`), Items (ItemQuality, ItemRarity)
   - **Pattern:** Follows EPIC 12 Combat Integration dual-component approach
 
-**EPIC 13 Phase 1a Summary:**
-- ✅ **COMPLETE:** Core components created and compiling
-- **Next:** Phase 1b (System Updates) → Phase 1c (Migration & Tests)
+- **Commit `6976ca0`** — Phase 1b: System Updates
+  - **Updated:** HeroArchetypeRegistry to create both old and new inventory components in templates
+  - **Updated:** HeroFactory.CreateHeroFromDatabaseAsync to create dual components
+  - **Updated:** HeroFactory.SaveHeroToDatabaseAsync to read from new component first, fallback to old
+  - **Helpers:** ConvertNewInventoryToOld, EquipIfNotEmpty for format conversion
+  - **Equipment Migration:** Maps old armor/weapons to new MythHunterEquipmentSlot system
+  - **Current Weapon Tracking:** Preserves active weapon slot during migration
+  - **Files:** 2 files (+158 insertions, -6 deletions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Dual-Component Mode:** All new heroes created with both components for backward compatibility
+
+**EPIC 13 Phases 1a-1b Summary:**
+- ✅ **COMPLETE:** Core components and system integration
+- **Total Files:** 19 files (+2212 insertions, -6 deletions)
+- **Next:** Phase 1c (Migration Utility & Tests)
 - **Quality:** Type-safe equipment slots, backward compatible, zero Unity dependencies in adapters
 
 ### Earlier milestones
@@ -212,12 +224,17 @@ Current focus: Integrating EPIC 11 gameplay modules into MythHunter game layer.
 - ✅ Unity compilation validated (SUCCESS)
 - ✅ Commit pushed to origin/dev
 
-**Phase 1b: System Updates — PENDING**
-- Update HeroFactory.cs to use new component
-- Update HeroArchetypeRegistry.cs
+**Phase 1b: System Updates — ✅ COMPLETE** (2026-10-16, commit `6976ca0`)
+- ✅ Updated HeroArchetypeRegistry to create dual components in templates
+- ✅ Updated HeroFactory.CreateHeroFromDatabaseAsync for dual-component creation
+- ✅ Updated HeroFactory.SaveHeroToDatabaseAsync to prefer new component
+- ✅ Added ConvertNewInventoryToOld and EquipIfNotEmpty helpers
+- ✅ Equipment mapping (old armor/weapons → new slot system)
+- ✅ Unity compilation validated (SUCCESS, exit code 0)
+- ✅ Commit pushed to origin/dev
 
 **Phase 1c: Migration & Validation — PENDING**
-- Create Unity Editor migration utility
+- Create Unity Editor migration utility (menu commands)
 - Create integration tests (target: 30+ tests)
 - Validate with automated tests
 
