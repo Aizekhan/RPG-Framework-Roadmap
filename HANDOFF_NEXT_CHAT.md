@@ -1,112 +1,138 @@
-# Handoff — EPIC 13 Phase 2a Complete
+# Handoff — EPIC 13 Phase 2b Complete
 
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md`. This handoff is an execution guide, not a status database.
 
-## ✅ EPIC 13 Phase 2a: Loot System Integration — **COMPLETE**
+## ✅ EPIC 13 Phase 2b: Loot System Updates — **COMPLETE**
 
 ### Achievement Summary
 
-**Loot System Core Integration delivered!** MythHunter game layer now has loot component and integration helper for generating loot from enemies, chests, and bosses. Greenfield integration (no legacy code to migrate).
+**Loot System Runtime Integration delivered!** MythHunter now has event-driven loot drops, fluent API loot table builder, 8 pre-configured loot tables, and registry initialization infrastructure.
 
-**Completion Date:** 2026-10-16
-**Commit:** `51ce245` (Phase 2a: Core Components)
+**Completion Date:** 2026-10-17
+**Commit:** `5b571ba` (Phase 2b: Loot System Updates)
 **Branch:** `dev`
 **Status:** Pushed to origin/dev ✅
 
 ---
 
-## EPIC 13 Phase 2a Summary
+## EPIC 13 Phase 2b Summary
 
 ### Deliverables
 
-**Components Created:**
-- ✅ **MythHunterLootComponent.cs** (Components/, 171 lines)
-  - ECS component for entities that can drop loot
-  - Properties: LootTableId, Level, LuckModifier, LootGenerated, CustomSeed
-  - 4 factory methods: CreateEnemy(), CreateBoss(), CreateChest(), CreateEvent()
-  - 7 helper methods: IsGenerated(), SetGenerated(), HasLootTable(), IsDeterministic(), GetSeed(), WithLuck(), WithLevel()
-  - Pattern: Follows MythHunterInventoryComponent design from Phase 1a
+**Runtime Systems Created:**
+- ✅ **LootDropSystem.cs** (Systems/Gameplay/Loot/, 180 lines)
+  - Event-driven system subscribing to `EntityDeathEvent`
+  - Checks for `MythHunterLootComponent` and `PositionComponent`
+  - Generates loot at death location with random offset (prevents item stacking)
+  - Publishes `LootDroppedEvent` for UI/audio feedback
+  - Pattern: Separated from CombatSystem (follows EPIC 12 architecture)
+  - Dependencies: IEntityManager, LootSystemIntegration, IPhaseSystem
 
-- ✅ **LootSystemIntegration.cs** (Adapters/, 395 lines)
-  - Helper class bridging Framework Loot System with MythHunter game layer
-  - Loot generation: GenerateLoot(entityId), GenerateLoot(tableId, level, luck, seed)
-  - Item entity creation: GenerateLootAndCreateItems() - integrates with Phase 1 Item system
-  - Query methods: HasLootTable(), GetLootTableId(), GetEntitiesWithLoot(), IsLootGenerated(), GetEntityLevel(), GetLuckModifier()
-  - Registry queries: HasLootTableInRegistry(), GetAllLootTableIds(), GetLootTable()
-  - Dependencies: ILootGenerator, ILootTableRegistry, IEntityManager, IMythLogger
-  - Pattern: Follows InventorySystemIntegration structure (greenfield - no dual-component complexity)
+- ✅ **LootTableBuilder.cs** (GameLogic/Loot/Utilities/, 168 lines)
+  - Fluent API for creating loot tables programmatically
+  - Chainable methods: `.Create()`, `.WithDrops()`, `.AllowDuplicates()`, `.AddEntry()`, `.Build()`
+  - Convenience methods: `.AddCommon()`, `.AddUncommon()`, `.AddRare()`, `.AddEpic()`, `.AddLegendary()`
+  - `.AddGuaranteedDrop(itemId)` for 100% drop items
+  - Encapsulates Framework's constructor-only initialization pattern
 
-**Implementation Plan:**
-- ✅ **EPIC-13-Phase2-Loot-Integration-Plan.md** (332 lines)
-  - Framework analysis, integration flow, 3-phase breakdown
-  - Greenfield integration strategy (simpler than Phase 1 migration)
-  - Estimated 4-5 files, ~500 lines, 10-12 tests (Phase 2c)
+- ✅ **SampleLootTables.cs** (GameLogic/Loot/Data/, 225 lines)
+  - 8 pre-configured loot tables for testing and development
+  - **Enemies:** GoblinCommon, GoblinElite, SkeletonWarrior
+  - **Chests:** Wooden, Iron, Golden
+  - **Bosses:** GoblinKing, DragonAncient
+  - Static factory methods for each table
+  - `GetAllTables()` helper for registry population
 
-**Directory Structure:**
-```
-Assets/_MythHunter/Code/GameLogic/Loot/
-  ├── Components/
-  │   └── MythHunterLootComponent.cs
-  └── Adapters/
-      └── LootSystemIntegration.cs
-```
+- ✅ **LootRegistryInitializer.cs** (GameLogic/Loot/Initialization/, 166 lines)
+  - Initializes `ILootTableRegistry` on game start
+  - Registers all sample tables from `SampleLootTables.GetAllTables()`
+  - Runtime custom table registration: `RegisterCustomTable()`, `UnregisterTable()`
+  - Debugging utilities: `LogRegisteredTables()`, `GetTableCount()`, `HasTable()`
+  - Pattern: Dependency injection, initialization guard
 
 **Statistics:**
-- **Files Created:** 8 files (3 source + 5 meta files)
-- **Lines Added:** 967 insertions
-- **Factory Methods:** 4 (CreateEnemy, CreateBoss, CreateChest, CreateEvent)
+- **Files Changed:** 11 files (+805 insertions)
+- **Systems Created:** LootDropSystem (event-driven)
+- **Builder API:** Fluent loot table creation
+- **Sample Content:** 8 loot tables
 - **Compilation:** ✅ SUCCESS (exit code 0)
 
-### Key Differences from Phase 1
+### Architecture Highlights
 
-| Aspect | Phase 1 (Inventory) | Phase 2 (Loot) |
-|--------|---------------------|----------------|
-| **Legacy Code** | Yes (InventoryComponent) | No (greenfield) |
-| **Migration Utility** | Required | Not needed |
-| **Dual-Component** | Yes (old + new) | No (clean integration) |
-| **Complexity** | Higher (migration) | Lower (direct integration) |
-| **Files** | 24 files | 8 files |
-| **Lines** | ~2818 lines | ~967 lines |
+**Event-Driven Loot Drops:**
+```
+EntityDeathEvent published by CombatSystem
+  ↓
+LootDropSystem.OnEntityDeath() (subscriber)
+  ↓
+Check: HasLootTable(entityId)?
+  ↓
+Check: IsLootGenerated(entityId)?
+  ↓
+Get: PositionComponent.Position
+  ↓
+Add: Random offset (DROP_OFFSET_RADIUS = 0.5f)
+  ↓
+LootSystemIntegration.GenerateLootAndCreateItems()
+  ↓
+Framework: ILootGenerator.GenerateLoot()
+  ↓
+Create: Item entities (MythHunterItemComponent)
+  ↓
+Publish: LootDroppedEvent
+```
 
-### Validation
+**Immutability Pattern:**
+Framework classes (`LootEntry`, `LootTable`) use readonly properties with constructor-only initialization. `LootTableBuilder` encapsulates this complexity with fluent API:
 
-- ✅ Unity compilation successful (exit code 0)
-- ✅ Framework dependencies resolved (RPGFramework.Loot)
-- ✅ Phase 1 Item integration validated (MythHunterItemComponent)
-- ✅ Zero Unity dependencies in adapters
-- ✅ Zero compilation errors
-- ✅ All .meta files generated
+```csharp
+var table = LootTableBuilder
+    .Create("goblin_common", "Common Goblin Loot")
+    .WithDrops(minDrops: 1, maxDrops: 2)
+    .AddCommon("gold_coins", minQty: 5, maxQty: 15)
+    .AddUncommon("leather_gloves")
+    .AddGuaranteedDrop("exp_orb_small")
+    .Build();
+```
+
+**System Separation Pattern:**
+Following EPIC 12 Combat Integration pattern - `LootDropSystem` is separate from `CombatSystem`:
+- CombatSystem: publishes EntityDeathEvent
+- LootDropSystem: subscribes to EntityDeathEvent
+- Single responsibility principle
+- No coupling between combat and loot
+
+### Compilation Fixes Applied
+
+During implementation, 5 compilation errors were resolved:
+1. **Missing namespace:** Added `using MythHunter.Core.ECS;` for `SystemBase`
+2. **Readonly properties:** Changed from object initializers to constructor calls for `LootEntry` and `LootTable`
+3. **GuaranteedDrops signature:** Simplified `AddGuaranteedDrop()` to only take `itemId` (Framework uses `IReadOnlyList<string>`, not full entries)
+4. **Random ambiguity:** Explicitly qualified with `UnityEngine.Random.insideUnitCircle`
+5. **Constructor parameters:** Used named parameters for all Framework constructors
+
+Result: Clean compilation (exit code 0) ✅
 
 ---
 
-## Integration Flow (Loot → Items → Inventory)
+## EPIC 13 Phase 2a Summary (Previously Completed)
 
-```
-Enemy Death / Chest Open
-  ↓
-MythHunterLootComponent (TableId, Level, Luck)
-  ↓
-LootSystemIntegration.GenerateLoot()
-  ↓
-Framework: ILootGenerator → LootResult (Drops)
-  ↓
-Game Layer: Create Item Entities (MythHunterItemComponent)
-  ↓
-Player Pickup: Add to Inventory (Phase 1 InventorySystemIntegration)
-```
+### Achievement
 
-### Framework Dependencies
+**Loot System Core Integration delivered!** MythHunter game layer has loot component and integration helper for generating loot from enemies, chests, and bosses. Greenfield integration (no legacy code to migrate).
 
-**EPIC 11 Phase 3 — Loot System:**
-- `RPGFramework.Loot` namespace
-- `ILootGenerator` - generates loot from tables
-- `ILootTable`, `ILootEntry` - table structure
-- `ILootTableRegistry` - table storage
-- `LootResult`, `LootDrop` - result data structures
+**Completion Date:** 2026-10-16
+**Commit:** `51ce245` (Phase 2a: Core Components)
+**Branch:** `dev`
 
-**EPIC 13 Phase 1 — Items:**
-- `MythHunterItemComponent` (from Inventory/Components/)
-- Creates item entities from loot drops
+### Key Deliverables
+
+- ✅ MythHunterLootComponent (4 factory methods)
+- ✅ LootSystemIntegration (395 lines)
+- ✅ Framework integration: ILootGenerator, ILootTableRegistry
+- ✅ Item entity creation from loot drops (Phase 1 integration)
+
+**Files:** 8 files (+967 insertions)
 
 ---
 
@@ -138,100 +164,77 @@ Player Pickup: Add to Inventory (Phase 1 InventorySystemIntegration)
 
 ## Next Actions
 
-### Option 1: EPIC 13 Phase 2b — Loot System Updates (Recommended)
-
-**Goal:** Integrate loot generation into game systems
-
-**Tasks:**
-1. **Enemy Death Integration**
-   - Modify death handlers to call `LootSystemIntegration.GenerateLootAndCreateItems()`
-   - Drop item entities at enemy position
-   - Support luck modifiers from player buffs
-
-2. **Chest/Container Support**
-   - Add `MythHunterLootComponent` to chest entities
-   - Interaction triggers loot generation
-   - One-time loot (LootGenerated flag prevents re-looting)
-
-3. **Boss Loot Tables**
-   - Create boss-specific loot tables with guaranteed drops
-   - Enhanced luck modifiers (1.5x default)
-   - MinDrops/MaxDrops configuration
-
-4. **Loot Table Registry Setup**
-   - Populate `ILootTableRegistry` with game loot tables
-   - Enemy tiers: common, elite, rare, boss
-   - Chest types: dungeon, world, event
-   - Item rarity distribution per tier
-
-**Deliverables:**
-- CombatSystem/DeathSystem integration
-- ChestInteractionSystem integration
-- Loot table data files (JSON/ScriptableObjects)
-- Registry population on game start
-
-**Estimated Complexity:** Medium (system integration)
-
----
-
-### Option 2: EPIC 13 Phase 2c — Tests & Validation
+### Option 1: EPIC 13 Phase 2c — Tests & Validation (Recommended)
 
 **Goal:** Comprehensive testing for loot integration
 
 **Tasks:**
-1. **Component Tests**
-   - MythHunterLootComponent factory methods
-   - Helper methods (IsGenerated, WithLuck, WithLevel)
-   - Deterministic seed testing
+1. **LootDropSystem Integration Tests**
+   - Death event → loot generation flow
+   - PositionComponent requirement validation
+   - LootDroppedEvent publication verification
+   - Edge case: No loot table configured
+   - Edge case: Loot already generated
 
-2. **Integration Tests**
-   - Loot generation from entity components
-   - Loot generation from table IDs
-   - Item entity creation from drops
-   - Full flow: Loot → Item → Inventory
+2. **LootTableBuilder Tests**
+   - Fluent API method chaining
+   - Constructor parameter mapping (readonly properties)
+   - GuaranteedDrops list generation
+   - AddCommon/Rare/Epic/Legendary shorthand methods
 
-3. **Edge Cases**
+3. **Sample Loot Table Validation**
+   - 8 tables load successfully
+   - Entry counts match expectations
+   - Drop ranges valid (minDrops ≤ maxDrops)
+   - Guaranteed drops configured correctly
+
+4. **Edge Cases**
    - Empty loot tables
    - Missing loot table IDs
-   - Invalid level ranges
-   - Extreme luck modifiers
-   - Duplicate loot prevention (chests)
+   - Entity without PositionComponent
+   - Duplicate loot generation prevention
+   - Random offset calculation
 
 **Deliverables:**
 - LootSystemIntegrationTests.cs (~10-12 tests)
 - Test loot tables for validation
 - Edge case coverage
+- NUnit XML results
 
 **Estimated Complexity:** Low (testing only)
 
 ---
 
-### Option 3: EPIC 13 Phase 3 — Abilities System Integration
+### Option 2: EPIC 13 Phase 3 — Abilities System Integration
 
 **Goal:** Integrate EPIC 11 Phase 4 Abilities System
 
 **Pattern:** Follow Phase 1 & 2 structure
-- MythHunterAbilityComponent
-- AbilitySystemIntegration
+- MythHunterAbilityComponent (factory methods, helpers)
+- AbilitySystemIntegration (adapter helper)
 - Integration with Combat/Resource systems
 - Cooldown management
 - Resource cost validation
+- System updates (ability execution triggers)
+- Tests (~10-12 integration tests)
 
 **Estimated Complexity:** Medium (similar to Phase 1)
 
 ---
 
-### Option 4: EPIC 13 Phase 4 — Progression System Integration
+### Option 3: EPIC 13 Phase 4 — Progression System Integration
 
 **Goal:** Integrate EPIC 11 Phase 5 Progression System (XP, Leveling, Stats, Unlocks)
 
 **Pattern:** Follow Phase 1 & 2 structure
 - MythHunterProgressionComponent
 - ProgressionSystemIntegration
-- XP gain integration
-- Level-up flow
-- Stat growth application
-- Unlock management
+- XP gain integration (enemy kills, quest completion)
+- Level-up flow (stat increases, unlocks)
+- Stat growth application (integrate with MythHunterStatsComponent)
+- Unlock management (abilities, equipment slots)
+- System updates (XP awards, level-ups)
+- Tests (~12-15 integration tests)
 
 **Estimated Complexity:** Medium-High (complex progression logic)
 
@@ -239,16 +242,17 @@ Player Pickup: Add to Inventory (Phase 1 InventorySystemIntegration)
 
 ## Recommendation
 
-**Proceed with EPIC 13 Phase 2b (Loot System Updates)** to complete the loot integration before moving to new systems. This follows the established pattern of completing each system fully before moving to the next.
+**Proceed with EPIC 13 Phase 2c (Tests & Validation)** to complete the loot system testing before moving to new systems. This follows the established pattern of completing each system fully (Core → System Updates → Tests) before moving to the next.
 
 **Rationale:**
-1. Phase 2a (Core) is complete - finish Phase 2b (System Updates) for feature completeness
-2. Enables runtime loot drops from enemies/chests (visible player value)
-3. Sets up loot table infrastructure for future content
-4. Phase 2c (Tests) can follow immediately after
-5. Maintains momentum on loot system before context switching
+1. Phase 2b (System Updates) is complete - finish Phase 2c (Tests) for quality assurance
+2. Test coverage ensures loot system works correctly before production use
+3. Edge case coverage prevents runtime bugs
+4. Maintains test-driven quality standard (124+ tests in Framework)
+5. Low complexity - can complete in single session
+6. Completes EPIC 13 Phase 2 fully before Phase 3
 
-**Alternative:** If testing is preferred first, Phase 2c can be done before 2b (tests don't require runtime integration).
+**Alternative:** If eager to start new system, Phase 3 (Abilities) can be started, but testing debt will accumulate.
 
 ---
 
@@ -257,9 +261,9 @@ Player Pickup: Add to Inventory (Phase 1 InventorySystemIntegration)
 When starting next session:
 1. Read `STATUS.md` and this file from Roadmap repository
 2. Verify active branch is `dev` in MythHunter repository
-3. Check latest commit SHA matches `51ce245` (Phase 2a)
+3. Check latest commit SHA matches `5b571ba` (Phase 2b)
 4. Confirm Unity compilation still succeeds
-5. Begin selected phase (2b recommended)
+5. Begin selected phase (2c recommended)
 
 ---
 
@@ -275,15 +279,21 @@ When starting next session:
 - Tests: 0 (Phase 2c)
 - Pattern: Greenfield integration
 
+**Phase 2b (Loot System Updates):**
+- Files: 11 (+805 insertions)
+- Tests: 0 (Phase 2c)
+- Pattern: Event-driven architecture
+
 **Total EPIC 13 Progress:**
-- Files: 32 (+3785 insertions, -6 deletions)
-- Systems: Inventory + Items + Loot (core)
-- Remaining: Abilities, Progression
+- Files: 43 (+4590 insertions, -6 deletions)
+- Systems: Inventory + Items + Loot (complete runtime integration)
+- Tests: 15 (Inventory only, Loot tests pending)
+- Remaining: Loot tests, Abilities, Progression
 - Compilation: ✅ All phases compile successfully
 
 ---
 
-**Last Updated:** 2026-10-16
-**Current HEAD:** `51ce245` (EPIC 13 Phase 2a)
+**Last Updated:** 2026-10-17
+**Current HEAD:** `5b571ba` (EPIC 13 Phase 2b)
 **Branch:** `dev`
-**Next Phase:** EPIC 13 Phase 2b (Loot System Updates) — Recommended
+**Next Phase:** EPIC 13 Phase 2c (Tests & Validation) — Recommended

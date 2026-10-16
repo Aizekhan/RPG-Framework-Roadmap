@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-16.
+> Last reconciled against GitHub: 2026-10-17.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `51ce245` — Latest: EPIC 13 Phase 2a complete (Loot System Core Integration)
+- Current source head: `5b571ba` — Latest: EPIC 13 Phase 2b complete (Loot System Updates)
 
 ## Verified completed sequence
 
@@ -118,9 +118,9 @@ All 5 phases successfully extracted gameplay systems into universal RPG Framewor
   - `RPGFramework.Abilities.Runtime`
   - `RPGFramework.Progression.Runtime`
 
-### EPIC 12 (MythHunter Framework Integration) — 🔄 **IN PROGRESS**
+### EPIC 12 (MythHunter Framework Integration) — ✅ **COMPLETE** 🎉
 
-First integration of extracted Framework modules into MythHunter game layer.
+First integration of extracted Framework modules into MythHunter game layer (Combat System).
 
 - **PR #76** merged as `c52304d` — Phase 1: Core Combat Integration
   - **Components:** MythHunterStatsComponent, MythHunterResourceComponent, CombatStateComponent
@@ -169,9 +169,9 @@ First integration of extracted Framework modules into MythHunter game layer.
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
-### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1 & 2a Complete)
+### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1 & 2a-b Complete)
 
-Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items) complete. Phase 2a (Loot Core Integration) complete.
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items), Phase 2a (Loot Core), and Phase 2b (Loot System Updates) complete.
 
 - **Commit `f683355`** — Phase 1a: Core Components
   - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
@@ -225,8 +225,28 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 - ✅ **COMPLETE:** Core loot integration (greenfield, simpler than Phase 1)
 - **Total Files:** 8 files (+967 insertions)
 - **Total Tests:** 0 (Phase 2c pending)
-- **Next:** Phase 2b (System Updates) or Phase 2c (Tests & Validation)
 - **Quality:** Zero Unity dependencies, Framework loot integration, Item entity creation
+
+- **Commit `5b571ba`** — Phase 2b: Loot System Updates (Runtime Integration)
+  - **System:** LootDropSystem.cs (180 lines, event-driven loot drops)
+  - **Builder:** LootTableBuilder.cs (168 lines, fluent API)
+  - **Content:** SampleLootTables.cs (225 lines, 8 pre-configured tables)
+  - **Initialization:** LootRegistryInitializer.cs (166 lines, registry setup)
+  - **Pattern:** Event-driven architecture, separated from CombatSystem
+  - **Architecture:** Subscribes to EntityDeathEvent, publishes LootDroppedEvent
+  - **Sample Tables:** 3 enemies, 3 chests, 2 bosses
+  - **Files:** 11 files (+805 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Event Flow:** EntityDeathEvent → LootDropSystem → LootSystemIntegration → ILootGenerator → Item Entities → LootDroppedEvent
+
+**EPIC 13 Phase 2b Summary:**
+- ✅ **COMPLETE:** Runtime loot system integration (event-driven)
+- **Total Files:** 11 files (+805 insertions)
+- **Systems Created:** LootDropSystem (180 lines)
+- **Builder API:** Fluent loot table creation with immutability encapsulation
+- **Sample Content:** 8 ready-to-use loot tables
+- **Next:** Phase 2c (Tests & Validation)
+- **Quality:** Event-driven, system separation, random positioning, UI/audio events
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
@@ -238,9 +258,9 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 
 ## Active Work
 
-**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE, ✅ Phase 2a COMPLETE**
+**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE, ✅ Phase 2a COMPLETE, ✅ Phase 2b COMPLETE**
 
-Phase 1 (Inventory & Items Integration) and Phase 2a (Loot Core Integration) successfully completed!
+Phase 1 (Inventory & Items Integration), Phase 2a (Loot Core Integration), and Phase 2b (Loot System Updates) successfully completed!
 
 **Phase 1a: Core Components — ✅ COMPLETE** (2026-10-16, commit `f683355`)
 - ✅ Created MythHunterEquipmentSlot enum (15 slots)
@@ -277,11 +297,21 @@ Phase 1 (Inventory & Items Integration) and Phase 2a (Loot Core Integration) suc
 - ✅ Commit pushed to origin/dev
 - ✅ Pattern: Greenfield integration (no migration needed)
 
+**Phase 2b: Loot System Updates — ✅ COMPLETE** (2026-10-17, commit `5b571ba`)
+- ✅ Created LootDropSystem.cs (180 lines, event-driven)
+- ✅ Created LootTableBuilder.cs (168 lines, fluent API)
+- ✅ Created SampleLootTables.cs (225 lines, 8 pre-configured tables)
+- ✅ Created LootRegistryInitializer.cs (166 lines, registry initialization)
+- ✅ Event flow: EntityDeathEvent → LootDropSystem → LootSystemIntegration → ILootGenerator
+- ✅ Sample content: 3 enemies, 3 chests, 2 bosses
+- ✅ Unity compilation validated (SUCCESS, exit code 0)
+- ✅ Commit pushed to origin/dev
+- ✅ Pattern: Event-driven architecture, system separation (follows EPIC 12)
+
 **Next Phase Options:**
-- **EPIC 13 Phase 2b:** Loot System Updates (Recommended - complete Phase 2)
-- **EPIC 13 Phase 2c:** Tests & Validation (~10-12 tests)
-- **EPIC 13 Phase 3:** Abilities System Integration
-- **EPIC 13 Phase 4:** Progression System Integration
+- **EPIC 13 Phase 2c:** Tests & Validation (Recommended - complete Phase 2, ~10-12 tests)
+- **EPIC 13 Phase 3:** Abilities System Integration (Medium complexity)
+- **EPIC 13 Phase 4:** Progression System Integration (Medium-High complexity)
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
