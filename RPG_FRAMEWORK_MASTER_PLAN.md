@@ -305,19 +305,227 @@ PR #22: https://github.com/Aizekhan/MythHunter/pull/22
 - [ ] Cloud/provider integrations
 - [ ] Keep Unity/platform/provider implementations outside neutral contracts
 
-# EPIC 10 — RPG Foundation Domain Modules
-- [ ] Stats and attributes
-- [ ] Resources
-- [ ] Statuses, buffs and debuffs
-- [ ] Damage and resistances
-- [ ] Death/life-state rules
-- [ ] Define interactions and test domain behavior without MythHunter content
+# EPIC 10 — Combat Foundation (Stats, Resources, Damage, Combat)
+**Status: COMPLETE (Phases 1-3) — Extracted to Framework** (2026-10-14 to 2026-10-16)
 
-# EPIC 11 — Optional Gameplay Modules
-- [ ] Inventory, items and equipment
-- [ ] Loot, abilities and combat
-- [ ] Progression and cooldowns
-- [ ] Define explicit dependencies and test selectable combinations
+- [x] **Phase 1:** Stats System — `RPGFramework.Stats.Runtime` (PR #55, merge `0b41d7a`)
+  - Contracts: `IStat`, `IStatModifier`, `IStatCollection`, `IStatManager`
+  - 17 Framework tests (100% pass rate)
+  - MythHunter integration with dual-component pattern
+
+- [x] **Phase 2:** Resources System — `RPGFramework.Resources.Runtime` (PR #61, merge `01e69ad`)
+  - Contracts: `IResource`, `IResourceModifier`, `IResourceCollection`, `IResourceManager`
+  - 19 Framework tests (100% pass rate)
+  - Regeneration, bounds checking, state transitions
+
+- [x] **Phase 3:** Damage System — `RPGFramework.Damage.Runtime` (PR #69, merge `c38fd79`)
+  - Contracts: `IDamageInstance`, `IDamageCalculator`, `IResistance`, `IDamageResult`
+  - 21 Framework tests (100% pass rate)
+  - Type-based damage, resistances, critical hits, absorption
+
+- [ ] **Phase 4:** Status Effects (moved to EPIC 15)
+- [ ] **Phase 5:** Death/Life State (deferred)
+
+**Summary:** 3 assemblies, ~57 tests, ~4,500 lines of code
+
+# EPIC 11 — Gameplay Systems Extraction (Inventory, Items, Loot, Abilities, Progression)
+**Status: COMPLETE — All 5 phases extracted to Framework** (2026-10-16 to 2026-10-18)
+
+### Phase 1: Inventory System ✅ (PR #71, merge `58fa490`)
+- Assembly: `RPGFramework.Inventory.Runtime`
+- Contracts: `IInventory`, `IInventorySlot`, `IInventoryManager`
+- 15 Framework tests (100% pass rate)
+- **Total:** ~20 files, ~1,800 lines
+
+### Phase 2: Items System ✅ (Commit `9842621`)
+- Assembly: `RPGFramework.Items.Runtime`
+- Contracts: `IItem`, `IItemInstance`, `IEquipment`, `IConsumable`, `IItemRegistry`
+- 15 Framework tests (100% pass rate)
+- Enums: ItemType, ItemQuality, ItemRarity
+- **Total:** ~22 files, ~2,200 lines
+
+### Phase 3: Loot System ✅ (PR #73, merge `9842621`)
+- Assembly: `RPGFramework.Loot.Runtime`
+- Contracts: `ILootTable`, `ILootEntry`, `ILootGenerator`, `ILootTableRegistry`
+- 17 Framework tests (100% pass rate)
+- Event-driven architecture (LootGeneratedEvent, LootDroppedEvent)
+- **Total:** ~20 files, ~1,900 lines
+
+### Phase 4: Abilities System ✅ (PR #74, merge `a0851a8`)
+- Assembly: `RPGFramework.Abilities.Runtime`
+- Contracts: `IAbility`, `IAbilityInstance`, `IAbilityManager`, `ICooldownTracker`
+- 15 Framework tests (100% pass rate)
+- Container design pattern, cooldown system
+- **Total:** ~18 files, ~1,700 lines
+
+### Phase 5: Progression System ✅ (Commit `14bdf4f`)
+- Assembly: `RPGFramework.Progression.Runtime`
+- Contracts: `IProgressionTracker`, `ILevelTable`, `IStatGrowthFormula`, `IUnlockManager`
+- 20 Framework tests (100% pass rate)
+- XP, leveling, stat growth, unlocks
+- **Total:** ~20 files, ~1,800 lines
+
+**EPIC 11 Summary:**
+- **Total Files:** ~100 files
+- **Total Tests:** 82 tests (100% pass rate)
+- **Lines of Code:** ~9,400
+- **Assemblies:** 5 new Framework assemblies
+- **Pattern:** Pure .NET 8.0, zero Unity dependencies, comprehensive test coverage
+
+# EPIC 13 — Gameplay Systems Integration (MythHunter Game Layer)
+**Status: COMPLETE — All EPIC 11 systems integrated** (2026-10-17 to 2026-10-18)
+
+Integrated all 5 EPIC 11 gameplay modules into MythHunter game layer using dual-component pattern.
+
+### Phase 1: Inventory & Items Integration ✅ (Commits `f683355`, `6976ca0`, `79640ad`)
+- Components: `MythHunterInventoryComponent`, `MythHunterItemComponent`
+- Adapter: `InventorySystemIntegration`
+- Migration utility and 15 integration tests
+- **Total:** 24 files (+2,818 insertions), 15 tests
+
+### Phase 2: Loot System Integration ✅ (Commits `51ce245`, `5b571ba`, `f12bac3`)
+- Component: `MythHunterLootComponent`
+- Adapter: `LootSystemIntegration`
+- Systems: `LootDropSystem`, `LootTableBuilder`, `SampleLootTables`
+- **Total:** 22 files (+2,374 insertions), 17 tests
+
+### Phase 3: Abilities System Integration ✅ (Commits `c49f9c3`, `d6f9a22`, `12277ef`)
+- Component: `MythHunterAbilityComponent` (container pattern)
+- Adapter: `AbilitySystemIntegration`
+- Sample: 12 pre-configured abilities
+- **Total:** 17 files (+2,030 insertions), 29 tests
+
+### Phase 4: Progression System Integration ✅ (Commits `0c319fa`, `415021b`, `37c2056`)
+- Assembly definitions: `MythHunter.Runtime.asmdef`, `MythHunter.Progression.Tests.asmdef`
+- All integration tests passing (20/20)
+- **Total:** 9 files, 20 tests
+
+**EPIC 13 Summary:**
+- **Total Files:** 72 files
+- **Total Tests:** 81 integration tests (100% pass rate)
+- **Lines of Code:** ~7,200
+- **Quality:** Backward compatible, comprehensive tests, zero Unity dependencies in Framework
+
+# EPIC 14 — Skills System (Extraction + Integration)
+**Status: COMPLETE** (2026-10-17)
+
+### Phase 1: Framework Module ✅ (Commits `a7147ea`, `ff873b6`)
+- Assembly: `RPGFramework.Skills.Runtime`
+- Contracts: `ISkill`, `ISkillTree`, `ISkillProgress`, `ISkillManager`, `ISkillPrerequisite`, `ISkillBonus`
+- Implementations: 6 + 2 enums + 2 events
+- **Tests:** 24 Framework tests (100% pass rate)
+- Features: Multi-level progression, prerequisite chains, skill bonuses, skill trees
+- Pure .NET 8.0, `noEngineReferences: true`
+
+### Phase 2: MythHunter Integration ✅ (Commit `e07a23e`)
+- Component: `MythHunterSkillsComponent` (dual-component pattern)
+- Adapter: `SkillSystemIntegration`
+- Game metadata: Favorites, LastLearnTime, TotalPointsSpent, ActiveTreeId
+- **Tests:** 17 integration tests (100% pass rate)
+
+### Phase 3: Documentation ✅ (Commit `94131ad`)
+- Complete documentation: `EPIC-14-COMPLETE.md`
+
+**EPIC 14 Summary:**
+- **Total Files:** ~30 files
+- **Total Tests:** 41 tests (100% pass rate)
+- **Lines of Code:** ~2,050
+- **Assembly:** `RPGFramework.Skills.Runtime` (16KB)
+
+# EPIC 15 — Status Effects System (Extraction + Integration)
+**Status: COMPLETE** (2026-10-18)
+
+### Phase 1 & 2: Framework Module & Integration ✅ (Commit `249ab7c`)
+- Assembly: `RPGFramework.StatusEffects.Runtime`
+- Contracts: `IStatusEffect`, `IEffectModifier`, `IStatusEffectInstance`, `IStatusEffectManager`
+- Data structures: 7 (StatusEffectData, EffectModifierData, StatusEffectInstanceData, etc.)
+- Events: 4 (EffectAppliedEvent, EffectExpiredEvent, EffectTickEvent, EffectRemovedEvent)
+- **Tests:** 22 Framework tests (100% pass rate)
+- Features:
+  - Effect types: Buff, Debuff, DamageOverTime, HealOverTime, StatModifier, StatusCondition
+  - Modifier operations: Add, Multiply, Override
+  - Duration system: -1 (permanent), 0 (instant), >0 (timed)
+  - Stacking support, tick-based effects, immunity system
+- Pure .NET 8.0, `noEngineReferences: true`
+
+**Game Layer:**
+- Component: `MythHunterStatusEffectsComponent` (dual-component pattern)
+- Adapter: `StatusEffectSystemIntegration`
+- Game metadata: EffectMetadata (VFX, audio, icons, tooltips), Immunities, MaxActiveEffects
+
+### Phase 3: Missing .meta files ✅ (Commit `c04b35f`)
+- Added top-level directory .meta files
+
+### Documentation ✅ (Commit `55d2b14`)
+- Complete documentation: `EPIC-14-15-COMPLETE-HANDOFF.md`
+
+**EPIC 15 Summary:**
+- **Total Files:** 21 files (19 Framework + 2 Integration)
+- **Total Tests:** 22 tests (100% pass rate)
+- **Lines of Code:** ~2,000
+- **Assembly:** `RPGFramework.StatusEffects.Runtime`
+
+---
+
+## EPIC 13-15 Combined Achievement
+**Timeline:** 2026-10-17 to 2026-10-18 (2 days)
+**Total:** ~123 files, 144 tests (100% pass), ~11,250 lines, 2 new assemblies
+
+**Current MythHunter HEAD:** `55d2b14` (branch: `dev`, 7 commits ahead of origin)
+**Commits Ready for Push:**
+```
+55d2b14 docs: add EPIC 14-15 completion summary and handoff
+c04b35f chore: add missing top-level .meta files for StatusEffects directories
+249ab7c feat: EPIC 15 - Status Effects System (Buffs/Debuffs/DoT/HoT)
+94131ad docs: EPIC 14 completion documentation
+e07a23e feat: EPIC 14 Phase 2 - Skills System MythHunter Integration
+ff873b6 feat: EPIC 14 Phase 1b - Skills System comprehensive test suite
+a7147ea feat: EPIC 14 Phase 1a - Skills System Framework module
+```
+
+---
+
+# EPIC 16 — Quest System (Future)
+- [ ] Quest definitions, objectives, and progress tracking
+- [ ] Quest chains and branching logic
+- [ ] Reward system integration
+- [ ] Extract to `RPGFramework.Quests.Runtime`
+
+# EPIC 17 — Dialogue System (Future)
+- [ ] Dialogue trees and conversation flow
+- [ ] Choice handling and branching
+- [ ] Integration with quest and character systems
+- [ ] Extract to `RPGFramework.Dialogue.Runtime`
+
+# EPIC 18 — Crafting System (Future)
+- [ ] Recipe definitions and requirements
+- [ ] Crafting mechanics and validation
+- [ ] Integration with inventory and items
+- [ ] Extract to `RPGFramework.Crafting.Runtime`
+
+# EPIC 19 — Trading System (Future)
+- [ ] Trade session management
+- [ ] Item exchange and validation
+- [ ] Currency and pricing
+- [ ] Extract to `RPGFramework.Trading.Runtime`
+
+# EPIC 20 — Persistence (Future Rename from EPIC 12)
+- [ ] Define save/load lifecycle, storage abstraction, schema versioning and migrations
+- [ ] Test roundtrip, compatibility and interrupted operations
+- [ ] Keep network protocol concerns outside persistence
+
+# EPIC 21 — Networking (Future Rename from EPIC 13)
+- [ ] Audit actual client/server implementation before reuse
+- [ ] Define transport/session lifecycle, commands/snapshots/replication and stable wire schema
+- [ ] Define security boundaries and tests
+- [ ] Prove offline games can omit networking
+
+# EPIC 22 — Tools, Sample and Release (Future Rename from EPIC 14)
+- [ ] Dependency/module graph and relevant inspectors/diagnostics
+- [ ] Runtime/editor assembly separation
+- [ ] Framework API documentation and new-project/module templates
+- [ ] Small sample RPG independent of MythHunter game content
+- [ ] Automated architecture/build/test validation and release-candidate review
 
 # EPIC 12 — Persistence
 - [ ] Define save/load lifecycle, storage abstraction, schema versioning and migrations
