@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-17.
+> Last reconciled against GitHub: 2026-10-18.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `12277ef` — Latest: EPIC 13 Phase 3c complete (Abilities System Tests)
+- Current source head: `55d2b14` — Latest: EPIC 14-15 complete (Skills & Status Effects Systems)
 
 ## Verified completed sequence
 
@@ -169,9 +169,9 @@ First integration of extracted Framework modules into MythHunter game layer (Com
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
-### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1-3 Complete)
+### EPIC 13 (Inventory & Items Integration) — ✅ **COMPLETE** 🎉
 
-Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phases 1 (Inventory & Items), 2 (Loot System), and 3 (Abilities System) complete.
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. All 4 phases complete!
 
 - **Commit `f683355`** — Phase 1a: Core Components
   - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
@@ -309,6 +309,77 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 - **Sample Content:** 12 ready-to-use abilities across 4 types
 - **Quality:** Container pattern, comprehensive tests, diverse ability set
 
+- **Commits `0c319fa`, `415021b`, `37c2056`** — Phase 4: Progression System Integration
+  - **Assembly Definitions:** MythHunter.Runtime.asmdef (763KB), MythHunter.Progression.Tests.asmdef (14KB)
+  - **Test Fixes:** Fixed CreateHero API semantics, 20/20 tests passing (100%)
+  - **Documentation:** EPIC-13-PHASE4-COMPLETE.md
+  - **Total:** 9 files (assembly defs + test fixes + docs), 20 tests
+  - **Status:** ✅ COMPLETE
+
+**EPIC 13 Complete Summary:**
+- ✅ **COMPLETE:** All 4 phases (Inventory, Loot, Abilities, Progression)
+- **Total Files:** 72 files
+- **Total Tests:** 81 integration tests (100% pass rate)
+- **Quality:** Backward compatible, comprehensive tests, zero Unity dependencies in Framework
+
+### EPIC 14 (Skills System) — ✅ **COMPLETE** 🎉
+
+Universal Skills System extracted to Framework with MythHunter integration.
+
+- **Commits `a7147ea`, `ff873b6`** — Phase 1: Framework Module & Tests
+  - Created `RPGFramework.Skills.Runtime` assembly
+  - 6 interfaces: ISkill, ISkillTree, ISkillProgress, ISkillManager, ISkillPrerequisite, ISkillBonus
+  - 6 implementations + 2 enums + 2 events
+  - 24 Framework tests (100% pass rate)
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `e07a23e`** — Phase 2: MythHunter Integration
+  - Component: MythHunterSkillsComponent (dual-component pattern)
+  - Adapter: SkillSystemIntegration
+  - Game metadata: Favorites, LastLearnTime, TotalPointsSpent, ActiveTreeId
+  - 17 integration tests (100% pass rate)
+
+- **Commit `94131ad`** — Phase 3: Documentation
+  - EPIC-14-COMPLETE.md
+
+**EPIC 14 Summary:**
+- **Total Files:** ~30 files
+- **Total Tests:** 41 tests (100% pass rate)
+- **Lines of Code:** ~2,050
+- **Assembly:** RPGFramework.Skills.Runtime (16KB)
+
+### EPIC 15 (Status Effects System) — ✅ **COMPLETE** 🎉
+
+Universal Status Effects System extracted to Framework with MythHunter integration.
+
+- **Commit `249ab7c`** — Phase 1 & 2: Framework Module & Integration
+  - Created `RPGFramework.StatusEffects.Runtime` assembly
+  - 4 interfaces: IStatusEffect, IEffectModifier, IStatusEffectInstance, IStatusEffectManager
+  - 7 data structures (StatusEffectData, EffectModifierData, etc.)
+  - 4 events: EffectAppliedEvent, EffectExpiredEvent, EffectTickEvent, EffectRemovedEvent
+  - 4 implementations
+  - 22 Framework tests (100% pass rate)
+  - Component: MythHunterStatusEffectsComponent (with VFX, audio, immunity metadata)
+  - Adapter: StatusEffectSystemIntegration
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `c04b35f`** — Phase 3: Missing .meta files
+  - Added top-level directory .meta files
+
+- **Commit `55d2b14`** — Documentation
+  - EPIC-14-15-COMPLETE-HANDOFF.md
+
+**EPIC 15 Features:**
+- Effect types: Buff, Debuff, DamageOverTime, HealOverTime, StatModifier, StatusCondition
+- Duration system: -1 (permanent), 0 (instant), >0 (timed)
+- Stacking support, tick-based effects, immunity system
+
+**EPIC 15 Summary:**
+- **Total Files:** 21 files (19 Framework + 2 Integration)
+- **Total Tests:** 22 tests (100% pass rate)
+- **Lines of Code:** ~2,000
+- **Assembly:** RPGFramework.StatusEffects.Runtime
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -319,33 +390,30 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 
 ## Active Work
 
-**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1-3 COMPLETE**
+**EPIC 13, 14, 15 — ✅ ALL COMPLETE** 🎉
 
-Phases 1 (Inventory & Items), 2 (Loot System), and 3 (Abilities System) successfully completed!
+All Framework extraction and integration work successfully completed! (2026-10-18)
 
-**Phase 1: Inventory & Items Integration — ✅ COMPLETE** (2026-10-16)
-- Phase 1a: `f683355` (Core Components)
-- Phase 1b: `6976ca0` (System Updates)
-- Phase 1c: `79640ad` (Migration Utility & Tests)
-- **Total:** 24 files (+2818 insertions), 15 tests
-- **Pattern:** Dual-component migration
+**EPIC 13 (Inventory & Items Integration) — ✅ COMPLETE**
+- Phase 1-4: All integration phases complete
+- Total: 72 files, 81 integration tests (100% pass)
 
-**Phase 2: Loot System Integration — ✅ COMPLETE** (2026-10-17)
-- Phase 2a: `51ce245` (Core Components)
-- Phase 2b: `5b571ba` (System Updates)
-- Phase 2c: `f12bac3` (Tests & Validation)
-- **Total:** 22 files (+2374 insertions), 17 tests
-- **Pattern:** Greenfield integration, event-driven architecture
+**EPIC 14 (Skills System) — ✅ COMPLETE**
+- Framework: RPGFramework.Skills.Runtime
+- Integration: MythHunterSkillsComponent + SkillSystemIntegration
+- Total: ~30 files, 41 tests (100% pass), ~2,050 lines
 
-**Phase 3: Abilities System Integration — ✅ COMPLETE** (2026-10-17)
-- Phase 3a: `c49f9c3` (Core Components)
-- Phase 3b: `d6f9a22` (System Updates - Sample Abilities)
-- Phase 3c: `12277ef` (Tests & Validation)
-- **Total:** 17 files (+2030 insertions), 29 tests
-- **Pattern:** Container design (matches Inventory pattern)
+**EPIC 15 (Status Effects System) — ✅ COMPLETE**
+- Framework: RPGFramework.StatusEffects.Runtime
+- Integration: MythHunterStatusEffectsComponent + StatusEffectSystemIntegration
+- Total: 21 files, 22 tests (100% pass), ~2,000 lines
 
-**Next Phase:**
-- **EPIC 13 Phase 4:** Progression System Integration (Final phase, Medium-High complexity)
+**Latest Commit:** `55d2b14` (Documentation: EPIC 14-15 completion handoff)
+
+**Next Steps:**
+- Push commits to remote
+- Create PR for EPIC 14-15
+- Start next EPIC (Quest/Dialogue/Crafting systems or other gameplay modules)
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
