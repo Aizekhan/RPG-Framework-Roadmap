@@ -1,138 +1,116 @@
-# Handoff — EPIC 13 Phase 2 Complete (All Sub-phases)
+# Handoff — EPIC 13 Phase 3 Complete (All Sub-phases)
 
 > Read `STATUS.md` first, then `RPG_FRAMEWORK_MASTER_PLAN.md`. This handoff is an execution guide, not a status database.
 
-## ✅ EPIC 13 Phase 2: Loot System Integration — **COMPLETE**
+## ✅ EPIC 13 Phase 3: Abilities System Integration — **COMPLETE**
 
 ### Achievement Summary
 
-**Complete Loot System Integration delivered!** MythHunter now has full loot system functionality including core components, runtime systems, sample content, and comprehensive tests.
+**Complete Abilities System Integration delivered!** MythHunter now has full ability system functionality including core components, sample abilities, registry initialization, and comprehensive tests.
 
 **Completion Date:** 2026-10-17
-**Commits:** `51ce245` (Phase 2a), `5b571ba` (Phase 2b), `f12bac3` (Phase 2c)
+**Commits:** `c49f9c3` (Phase 3a), `d6f9a22` (Phase 3b), `12277ef` (Phase 3c)
 **Branch:** `dev`
 **Status:** All commits pushed to origin/dev ✅
 
 ---
 
-## EPIC 13 Phase 2 Complete Summary
+## EPIC 13 Phase 3 Complete Summary
 
-### Phase 2a: Loot Core Integration (Commit `51ce245`)
+### Phase 3a: Core Components (Commit `c49f9c3`)
 
 **Components Created:**
-- ✅ **MythHunterLootComponent.cs** (171 lines)
-  - 4 factory methods: CreateEnemy(), CreateBoss(), CreateChest(), CreateEvent()
-  - Properties: LootTableId, Level, LuckModifier, LootGenerated, CustomSeed
-  - 7 helper methods for loot state management
+- ✅ **MythHunterAbilityComponent.cs** (156 lines)
+  - Container pattern: Dictionary<string, AbilityInstanceData>
+  - AbilityInstanceData struct: per-ability state (cooldown, charges, casting, toggle, level)
+  - Factory methods: CreateEmpty() with AddAbility helper
+  - Supports multiple abilities per entity (ECS single-component constraint)
 
-- ✅ **LootSystemIntegration.cs** (395 lines)
-  - Bridges Framework ILootGenerator with MythHunter game layer
-  - Loot generation from entities or table IDs
-  - Item entity creation integration (Phase 1)
-  - Registry queries and entity queries
+- ✅ **AbilitySystemIntegration.cs** (367 lines)
+  - Bridges Framework IAbilityExecutor with MythHunter game layer
+  - Ability execution with resource validation callbacks
+  - Component management: Add/Remove abilities, query operations
+  - Cooldown/charge tracking integration
 
-**Files:** 8 files (+967 insertions)
+**Files:** 8 files (+803 insertions)
 
-### Phase 2b: Loot System Updates (Commit `5b571ba`)
+### Phase 3b: System Updates (Commit `d6f9a22`)
 
 **Runtime Systems:**
-- ✅ **LootDropSystem.cs** (180 lines)
-  - Event-driven: subscribes to EntityDeathEvent
-  - Publishes LootDroppedEvent for UI/audio
-  - Random positioning to prevent item stacking
+- ✅ **SampleAbilities.cs** (359 lines)
+  - 12 pre-configured abilities across 4 types:
+    - Combat: MeleeStrike, Fireball, PowerStrike, Whirlwind
+    - Utility: Heal, Blink, Shield
+    - Passive: CriticalStrikeMastery, ArmorProficiency, ManaRegeneration
+    - Toggle: BerserkerStance, HolyAura
+  - Resource costs: MP, Stamina (flat amounts or percentages)
+  - Cooldowns: 0-15s, Charge-based (Blink)
+  - Cast times: Instant, 1.5s, 2s (interruptible)
 
-- ✅ **LootTableBuilder.cs** (168 lines)
-  - Fluent API for loot table creation
-  - Rarity shortcuts: AddCommon/Rare/Epic/Legendary
-  - Encapsulates Framework immutability pattern
+- ✅ **AbilityRegistryInitializer.cs** (216 lines)
+  - Registry population on game startup
+  - Custom ability registration API
+  - Logging and debugging utilities
 
-- ✅ **SampleLootTables.cs** (225 lines)
-  - 8 pre-configured tables (3 enemies, 3 chests, 2 bosses)
+**Files:** 7 files (+647 insertions)
 
-- ✅ **LootRegistryInitializer.cs** (166 lines)
-  - Registry initialization on game start
-
-**Files:** 11 files (+805 insertions)
-
-### Phase 2c: Tests & Validation (Commit `f12bac3`)
+### Phase 3c: Tests & Validation (Commit `12277ef`)
 
 **Test Coverage:**
-- ✅ **LootSystemIntegrationTests.cs** (502 lines, 17 tests)
-  - LootTableBuilder fluent API tests (5 tests)
-  - Sample loot tables validation (4 tests)
-  - LootSystemIntegration operations (6 tests)
-  - Edge case coverage (5 tests)
+- ✅ **AbilitySystemIntegrationTests.cs** (462 lines, 29 tests)
+  - Component Management tests (7 tests)
+  - Query operations tests (6 tests)
+  - Cooldown/Charge tracking (3 tests)
+  - Execution validation (5 tests)
+  - Sample abilities validation (7 tests)
+  - Registry operations (2 tests)
 
 **Test Categories:**
-1. **Builder Tests:** Table creation, entry addition, rarity shortcuts, guaranteed drops, duplicates flag
-2. **Sample Tables:** Structure validation, guaranteed drops, drop ranges, table count
-3. **Integration:** Component queries, entity queries, registry operations, level/luck retrieval
-4. **Edge Cases:** Missing tables, invalid entities, empty results, filtering
+1. **Component Tests:** Add/Remove abilities, multiple abilities per entity, component queries
+2. **Query Tests:** Entity queries by ability ID/type, ability data retrieval
+3. **Cooldown/Charge:** Cooldown tracking, charge-based abilities, cooldown modifiers
+4. **Execution:** Ability execution with resource checks, effect application, validation
+5. **Sample Abilities:** Structure validation, resource costs, cooldowns, cast times
+6. **Registry:** Sample ability count, type distribution
 
-**Files:** 2 files (+502 insertions)
+**Files:** 2 files (+580 insertions)
 **Compilation:** ✅ SUCCESS
 
 ---
 
-## EPIC 13 Phase 2 Total Stats
+## EPIC 13 Phase 3 Total Stats
 
-**Commits:** 3 (51ce245, 5b571ba, f12bac3)
-**Files:** 22 files (+2374 insertions)
-**Tests:** 17 loot integration tests
-**Sample Content:** 8 ready-to-use loot tables
-**Pattern:** Greenfield integration (no legacy code migration)
+**Commits:** 3 (c49f9c3, d6f9a22, 12277ef)
+**Files:** 17 files (+2030 insertions)
+**Tests:** 29 ability integration tests
+**Sample Content:** 12 ready-to-use abilities
+**Pattern:** Container design (matches Inventory pattern)
 
 ---
 
-## EPIC 13 Phase 1 Summary (Previously Completed)
+## Previously Completed Phases Summary
 
-**Inventory & Items Integration:**
+### EPIC 13 Phase 1: Inventory & Items Integration
 - Phase 1a: `f683355` (Core Components)
 - Phase 1b: `6976ca0` (System Updates)
 - Phase 1c: `79640ad` (Migration Utility & Tests)
+- **Total:** 24 files (+2818 insertions), 15 tests
 
-**Total:** 24 files (+2818 insertions), 15 tests
+### EPIC 13 Phase 2: Loot System Integration
+- Phase 2a: `51ce245` (Core Components)
+- Phase 2b: `5b571ba` (System Updates)
+- Phase 2c: `f12bac3` (Tests & Validation)
+- **Total:** 22 files (+2374 insertions), 17 tests
 
 ---
 
 ## Next Actions
 
-### Option 1: EPIC 13 Phase 3 — Abilities System Integration (Recommended)
-
-**Goal:** Integrate EPIC 11 Phase 4 Abilities System
-
-**Pattern:** Follow Phase 1 & 2 structure (3 sub-phases)
-
-**Phase 3a: Core Components**
-- MythHunterAbilityComponent
-  - Factory methods: CreateCombat(), CreateUtility(), CreatePassive()
-  - Properties: AbilityId, Level, Cooldown state, Resource costs
-- AbilitySystemIntegration
-  - Execute abilities with resource validation
-  - Cooldown management
-  - Query entities with abilities
-
-**Phase 3b: System Updates**
-- Ability execution triggers (combat, input handlers)
-- Cooldown tracking system integration
-- Resource cost deduction (integrate with Phase 1 Combat)
-- Sample ability definitions (attack, heal, buff, etc.)
-
-**Phase 3c: Tests & Validation**
-- AbilitySystemIntegrationTests (~10-12 tests)
-- Component tests, execution tests, cooldown tests, edge cases
-
-**Estimated Complexity:** Medium
-**Estimated Files:** ~18-20 files
-**Estimated Tests:** ~10-12 tests
-
----
-
-### Option 2: EPIC 13 Phase 4 — Progression System Integration
+### Option 1: EPIC 13 Phase 4 — Progression System Integration (Recommended)
 
 **Goal:** Integrate EPIC 11 Phase 5 Progression System (XP, Leveling, Stats, Unlocks)
 
-**Pattern:** Follow Phase 1 & 2 structure (3 sub-phases)
+**Pattern:** Follow Phase 1, 2, 3 structure (3 sub-phases)
 
 **Phase 4a: Core Components**
 - MythHunterProgressionComponent
@@ -160,16 +138,14 @@
 
 ## Recommendation
 
-**Proceed with EPIC 13 Phase 3 (Abilities System Integration)** to continue the systematic integration of EPIC 11 gameplay modules. Abilities are a natural progression after Loot, and have medium complexity (lower than Progression).
+**Proceed with EPIC 13 Phase 4 (Progression System Integration)** to complete the final EPIC 11 gameplay module integration. This is the last phase of EPIC 13.
 
 **Rationale:**
-1. Maintains systematic approach: Inventory → Items → Loot → **Abilities** → Progression
-2. Medium complexity allows steady progress
-3. Abilities integrate with existing Combat system from EPIC 12
-4. Foundation for Progression (abilities unlock at levels)
-5. Completes 4 of 5 EPIC 11 gameplay modules
-
-**Alternative:** If preferred, skip to Phase 4 (Progression), but Abilities are recommended first for logical dependency flow.
+1. Completes systematic approach: Inventory → Items → Loot → Abilities → **Progression**
+2. Final EPIC 11 gameplay module (5 of 5)
+3. Integration dependencies already satisfied (Combat, Stats, Abilities)
+4. Foundation for character advancement and unlocks
+5. Completes EPIC 13 entirely
 
 ---
 
@@ -178,13 +154,13 @@
 When starting next session:
 1. Read `STATUS.md` and this file from Roadmap repository
 2. Verify active branch is `dev` in MythHunter repository
-3. Check latest commit SHA matches `f12bac3` (Phase 2c)
+3. Check latest commit SHA matches `12277ef` (Phase 3c)
 4. Confirm Unity compilation still succeeds
-5. Begin Phase 3 (Abilities) or Phase 4 (Progression) based on choice
+5. Begin Phase 4 (Progression System Integration)
 
 ---
 
-## Quality Metrics (EPIC 13 So Far)
+## Quality Metrics (EPIC 13 Progress)
 
 **Phase 1 (Inventory & Items):**
 - Files: 24 (+2818 insertions, -6 deletions)
@@ -196,16 +172,21 @@ When starting next session:
 - Tests: 17 integration tests
 - Pattern: Greenfield integration
 
+**Phase 3 (Abilities System):**
+- Files: 17 (+2030 insertions)
+- Tests: 29 integration tests
+- Pattern: Container design (matches Inventory)
+
 **Total EPIC 13 Progress:**
-- Files: 46 (+5192 insertions, -6 deletions)
-- Systems: Inventory + Items + Loot (complete)
-- Tests: 32 integration tests
-- Remaining: Abilities, Progression
+- Files: 63 (+7222 insertions, -6 deletions)
+- Systems: Inventory + Items + Loot + Abilities (complete)
+- Tests: 61 integration tests
+- Remaining: Progression (Phase 4)
 - Compilation: ✅ All phases compile successfully
 
 ---
 
 **Last Updated:** 2026-10-17
-**Current HEAD:** `f12bac3` (EPIC 13 Phase 2c)
+**Current HEAD:** `12277ef` (EPIC 13 Phase 3c)
 **Branch:** `dev`
-**Next Phase:** EPIC 13 Phase 3 (Abilities System Integration) — Recommended
+**Next Phase:** EPIC 13 Phase 4 (Progression System Integration) — Final Phase

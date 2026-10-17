@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `f12bac3` — Latest: EPIC 13 Phase 2c complete (Loot System Tests)
+- Current source head: `12277ef` — Latest: EPIC 13 Phase 3c complete (Abilities System Tests)
 
 ## Verified completed sequence
 
@@ -169,9 +169,9 @@ First integration of extracted Framework modules into MythHunter game layer (Com
 - **Pattern Established:** Game-layer adapters bridge MythHunter types ↔ Framework calculators
 - **Status:** Combat Integration COMPLETE — Ready for runtime entities
 
-### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1 & 2a-b Complete)
+### EPIC 13 (Inventory & Items Integration) — 🔄 **IN PROGRESS** (Phases 1-3 Complete)
 
-Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phase 1 (Inventory & Items), Phase 2a (Loot Core), and Phase 2b (Loot System Updates) complete.
+Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Progression) into MythHunter game layer. Phases 1 (Inventory & Items), 2 (Loot System), and 3 (Abilities System) complete.
 
 - **Commit `f683355`** — Phase 1a: Core Components
   - **Components:** MythHunterInventoryComponent, MythHunterItemComponent
@@ -245,8 +245,69 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 - **Systems Created:** LootDropSystem (180 lines)
 - **Builder API:** Fluent loot table creation with immutability encapsulation
 - **Sample Content:** 8 ready-to-use loot tables
-- **Next:** Phase 2c (Tests & Validation)
 - **Quality:** Event-driven, system separation, random positioning, UI/audio events
+
+- **Commit `f12bac3`** — Phase 2c: Loot System Tests & Validation
+  - **Tests:** LootSystemIntegrationTests.cs (502 lines, 17 tests)
+  - **Test Coverage:** Builder API (5), Sample Tables (4), Integration (6), Edge Cases (5)
+  - **Pattern:** Follows InventorySystemIntegrationTests structure
+  - **Files:** 2 files (+502 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Status:** ✅ COMPLETE
+
+**EPIC 13 Phase 2 Summary:**
+- ✅ **COMPLETE:** All 3 sub-phases finished (Core, System Updates, Tests)
+- **Total Files:** 22 files (+2374 insertions)
+- **Total Tests:** 17 loot integration tests
+- **Quality:** Greenfield integration, event-driven architecture, comprehensive tests
+
+- **Commit `c49f9c3`** — Phase 3a: Abilities System Core Components
+  - **Components:** MythHunterAbilityComponent (156 lines, container pattern)
+  - **Adapters:** AbilitySystemIntegration (367 lines)
+  - **Container Design:** Dictionary<string, AbilityInstanceData> for multiple abilities per entity
+  - **Integration:** IAbilityExecutor, IAbilityRegistry, ICooldownTracker, ITargetValidator
+  - **Files:** 8 files (+803 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Pattern:** Matches MythHunterInventoryComponent container pattern
+  - **ECS Constraint:** Single component type per entity with dictionary storage
+
+**EPIC 13 Phase 3a Summary:**
+- ✅ **COMPLETE:** Core abilities integration (container design)
+- **Total Files:** 8 files (+803 insertions)
+- **Total Tests:** 0 (Phase 3c pending)
+- **Quality:** Zero Unity dependencies, Framework ability execution, ECS-compliant design
+
+- **Commit `d6f9a22`** — Phase 3b: Abilities System Updates (Sample Content)
+  - **Content:** SampleAbilities.cs (359 lines, 12 abilities)
+  - **Ability Types:** Combat (4), Utility (3), Passive (3), Toggle (2)
+  - **Initialization:** AbilityRegistryInitializer.cs (216 lines)
+  - **Resource Costs:** MP, Stamina (flat amounts or percentages)
+  - **Cooldowns:** 0-15s, charge-based (Blink with 3 charges)
+  - **Cast Times:** Instant, 1.5s, 2s (interruptible)
+  - **Files:** 7 files (+647 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Pattern:** Follows SampleLootTables structure
+
+**EPIC 13 Phase 3b Summary:**
+- ✅ **COMPLETE:** Sample abilities and registry initialization
+- **Total Files:** 7 files (+647 insertions)
+- **Sample Abilities:** 12 ready-to-use abilities (4 types)
+- **Quality:** Diverse ability set, configurable costs/cooldowns, registry automation
+
+- **Commit `12277ef`** — Phase 3c: Abilities System Tests & Validation
+  - **Tests:** AbilitySystemIntegrationTests.cs (462 lines, 29 tests)
+  - **Test Coverage:** Component Management (7), Query Operations (6), Cooldown/Charge (3), Execution (5), Sample Abilities (7), Registry (2)
+  - **Pattern:** Follows LootSystemIntegrationTests structure
+  - **Files:** 2 files (+580 insertions)
+  - **Validation:** Unity compilation ✅ SUCCESS (exit code 0)
+  - **Status:** ✅ COMPLETE
+
+**EPIC 13 Phase 3 Summary:**
+- ✅ **COMPLETE:** All 3 sub-phases finished (Core, Sample Content, Tests)
+- **Total Files:** 17 files (+2030 insertions)
+- **Total Tests:** 29 ability integration tests
+- **Sample Content:** 12 ready-to-use abilities across 4 types
+- **Quality:** Container pattern, comprehensive tests, diverse ability set
 
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
@@ -258,60 +319,33 @@ Integration of EPIC 11 gameplay modules (Inventory, Items, Loot, Abilities, Prog
 
 ## Active Work
 
-**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1 COMPLETE, ✅ Phase 2a COMPLETE, ✅ Phase 2b COMPLETE**
+**EPIC 13 (Inventory & Items Integration) — ✅ Phase 1-3 COMPLETE**
 
-Phase 1 (Inventory & Items Integration), Phase 2a (Loot Core Integration), and Phase 2b (Loot System Updates) successfully completed!
+Phases 1 (Inventory & Items), 2 (Loot System), and 3 (Abilities System) successfully completed!
 
-**Phase 1a: Core Components — ✅ COMPLETE** (2026-10-16, commit `f683355`)
-- ✅ Created MythHunterEquipmentSlot enum (15 slots)
-- ✅ Created MythHunterInventoryComponent wrapper with 5 factory methods
-- ✅ Created MythHunterItemComponent for world/loot items
-- ✅ Created InventorySystemIntegration dual-component helper
-- ✅ Created InventoryComponentMigration utility
-- ✅ Unity compilation validated (SUCCESS)
-- ✅ Commit pushed to origin/dev
+**Phase 1: Inventory & Items Integration — ✅ COMPLETE** (2026-10-16)
+- Phase 1a: `f683355` (Core Components)
+- Phase 1b: `6976ca0` (System Updates)
+- Phase 1c: `79640ad` (Migration Utility & Tests)
+- **Total:** 24 files (+2818 insertions), 15 tests
+- **Pattern:** Dual-component migration
 
-**Phase 1b: System Updates — ✅ COMPLETE** (2026-10-16, commit `6976ca0`)
-- ✅ Updated HeroArchetypeRegistry to create dual components in templates
-- ✅ Updated HeroFactory.CreateHeroFromDatabaseAsync for dual-component creation
-- ✅ Updated HeroFactory.SaveHeroToDatabaseAsync to prefer new component
-- ✅ Added ConvertNewInventoryToOld and EquipIfNotEmpty helpers
-- ✅ Equipment mapping (old armor/weapons → new slot system)
-- ✅ Unity compilation validated (SUCCESS, exit code 0)
-- ✅ Commit pushed to origin/dev
+**Phase 2: Loot System Integration — ✅ COMPLETE** (2026-10-17)
+- Phase 2a: `51ce245` (Core Components)
+- Phase 2b: `5b571ba` (System Updates)
+- Phase 2c: `f12bac3` (Tests & Validation)
+- **Total:** 22 files (+2374 insertions), 17 tests
+- **Pattern:** Greenfield integration, event-driven architecture
 
-**Phase 1c: Migration Utility & Tests — ✅ COMPLETE** (2026-10-16, commit `79640ad`)
-- ✅ Created InventoryComponentMigrationEditor.cs with 4 menu commands
-- ✅ Created InventorySystemIntegrationTests.cs with 15 integration tests
-- ✅ Test coverage: Item operations, Equipment, Queries, Dual-component validation
-- ✅ Unity compilation validated (SUCCESS, exit code 0)
-- ✅ Commit pushed to origin/dev
+**Phase 3: Abilities System Integration — ✅ COMPLETE** (2026-10-17)
+- Phase 3a: `c49f9c3` (Core Components)
+- Phase 3b: `d6f9a22` (System Updates - Sample Abilities)
+- Phase 3c: `12277ef` (Tests & Validation)
+- **Total:** 17 files (+2030 insertions), 29 tests
+- **Pattern:** Container design (matches Inventory pattern)
 
-**Phase 2a: Loot System Core Integration — ✅ COMPLETE** (2026-10-16, commit `51ce245`)
-- ✅ Created MythHunterLootComponent with 4 factory methods (CreateEnemy, CreateBoss, CreateChest, CreateEvent)
-- ✅ Created LootSystemIntegration helper (395 lines)
-- ✅ Integration with Framework ILootGenerator and ILootTableRegistry
-- ✅ Item entity creation from loot drops (uses Phase 1 MythHunterItemComponent)
-- ✅ Created EPIC-13-Phase2-Loot-Integration-Plan.md (332 lines)
-- ✅ Unity compilation validated (SUCCESS, exit code 0)
-- ✅ Commit pushed to origin/dev
-- ✅ Pattern: Greenfield integration (no migration needed)
-
-**Phase 2b: Loot System Updates — ✅ COMPLETE** (2026-10-17, commit `5b571ba`)
-- ✅ Created LootDropSystem.cs (180 lines, event-driven)
-- ✅ Created LootTableBuilder.cs (168 lines, fluent API)
-- ✅ Created SampleLootTables.cs (225 lines, 8 pre-configured tables)
-- ✅ Created LootRegistryInitializer.cs (166 lines, registry initialization)
-- ✅ Event flow: EntityDeathEvent → LootDropSystem → LootSystemIntegration → ILootGenerator
-- ✅ Sample content: 3 enemies, 3 chests, 2 bosses
-- ✅ Unity compilation validated (SUCCESS, exit code 0)
-- ✅ Commit pushed to origin/dev
-- ✅ Pattern: Event-driven architecture, system separation (follows EPIC 12)
-
-**Next Phase Options:**
-- **EPIC 13 Phase 2c:** Tests & Validation (Recommended - complete Phase 2, ~10-12 tests)
-- **EPIC 13 Phase 3:** Abilities System Integration (Medium complexity)
-- **EPIC 13 Phase 4:** Progression System Integration (Medium-High complexity)
+**Next Phase:**
+- **EPIC 13 Phase 4:** Progression System Integration (Final phase, Medium-High complexity)
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
