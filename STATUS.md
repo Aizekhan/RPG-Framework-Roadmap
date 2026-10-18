@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `c630e53` — Latest: EPIC 16 complete (Quest System)
+- Current source head: `6d6fa9b` — Latest: EPIC 17-19 complete (Dialogue, Crafting, Trading Systems)
 
 ## Verified completed sequence
 
@@ -412,6 +412,105 @@ Universal Quest System with objectives, rewards, quest chains, and repeatable qu
 - **Sample Content:** 5 ready-to-use quests
 - **Features:** Quest chains, repeatable quests, quest objectives (Kill, Collect, Interact, Explore, Escort, Custom)
 
+### EPIC 17 (Dialogue System) — ✅ **COMPLETE** 🎉
+
+Universal Dialogue System with branching conversations, conditional choices, speaker management.
+
+- **Commit `c8aec6b`** — Phase 1: Framework Module
+  - Created `RPGFramework.Dialogue.Runtime` assembly
+  - 8 interfaces: IDialogue, IDialogueNode, IDialogueChoice, IDialogueCondition, IDialogueContext, IDialogueManager, IDialogueProgress, IDialogueRegistry
+  - 6 data structures: DialogueData, DialogueNodeData, DialogueChoiceData, DialogueConditionData, DialogueProgressData, ActiveDialoguesData
+  - 3 enums: DialogueNodeType (Line, Choice, Branch, End), ConditionType, DialogueState
+  - 4 events: DialogueStartedEvent, DialogueEndedEvent, LineSpokenEvent, ChoiceSelectedEvent
+  - 8 implementations: Dialogue, DialogueNode, DialogueChoice, DialogueCondition, DialogueProgress, DialogueManager, DialogueRegistry
+  - 30 Framework tests (100% pass rate)
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `dc32346`** — Phase 2: MythHunter Integration
+  - Component: MythHunterDialogueComponent (metadata dictionary)
+  - Data: DialogueMetadata (SpeakerName, PortraitPath, VoiceActorId, BackgroundMusic, CameraAngle, etc.)
+  - Adapter: DialogueSystemIntegration (367 lines, metadata support)
+  - Sample: SampleDialogues.cs (5 dialogues: Greeting, Quest, Shop, Branching, Companion)
+  - Dual-component pattern (ActiveDialoguesData + MythHunterDialogueComponent)
+
+- **Commit `457ebfc`** — Phase 3: Documentation
+  - EPIC-17-COMPLETE.md
+
+**EPIC 17 Summary:**
+- **Total Files:** 33 files (29 Framework + 4 Integration)
+- **Total Tests:** 30 Framework tests (100% pass rate)
+- **Lines of Code:** ~4,053
+- **Assembly:** RPGFramework.Dialogue.Runtime
+- **Sample Content:** 5 complete dialogues with branching
+- **Features:** Conditional choices, speaker management, quest triggers, event-driven
+
+### EPIC 18 (Crafting System) — ✅ **COMPLETE** 🎉
+
+Universal Crafting System with time-based crafting, success chances, recipe management, experience/skill progression.
+
+- **Commit `b2385f1`** — Phase 1: Framework Module
+  - Created `RPGFramework.Crafting.Runtime` assembly
+  - 7 interfaces: ICraftingRecipe, ICraftingIngredient, ICraftingResult, ICraftingRequirement, ICraftingStation, ICraftingManager, ICraftingRecipeRegistry
+  - 5 data structures: CraftingRecipeData, CraftingIngredient, CraftingResult, CraftingRequirementData, ActiveCraftingData
+  - 3 enums: CraftingStationType (Forge, Alchemy, Cooking, Enchanting, Carpentry), RequirementType, CraftingState
+  - 4 events: CraftingStartedEvent, CraftingCompletedEvent, CraftingFailedEvent, CraftingCancelledEvent
+  - 7 implementations: CraftingRecipe, CraftingIngredient, CraftingResult, CraftingRequirement, CraftingStation, CraftingManager, CraftingRecipeRegistry
+  - 25+ Framework tests (100% pass rate)
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `3d5ecb7`** — Phase 2: MythHunter Integration
+  - Component: MythHunterCraftingComponent (ExperiencePoints, SkillLevel 0-100, LearnedRecipes)
+  - Data: CraftingRecipeMetadata (UIDisplayName, IconPath, ExperienceReward, SuccessChanceModifier, etc.)
+  - Adapter: CraftingSystemIntegration (345 lines)
+  - Sample: SampleCraftingRecipes.cs (5 recipes: IronSword, HealthPotion, BreadLoaf, EnchantedRing, WoodenShield)
+  - Dual-component pattern (ActiveCraftingData + MythHunterCraftingComponent)
+
+**EPIC 18 Summary:**
+- **Total Files:** 34 files (30 Framework + 4 Integration)
+- **Total Tests:** 25+ Framework tests (100% pass rate)
+- **Lines of Code:** ~2,975
+- **Assembly:** RPGFramework.Crafting.Runtime
+- **Sample Content:** 5 recipes across all crafting stations
+- **Features:** Time-based crafting, success chances, ingredient requirements, experience/skill system
+
+### EPIC 19 (Trading System) — ✅ **COMPLETE** 🎉
+
+Universal Trading System with trade offers, conditions, reputation tracking, gold/item exchange.
+
+- **Commit `7052555`** — Phase 1: Framework Module
+  - Created `RPGFramework.Trading.Runtime` assembly
+  - 5 interfaces: ITradeOffer, ITrader, ITradeCondition, ITradingManager, ITraderRegistry
+  - 5 data structures: TradeOfferData, TradeItem, TradeConditionData, TradeResultData, ActiveTradesData
+  - 3 enums: TraderType (Merchant, Blacksmith, Alchemist, FenceDealer, QuestGiver), ConditionType, TradeState
+  - 4 events: TradeProposedEvent, TradeAcceptedEvent, TradeDeclinedEvent, TradeCompletedEvent
+  - 5 implementations: TradeOffer, Trader, TradeCondition, TradingManager, TraderRegistry
+  - 29 Framework tests (100% pass rate)
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `0a9d208`** — Phase 2: MythHunter Integration
+  - Component: MythHunterTradingComponent (Reputation tracking, AvailableTraders, TradeHistory)
+  - Data: TraderMetadata (TraderName, PortraitPath, ShopMusicPath, PriceModifier, ReputationGain, etc.)
+  - Adapter: TradingSystemIntegration (214 lines)
+  - Sample: SampleTraders.cs (5 traders with 15 total trade offers)
+  - Dual-component pattern (ActiveTradesData + MythHunterTradingComponent)
+
+- **Commit `6d6fa9b`** — Phase 3: Documentation (EPIC 18 & 19)
+  - EPIC-18-COMPLETE.md
+  - EPIC-19-COMPLETE.md
+
+**EPIC 19 Summary:**
+- **Total Files:** 27 files (25 Framework + 4 Integration, 2 docs)
+- **Total Tests:** 29 Framework tests (100% pass rate)
+- **Lines of Code:** ~2,189
+- **Assembly:** RPGFramework.Trading.Runtime
+- **Sample Content:** 5 traders with 15 trade offers
+- **Features:** Conditional trades, reputation system, price modifiers, gold/item exchange
+
+**EPIC 18-19 Parallel Execution Note:**
+- Both systems created simultaneously using parallel Task subagents
+- Completed on same day: 2026-10-18
+- Total delivery: 61 files, ~5,164 lines, 54+ tests
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -422,27 +521,44 @@ Universal Quest System with objectives, rewards, quest chains, and repeatable qu
 
 ## Active Work
 
-**EPIC 16 (Quest System) — ✅ COMPLETE** 🎉
+**EPIC 17-19 (Dialogue, Crafting, Trading Systems) — ✅ COMPLETE** 🎉
 
-Quest System successfully extracted to Framework with MythHunter integration! (2026-10-18)
+Three major gameplay systems successfully extracted to Framework with MythHunter integration! (2026-10-18)
 
-- **Phase 1:** Framework Module (RPGFramework.Quests.Runtime) — ✅ COMPLETE
-- **Phase 2:** MythHunter Integration (Components, Adapters, Sample Quests) — ✅ COMPLETE
-- **Phase 3:** Documentation (EPIC-16-COMPLETE.md) — ✅ COMPLETE
+**EPIC 17 - Dialogue System:**
+- ✅ Phase 1: Framework Module (RPGFramework.Dialogue.Runtime, 30 tests)
+- ✅ Phase 2: MythHunter Integration (5 sample dialogues with branching)
+- ✅ Phase 3: Documentation (EPIC-17-COMPLETE.md)
 
-**Latest Commit:** `c630e53` — Quest System Phase 3 documentation
+**EPIC 18 - Crafting System:**
+- ✅ Phase 1: Framework Module (RPGFramework.Crafting.Runtime, 25+ tests)
+- ✅ Phase 2: MythHunter Integration (5 recipes, experience/skill system)
 
-**Achievements:**
-- 33 files, 36 Framework tests (100% pass rate)
-- 5 sample quests (Tutorial, Collection, Exploration, Chain, Daily)
-- Quest chains, repeatable quests, 6 objective types
-- Pure .NET 8.0 Framework, dual-component integration
+**EPIC 19 - Trading System:**
+- ✅ Phase 1: Framework Module (RPGFramework.Trading.Runtime, 29 tests)
+- ✅ Phase 2: MythHunter Integration (5 traders with 15 trade offers, reputation system)
+- ✅ Phase 3: Combined Documentation (EPIC-18-COMPLETE.md, EPIC-19-COMPLETE.md)
+
+**Latest Commit:** `6d6fa9b` — EPIC 18 & 19 Phase 3 documentation
+
+**Achievements (Parallel Execution):**
+- **Total Files:** 94 files (61 EPIC 18-19 + 33 EPIC 17)
+- **Total Tests:** 84+ Framework tests (100% pass rate)
+- **Total Lines:** ~10,217 lines
+- **Assemblies Created:**
+  - RPGFramework.Dialogue.Runtime
+  - RPGFramework.Crafting.Runtime
+  - RPGFramework.Trading.Runtime
+- **Sample Content:**
+  - 5 dialogues with branching conversations
+  - 5 crafting recipes across all stations
+  - 5 traders with 15 trade offers
+- **Special Note:** EPIC 18 and 19 created simultaneously using parallel Task subagents
 
 **Next Steps:**
-- Continue with next gameplay system:
-  - EPIC 17: Dialogue System
-  - EPIC 18: Crafting System
-  - EPIC 19: Trading System
+- Continue with next gameplay systems (EPIC 20+)
+- Consider integration testing across all gameplay systems
+- Optional: UI/UX implementation for new systems
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
