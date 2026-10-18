@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `55d2b14` — Latest: EPIC 14-15 complete (Skills & Status Effects Systems)
+- Current source head: `c630e53` — Latest: EPIC 16 complete (Quest System)
 
 ## Verified completed sequence
 
@@ -380,6 +380,38 @@ Universal Status Effects System extracted to Framework with MythHunter integrati
 - **Lines of Code:** ~2,000
 - **Assembly:** RPGFramework.StatusEffects.Runtime
 
+### EPIC 16 (Quest System) — ✅ **COMPLETE** 🎉
+
+Universal Quest System with objectives, rewards, quest chains, and repeatable quests.
+
+- **Commit `a100ed2`** — Phase 1: Framework Module
+  - Created `RPGFramework.Quests.Runtime` assembly
+  - 6 interfaces: IQuest, IQuestObjective, IQuestReward, IQuestProgress, IQuestManager, IQuestRegistry
+  - 5 data structures: QuestData, QuestObjectiveData, QuestRewardData, QuestProgressData, ActiveQuestsData
+  - 3 enums: ObjectiveType, QuestState, RewardType
+  - 5 events: QuestAcceptedEvent, QuestCompletedEvent, QuestFailedEvent, QuestAbandonedEvent, ObjectiveProgressedEvent
+  - 6 implementations: Quest, QuestObjective, QuestReward, QuestProgress, QuestRegistry, QuestManager
+  - 36 Framework tests (100% pass rate)
+  - Pure .NET 8.0, `noEngineReferences: true`
+
+- **Commit `6fdaae9`** — Phase 2: MythHunter Integration
+  - Component: MythHunterQuestComponent (metadata: IconPath, QuestGiverNpcId, Category, etc.)
+  - Data: QuestMetadata (171 lines, helper factories)
+  - Adapter: QuestSystemIntegration (455 lines, metadata support)
+  - Sample: SampleQuests.cs (5 quests: Tutorial, Collection, Exploration, Chain, Daily)
+  - Dual-component pattern (ActiveQuestsData + MythHunterQuestComponent)
+
+- **Commit `c630e53`** — Phase 3: Documentation
+  - EPIC-16-COMPLETE.md
+
+**EPIC 16 Summary:**
+- **Total Files:** 33 files (29 Framework + 4 Integration)
+- **Total Tests:** 36 Framework tests (100% pass rate)
+- **Lines of Code:** ~3,900
+- **Assembly:** RPGFramework.Quests.Runtime
+- **Sample Content:** 5 ready-to-use quests
+- **Features:** Quest chains, repeatable quests, quest objectives (Kill, Collect, Interact, Explore, Escort, Custom)
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -390,30 +422,27 @@ Universal Status Effects System extracted to Framework with MythHunter integrati
 
 ## Active Work
 
-**EPIC 13, 14, 15 — ✅ ALL COMPLETE** 🎉
+**EPIC 16 (Quest System) — ✅ COMPLETE** 🎉
 
-All Framework extraction and integration work successfully completed! (2026-10-18)
+Quest System successfully extracted to Framework with MythHunter integration! (2026-10-18)
 
-**EPIC 13 (Inventory & Items Integration) — ✅ COMPLETE**
-- Phase 1-4: All integration phases complete
-- Total: 72 files, 81 integration tests (100% pass)
+- **Phase 1:** Framework Module (RPGFramework.Quests.Runtime) — ✅ COMPLETE
+- **Phase 2:** MythHunter Integration (Components, Adapters, Sample Quests) — ✅ COMPLETE
+- **Phase 3:** Documentation (EPIC-16-COMPLETE.md) — ✅ COMPLETE
 
-**EPIC 14 (Skills System) — ✅ COMPLETE**
-- Framework: RPGFramework.Skills.Runtime
-- Integration: MythHunterSkillsComponent + SkillSystemIntegration
-- Total: ~30 files, 41 tests (100% pass), ~2,050 lines
+**Latest Commit:** `c630e53` — Quest System Phase 3 documentation
 
-**EPIC 15 (Status Effects System) — ✅ COMPLETE**
-- Framework: RPGFramework.StatusEffects.Runtime
-- Integration: MythHunterStatusEffectsComponent + StatusEffectSystemIntegration
-- Total: 21 files, 22 tests (100% pass), ~2,000 lines
-
-**Latest Commit:** `55d2b14` (Documentation: EPIC 14-15 completion handoff)
+**Achievements:**
+- 33 files, 36 Framework tests (100% pass rate)
+- 5 sample quests (Tutorial, Collection, Exploration, Chain, Daily)
+- Quest chains, repeatable quests, 6 objective types
+- Pure .NET 8.0 Framework, dual-component integration
 
 **Next Steps:**
-- Push commits to remote
-- Create PR for EPIC 14-15
-- Start next EPIC (Quest/Dialogue/Crafting systems or other gameplay modules)
+- Continue with next gameplay system:
+  - EPIC 17: Dialogue System
+  - EPIC 18: Crafting System
+  - EPIC 19: Trading System
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
