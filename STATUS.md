@@ -1,13 +1,13 @@
 # Project Status
 
 > Operational pointer only. Roadmap scope/history live in [RPG_FRAMEWORK_MASTER_PLAN.md](RPG_FRAMEWORK_MASTER_PLAN.md). Do not duplicate milestone histories here.
-> Last reconciled against GitHub: 2026-10-18.
+> Last reconciled against GitHub: 2026-10-23.
 
 ## Repositories
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `6d6fa9b` — Latest: EPIC 17-19 complete (Dialogue, Crafting, Trading Systems)
+- Current source head: `f1169f7` — Latest: EPIC 20 complete (Faction System)
 
 ## Verified completed sequence
 
@@ -511,6 +511,43 @@ Universal Trading System with trade offers, conditions, reputation tracking, gol
 - Completed on same day: 2026-10-18
 - Total delivery: 61 files, ~5,164 lines, 54+ tests
 
+
+### EPIC 20 (Faction System) — ✅ **COMPLETE** 🎉
+
+Universal Faction System with reputation tracking, relationship cascades, and standing tiers.
+
+- **Commit `f1169f7`** — Complete EPIC 20 (14 commits from `6d6fa9b`)
+  - Created `RPGFramework.Factions.Runtime` assembly
+  - Faction contracts: `IFaction`, `IFactionManager`, `IFactionRegistry`, `IFactionRelationship`, `IFactionReputation`
+  - Data structures: `FactionType`, `FactionStanding`, `FactionRelationType`, `FactionReputationData`
+  - Implementations: `Faction`, `FactionManager`, `FactionRegistry`, `FactionRelationship`, `FactionReputation`
+  - 19 comprehensive NUnit tests (100% pass rate)
+  - MythHunter integration: `MythHunterFactionComponent`, `FactionSystemIntegration`, `SampleFactions`
+  - 8 sample factions with 10 relationship mappings
+  - Stats: 19 files (+2,500 LOC)
+  - Validation: Unity EditMode tests ✅, Full compilation ✅
+
+**EPIC 20 Summary:**
+- **Total Files:** 19 files (16 Framework + 3 Integration)
+- **Total Tests:** 19 tests (100% pass rate)
+- **Lines of Code:** ~2,500
+- **Assembly:** `RPGFramework.Factions.Runtime`
+- **Sample Content:** 8 factions, 10 relationships
+
+**Features:**
+- **Reputation System:** -100 to +100 range with 7 standing tiers (Hated → Revered)
+- **Relationship Cascades:** Configurable modifiers (allied factions gain rep together, enemies lose)
+- **Faction Types:** 8 types (Nation, Guild, Religion, Faction, Criminal, Military, Trading, Cult)
+- **ECS Integration:** `FactionReputationData` component for per-entity tracking
+- **Dual-Component Pattern:** Backward-compatible MythHunter integration
+
+**Test Suite Fixes (Session 2026-10-23):**
+- Fixed 13 failed Framework tests across 5 systems to achieve 100% Framework pass rate
+- Trading System: 8 tests (struct write-back + null checks)
+- Quest System: 2 tests (callback capture)
+- Pooling System: 2 tests (HitRate formula)
+- Dialogue System: 1 test (callback capture)
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -520,6 +557,13 @@ Universal Trading System with trade offers, conditions, reputation tracking, gol
 - PR #53 merged as `6bef9b210ee35b40e4c28e74e5550c3f1c58d762`
 
 ## Active Work
+
+**EPIC 20 (Faction System) — ✅ COMPLETE** 🎉
+
+Universal Faction System successfully extracted to Framework! (2026-10-23)
+
+**Latest Commit:** `f1169f7` — All 14 commits pushed to origin/dev
+
 
 **EPIC 17-19 (Dialogue, Crafting, Trading Systems) — ✅ COMPLETE** 🎉
 
@@ -539,7 +583,7 @@ Three major gameplay systems successfully extracted to Framework with MythHunter
 - ✅ Phase 2: MythHunter Integration (5 traders with 15 trade offers, reputation system)
 - ✅ Phase 3: Combined Documentation (EPIC-18-COMPLETE.md, EPIC-19-COMPLETE.md)
 
-**Latest Commit:** `6d6fa9b` — EPIC 18 & 19 Phase 3 documentation
+
 
 **Achievements (Parallel Execution):**
 - **Total Files:** 94 files (61 EPIC 18-19 + 33 EPIC 17)
