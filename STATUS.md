@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `f1169f7` — Latest: EPIC 20 complete (Faction System)
+- Current source head: `ef5ace6` — Latest: EPIC 20 + UI Integration + Doc cleanup
 
 ## Verified completed sequence
 
@@ -548,6 +548,54 @@ Universal Faction System with reputation tracking, relationship cascades, and st
 - Pooling System: 2 tests (HitRate formula)
 - Dialogue System: 1 test (callback capture)
 
+
+### Game Layer UI Integration — ✅ **COMPLETE** 🎉
+
+All 11 MythHunter UI panels successfully migrated to use Framework APIs.
+
+- **Commit `54365fa`** — Complete UI Integration (7 commits from `9c98eaa`)
+  - **Phase 1 (9c98eaa):** Re-enabled 4 Manager-based UI panels
+    * CraftingUI → ICraftingManager
+    * DialogueUI → IDialogueManager
+    * TradingUI → ITradingManager
+    * StatusEffectsUI → IStatusEffectTracker
+  
+  - **Phase 2 (e2a98e7):** Re-enabled integration samples
+    * Achievements integration
+    * Guilds integration
+  
+  - **Phase 3 (57e770d):** Re-enabled 5 ECS UI panels with Framework patterns
+    * StatsUI → IProgressionTracker + IEntityManager
+    * InventoryUI → IInventoryContainer + MythHunterInventoryComponent
+    * AbilitiesUI → IAbilityRegistry + IAbilityExecutor
+    * LootUI → ILootGenerator + LootResult
+    * CombatLogUI → EventBus pattern
+  
+  - **Phase 4 (c8df73d):** Re-enabled UIManager coordinator
+    * Central management for all 11 UI panels
+    * Keyboard shortcuts (Q, I, C, T, D, F, K, P, L, O)
+    * Reflection-based UIMonoBehaviourWrapper for flexible panel integration
+  
+  - **Fixes (7fd58c1, 5a366ed, 54365fa):** Resolved all compilation errors
+    * Removed obsolete ILootSource, LootItemData types
+    * Fixed AbilitySlotDropHandler references
+    * Fixed ResourceCost struct comparison
+    * Fixed Debug.LogWarning namespace ambiguity
+
+**UI Integration Summary:**
+- **Total Files:** 11 UI panels migrated
+- **Commits:** 7 commits
+- **Code Simplified:** -250 lines (removed obsolete code)
+- **Compilation:** 0 errors ✅
+- **UI Panels Working:** 11/11 (100%) ✅
+
+**Documentation Cleanup (ef5ace6):**
+- Enforced Single Source of Truth per CLAUDE.md:68
+- Removed 72 duplicate/outdated documentation files (-31,027 lines)
+- Kept only essential MythHunter-specific docs
+- Roadmap repository is now the authoritative source for STATUS/HANDOFF
+
+
 ### Earlier milestones
 - PR #50 merged as `0af6ab74f8236b5de7455349c795377c883b5295`
 - PR #48 merged as `0d97060d45d978cafbe376cd43f00eb8fdf9f175`
@@ -558,51 +606,26 @@ Universal Faction System with reputation tracking, relationship cascades, and st
 
 ## Active Work
 
+**Game Layer UI Integration — ✅ COMPLETE** 🎉
+
+All 11 MythHunter UI panels successfully connected to Framework! (2026-10-25)
+
+**Latest Commit:** `ef5ace6` — UI Integration + Documentation cleanup complete
+
+**Key Achievements:**
+- 11/11 UI panels working with Framework APIs
+- Zero compilation errors
+- 72 duplicate/outdated files removed (-31,027 lines)
+- Single Source of Truth enforced (Roadmap repository)
+
+**Previous Work:**
+
 **EPIC 20 (Faction System) — ✅ COMPLETE** 🎉
 
 Universal Faction System successfully extracted to Framework! (2026-10-23)
 
 **Latest Commit:** `f1169f7` — All 14 commits pushed to origin/dev
 
-
-**EPIC 17-19 (Dialogue, Crafting, Trading Systems) — ✅ COMPLETE** 🎉
-
-Three major gameplay systems successfully extracted to Framework with MythHunter integration! (2026-10-18)
-
-**EPIC 17 - Dialogue System:**
-- ✅ Phase 1: Framework Module (RPGFramework.Dialogue.Runtime, 30 tests)
-- ✅ Phase 2: MythHunter Integration (5 sample dialogues with branching)
-- ✅ Phase 3: Documentation (EPIC-17-COMPLETE.md)
-
-**EPIC 18 - Crafting System:**
-- ✅ Phase 1: Framework Module (RPGFramework.Crafting.Runtime, 25+ tests)
-- ✅ Phase 2: MythHunter Integration (5 recipes, experience/skill system)
-
-**EPIC 19 - Trading System:**
-- ✅ Phase 1: Framework Module (RPGFramework.Trading.Runtime, 29 tests)
-- ✅ Phase 2: MythHunter Integration (5 traders with 15 trade offers, reputation system)
-- ✅ Phase 3: Combined Documentation (EPIC-18-COMPLETE.md, EPIC-19-COMPLETE.md)
-
-
-
-**Achievements (Parallel Execution):**
-- **Total Files:** 94 files (61 EPIC 18-19 + 33 EPIC 17)
-- **Total Tests:** 84+ Framework tests (100% pass rate)
-- **Total Lines:** ~10,217 lines
-- **Assemblies Created:**
-  - RPGFramework.Dialogue.Runtime
-  - RPGFramework.Crafting.Runtime
-  - RPGFramework.Trading.Runtime
-- **Sample Content:**
-  - 5 dialogues with branching conversations
-  - 5 crafting recipes across all stations
-  - 5 traders with 15 trade offers
-- **Special Note:** EPIC 18 and 19 created simultaneously using parallel Task subagents
-
-**Next Steps:**
-- Continue with next gameplay systems (EPIC 20+)
-- Consider integration testing across all gameplay systems
-- Optional: UI/UX implementation for new systems
 
 ## Dormant GitHub PRs — not active roadmap work
 These historical PRs predate the current architecture effort and must not be merged as-is.
