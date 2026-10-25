@@ -6,7 +6,7 @@ This document tracks the RPG Framework project's operational status. The roadmap
 ## Repositories
 - **Roadmap:** Aizekhan/RPG-Framework-Roadmap
 - **Source:** Aizekhan/MythHunter (branch: `dev`)
-- **Current HEAD:** Commit `ea82237` — Full Gameplay Loop Integration Test complete
+- **Current HEAD:** Commit `2bc646e` — EPIC 23 AI & Behavior Systems (Phases 23.1-23.3) complete
 
 ## Completed Milestones
 
@@ -156,21 +156,19 @@ Build actual game content using Framework:
 
 ---
 
-### EPIC 23 (AI & Behavior Systems) — 🔄 **IN PROGRESS** (2026-10-25)
+### EPIC 23 (AI & Behavior Systems) — ✅ **COMPLETE** (Phases 23.1-23.3) 🎉
 
-**Three foundational AI Framework modules completed (Phases 23.1-23.3):**
+**Three foundational AI Framework modules merged into `dev` branch:**
 
-**PR #79 — Phase 23.3: State Machine System**
-- Branch: `feature/epic-23-3-state-machine` (Commit: `8d2806a`)
+**PR #79 — Phase 23.3: State Machine System** (Merged as `cd3d1b7`)
 - Assembly: `RPGFramework.StateMachine.Runtime`
 - Contracts: `IState<TStateId>`, `IStateMachine<TStateId>`
 - Generic state machine with enum-based state IDs and lifecycle management
 - 19 comprehensive NUnit tests (100% pass rate)
 - CI: .NET tests ✅ PASS
-- Status: ⏳ **Awaiting Merge**
+- Status: ✅ **MERGED** (2026-10-25)
 
-**PR #80 — Phase 23.1: Pathfinding System**
-- Branch: `feature/epic-23-1-pathfinding` (Commit: `aa3c29b`)
+**PR #80 — Phase 23.1: Pathfinding System** (Merged as `38bfac8`)
 - Assembly: `RPGFramework.Pathfinding.Runtime`
 - Contracts: `IPathfinder`, `INavigationGraph`, `IHeuristic`
 - Data: `Position2D` struct (framework-neutral, no Unity Vector3)
@@ -178,28 +176,33 @@ Build actual game content using Framework:
 - Navigation: `GridNavigationGraph` for tile-based RPGs
 - 31 comprehensive NUnit tests (100% pass rate)
 - CI: .NET tests ✅ PASS
-- Status: ⏳ **Awaiting Merge**
+- Status: ✅ **MERGED** (2026-10-25)
 
-**PR #81 — Phase 23.2: Behavior Tree System**
-- Branch: `feature/epic-23-2-behavior-tree` (Commit: `917edad`)
+**PR #81 — Phase 23.2: Behavior Tree System** (Merged as `2bc646e`)
 - Assembly: `RPGFramework.BehaviorTree.Runtime`
 - Node Types: Selector (OR), Sequence (AND), Inverter (NOT), Repeater (loop)
 - Leaf Nodes: ActionNode, ConditionNode (abstract base classes)
 - Blackboard: Shared data storage for node communication
 - 15 comprehensive NUnit tests (100% pass rate)
 - CI: .NET tests ✅ PASS
-- Status: ⏳ **Awaiting Merge**
+- Status: ✅ **MERGED** (2026-10-25)
 
 **EPIC 23 Summary (Phases 23.1-23.3):**
 - **Completed:** 3/5 phases (StateMachine, Pathfinding, BehaviorTree)
-- **Total Files:** 54 files (Runtime + Tests + CI)
+- **Total Files:** 75 files (+3,468 insertions)
 - **Total Tests:** 65 Framework tests (100% pass rate: 65/65)
-- **Total PRs:** 3 PRs ready for merge
+- **Assemblies Created:**
+  - `RPGFramework.StateMachine.Runtime`
+  - `RPGFramework.Pathfinding.Runtime`
+  - `RPGFramework.BehaviorTree.Runtime`
 - **Framework Quality:** Zero Unity dependencies, pure .NET 8.0 C#
+- **Current HEAD:** `2bc646e` (dev branch)
 
 **Remaining Phases:**
 - Phase 23.4: Enemy AI System (Game Layer integration using completed Framework modules)
 - Phase 23.5: NPC AI System (Game Layer integration using completed Framework modules)
+
+**Note:** Phases 23.4-23.5 are MythHunter Game Layer implementations that USE the Framework modules, not new Framework modules.
 
 ---
 
