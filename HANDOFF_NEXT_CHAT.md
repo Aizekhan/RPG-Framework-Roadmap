@@ -203,22 +203,40 @@ This pattern is **working and validated** but needs **developer experience impro
 - Framework provides building blocks; Game Layer implements game-specific behaviors
 - `Position2D` struct enables framework-neutral pathfinding (no Unity Vector3 dependency)
 
-### Next Actions
+### Framework Principle: EPIC 23 Complete
 
-**Option A:** Continue with Game Layer Enemy/NPC AI (Phases 23.4-23.5)
-- Implement enemy AI using StateMachine + Pathfinding + BehaviorTree
-- Implement NPC AI with routines and interactions
+EPIC 23 successfully delivered AI **building blocks** following Framework extraction principles:
+- ✅ Generic StateMachine (any state-based logic)
+- ✅ A* Pathfinding (framework-neutral positions)
+- ✅ Behavior Tree (decision-making engine)
 
-**Option B:** Begin Inspector Tooling
-- Quest Editor
-- Loot Table Designer
+**Phases 23.4-23.5 (Enemy/NPC AI)** deferred to Game Layer:
+- Reason: No existing implementation to extract (Filter #5: "proof of problem")
+- Framework provides building blocks; Game Layer implements specific behaviors when needed
+- Enemy/NPC AI can be built in MythHunter using completed Framework modules
+
+### Next Priorities
+
+Framework development continues with extraction of **existing MythHunter systems**:
+
+**Priority 1: Inspector Tooling** (Recommended)
+- Quest Editor with visual objective setup
+- Loot Table Designer with drop rate visualization
 - Dialogue Graph Editor
-- Ability Tree Editor
+- Ability/Skill Tree Editor
+- Rationale: Framework is production-ready but needs Unity Inspector interfaces for efficient content creation
 
-**Option C:** New Framework EPIC
-- Review RPG_FRAMEWORK_MASTER_PLAN.md for next priority
+**Priority 2: Identify Remaining Framework Extractions**
+- Audit MythHunter codebase for systems needing extraction
+- Focus on systems with existing implementations (Filter #5)
+- Candidates: Achievement System, Guild System, Companion System
+
+**Priority 3: Game Layer Development**
+- Use completed Framework (31+ modules) to build actual game content
+- Full Gameplay Loop already validated ✅
+- Create production quests, enemies, progression
 
 ---
 
 **Last Updated:** 2026-10-25
-**Next Session:** Choose next development focus (Game Layer AI, Inspector Tooling, or new EPIC)
+**Next Session:** Inspector Tooling (Quest Editor recommended) or Framework extraction audit
