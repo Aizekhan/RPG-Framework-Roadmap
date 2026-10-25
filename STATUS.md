@@ -7,7 +7,7 @@
 - Roadmap: [Aizekhan/RPG-Framework-Roadmap](https://github.com/Aizekhan/RPG-Framework-Roadmap)
 - Source: [Aizekhan/MythHunter](https://github.com/Aizekhan/MythHunter)
 - Source branch: `dev`
-- Current source head: `ef5ace6` — Latest: EPIC 20 + UI Integration + Doc cleanup
+- Current source head: `1562456` — Latest: UI Integration + Runtime Testing complete
 
 ## Verified completed sequence
 
@@ -633,3 +633,48 @@ These historical PRs predate the current architecture effort and must not be mer
 - [PR #3 — RuneSystemV1](https://github.com/Aizekhan/MythHunter/pull/3)
 - [PR #5 — Feature/phases](https://github.com/Aizekhan/MythHunter/pull/5)
 - [PR #4 — UnifiedMythHunterWizard](https://github.com/Aizekhan/MythHunter/pull/4)
+
+### Runtime Testing (2026-10-25) — ✅ **COMPLETE** 🎉
+
+All 11 UI panels successfully tested in Unity PlayMode.
+
+- **Commit `1562456`** — Runtime testing complete (5 commits from `ef5ace6`)
+  - **Testing Infrastructure:**
+    * Created `CreateUITestScene` editor tool
+    * Menu: `MythHunter → Create UI Test Scene`
+    * Automated scene setup with all 11 UI panels
+    * One-click test scene generation
+  
+  - **Fixes During Testing:**
+    * Fixed CreateUITestScene namespace conflicts (Debug.Log, Resources)
+    * Updated font resource: Arial.ttf → LegacyRuntime.ttf (Unity 6)
+    * Added Show/Hide/Toggle methods to LootUI
+    * Support for LootUI's lootWindowRoot field
+    * Disabled DIValidator in test scenes (prevents warning spam)
+
+**Runtime Test Results:**
+- **UI Panels Tested:** 11/11 ✅
+- **Keyboard Shortcuts:** All working ✅
+- **Panel Visibility:** All toggle correctly ✅
+- **No Runtime Errors:** ✅
+
+**Keyboard Shortcuts Verified:**
+- Q → QuestLogUI ✅
+- I → InventoryUI ✅
+- C → CraftingUI ✅
+- T → TradingUI ✅
+- D → DialogueUI ✅
+- F → FactionReputationUI ✅
+- K → StatsUI ✅
+- P → AbilitiesUI ✅
+- L → CombatLogUI ✅
+- O → LootUI ✅
+- ESC → Close All ✅
+
+**Test Scene Features:**
+- Automated creation via editor menu
+- All panels pre-configured with Canvas
+- Visual feedback (title text, instructions)
+- Semi-transparent backgrounds
+- No DI dependency warnings
+
