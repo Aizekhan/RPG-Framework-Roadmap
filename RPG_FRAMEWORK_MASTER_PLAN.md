@@ -564,6 +564,90 @@ a100ed2 feat: EPIC 16 Phase 1 - Quest System Framework module
 - [ ] Small sample RPG independent of MythHunter game content
 - [ ] Automated architecture/build/test validation and release-candidate review
 
+# EPIC 23 — AI & Behavior Systems
+**Goal:** Implement core AI and NPC behavior systems to enable intelligent enemies, NPCs, and dynamic gameplay interactions.
+
+**Status: PLANNED**
+
+## Overview
+Create reusable AI framework for enemy behavior, NPC interactions, pathfinding, and decision-making. These systems are critical for any RPG game with combat, exploration, and NPC interaction.
+
+## Sub-modules
+
+### 23.1 — Pathfinding System
+- [ ] Define pathfinding abstractions (IPathfinder, INavigationGraph)
+- [ ] Implement A* pathfinding algorithm
+- [ ] Unity NavMesh integration adapter (Game Layer)
+- [ ] Grid-based pathfinding option
+- [ ] Path smoothing and optimization
+- [ ] Dynamic obstacle avoidance
+- [ ] Test pathfinding with various map layouts
+
+### 23.2 — Behavior Tree System
+- [ ] Define behavior tree nodes (Selector, Sequence, Leaf, Decorator)
+- [ ] Implement behavior tree executor
+- [ ] Create common behavior patterns (patrol, chase, flee, attack)
+- [ ] Visual behavior tree data structure (for future editor)
+- [ ] Blackboard for shared state between behaviors
+- [ ] Test behavior trees with sample enemy types
+
+### 23.3 — State Machine System
+- [ ] Define state machine interfaces (IState, IStateMachine, IStateTransition)
+- [ ] Implement generic state machine
+- [ ] Hierarchical state machine support
+- [ ] State transition conditions and triggers
+- [ ] Integration with ECS entities
+- [ ] Test state machines for combat and NPC behaviors
+
+### 23.4 — Enemy AI System
+- [ ] Define enemy AI contracts (IEnemyAI, ICombatBehavior)
+- [ ] Implement combat decision making (when to attack, use abilities, retreat)
+- [ ] Target selection and threat management
+- [ ] AI difficulty levels (easy, medium, hard)
+- [ ] Integration with Combat System
+- [ ] Test AI with various enemy archetypes (melee, ranged, caster)
+
+### 23.5 — NPC AI System
+- [ ] Define NPC behavior interfaces (INPCBehavior, IDialogueTrigger)
+- [ ] Implement patrol and idle behaviors
+- [ ] NPC reaction to player (greet, quest marker, shop)
+- [ ] Schedule system (daily routines, time-based behaviors)
+- [ ] Integration with Dialogue and Quest systems
+- [ ] Test NPC behaviors in various scenarios
+
+### 23.6 — Sensing & Perception
+- [ ] Define perception interfaces (IPerceptionSystem, ISensor)
+- [ ] Implement vision cone/radius detection
+- [ ] Audio detection (footsteps, combat sounds)
+- [ ] Line-of-sight checks
+- [ ] Memory system (last known player position)
+- [ ] Test perception with stealth gameplay scenarios
+
+### 23.7 — AI Integration Tests
+- [ ] Full combat encounter test (player vs multiple AI enemies)
+- [ ] NPC interaction test (patrol, dialogue, quest giving)
+- [ ] Pathfinding stress test (100+ entities navigating)
+- [ ] Behavior tree complexity test
+- [ ] Performance profiling and optimization
+
+## Architecture Constraints
+- **Framework Core:** Pure C# behavior trees, state machines, pathfinding algorithms (no Unity dependencies)
+- **Game Layer:** Unity NavMesh adapter, MonoBehaviour AI controllers, visual debugging
+- **Integration:** AI systems work with ECS, Combat, Quest, and Dialogue systems
+- **Optional:** Games without AI can omit these modules entirely
+
+## Dependencies
+- Requires: ECS (EPIC 03), Combat System (EPIC 10), Quest System (EPIC 16)
+- Optional: Dialogue System (EPIC 17), Faction System (EPIC 15)
+
+## Exit Criteria
+- [ ] All AI subsystems implemented with clean Framework APIs
+- [ ] Integration tests demonstrate AI working with Combat/Quest/Dialogue
+- [ ] Performance validated (100+ AI entities at 60 FPS)
+- [ ] Sample enemy types showcase different AI behaviors
+- [ ] Documentation for creating custom AI behaviors
+- [ ] CI tests passing for all AI modules
+
 # EPIC 12 — Persistence
 - [ ] Define save/load lifecycle, storage abstraction, schema versioning and migrations
 - [ ] Test roundtrip, compatibility and interrupted operations
