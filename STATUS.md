@@ -156,7 +156,54 @@ Build actual game content using Framework:
 
 ---
 
-**Status:** Framework architecture complete and validated. Ready for production game layer development with inspector tooling as next major milestone.
+### EPIC 23 (AI & Behavior Systems) — 🔄 **IN PROGRESS** (2026-10-25)
+
+**Three foundational AI Framework modules completed (Phases 23.1-23.3):**
+
+**PR #79 — Phase 23.3: State Machine System**
+- Branch: `feature/epic-23-3-state-machine` (Commit: `8d2806a`)
+- Assembly: `RPGFramework.StateMachine.Runtime`
+- Contracts: `IState<TStateId>`, `IStateMachine<TStateId>`
+- Generic state machine with enum-based state IDs and lifecycle management
+- 19 comprehensive NUnit tests (100% pass rate)
+- CI: .NET tests ✅ PASS
+- Status: ⏳ **Awaiting Merge**
+
+**PR #80 — Phase 23.1: Pathfinding System**
+- Branch: `feature/epic-23-1-pathfinding` (Commit: `aa3c29b`)
+- Assembly: `RPGFramework.Pathfinding.Runtime`
+- Contracts: `IPathfinder`, `INavigationGraph`, `IHeuristic`
+- Data: `Position2D` struct (framework-neutral, no Unity Vector3)
+- Implementation: `AStarPathfinder` with pluggable heuristics
+- Navigation: `GridNavigationGraph` for tile-based RPGs
+- 31 comprehensive NUnit tests (100% pass rate)
+- CI: .NET tests ✅ PASS
+- Status: ⏳ **Awaiting Merge**
+
+**PR #81 — Phase 23.2: Behavior Tree System**
+- Branch: `feature/epic-23-2-behavior-tree` (Commit: `917edad`)
+- Assembly: `RPGFramework.BehaviorTree.Runtime`
+- Node Types: Selector (OR), Sequence (AND), Inverter (NOT), Repeater (loop)
+- Leaf Nodes: ActionNode, ConditionNode (abstract base classes)
+- Blackboard: Shared data storage for node communication
+- 15 comprehensive NUnit tests (100% pass rate)
+- CI: .NET tests ✅ PASS
+- Status: ⏳ **Awaiting Merge**
+
+**EPIC 23 Summary (Phases 23.1-23.3):**
+- **Completed:** 3/5 phases (StateMachine, Pathfinding, BehaviorTree)
+- **Total Files:** 54 files (Runtime + Tests + CI)
+- **Total Tests:** 65 Framework tests (100% pass rate: 65/65)
+- **Total PRs:** 3 PRs ready for merge
+- **Framework Quality:** Zero Unity dependencies, pure .NET 8.0 C#
+
+**Remaining Phases:**
+- Phase 23.4: Enemy AI System (Game Layer integration using completed Framework modules)
+- Phase 23.5: NPC AI System (Game Layer integration using completed Framework modules)
+
+---
+
+**Status:** Framework architecture complete and validated. EPIC 23 Phases 23.1-23.3 complete with 3 PRs awaiting merge. Ready for production game layer development with inspector tooling as next major milestone.
 
 **Last Updated:** 2026-10-25
-**Next Session Focus:** Inspector tooling design or game content creation
+**Next Session Focus:** Merge EPIC 23 PRs or continue with Inspector tooling / Game content creation

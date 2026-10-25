@@ -151,3 +151,56 @@ This pattern is **working and validated** but needs **developer experience impro
 **Prepared for:** Next session continuation
 **Last Updated:** 2026-10-25
 **Status:** ✅ Full Gameplay Loop validated, Framework production-ready, Inspector tooling recommended next
+
+---
+
+## EPIC 23: AI & Behavior Systems (Phases 23.1-23.3) — ✅ COMPLETE
+
+**Session Date:** 2026-10-25 (Continuation)
+**Status:** 3 Framework modules complete, 3 PRs awaiting merge
+
+### Completed Work
+
+**Three foundational AI Framework modules:**
+
+1. **PR #79 - StateMachine** (`feature/epic-23-3-state-machine`, `8d2806a`)
+   - Assembly: `RPGFramework.StateMachine.Runtime`
+   - Generic state machine with enum-based state IDs
+   - Lifecycle: Enter → Update → Exit
+   - Tests: 19/19 ✅
+
+2. **PR #80 - Pathfinding** (`feature/epic-23-1-pathfinding`, `aa3c29b`)
+   - Assembly: `RPGFramework.Pathfinding.Runtime`
+   - A* pathfinding with framework-neutral `Position2D` struct
+   - Pluggable heuristics (Euclidean, Manhattan, Diagonal)
+   - Grid navigation for tile-based RPGs
+   - Tests: 31/31 ✅
+
+3. **PR #81 - Behavior Tree** (`feature/epic-23-2-behavior-tree`, `917edad`)
+   - Assembly: `RPGFramework.BehaviorTree.Runtime`
+   - Node types: Selector (OR), Sequence (AND), Inverter (NOT), Repeater
+   - Leaf nodes: ActionNode, ConditionNode
+   - Blackboard for shared state
+   - Tests: 15/15 ✅
+
+**Total:** 65 tests, 100% pass rate, 3 PRs ready for merge
+
+### Key Decisions
+
+- **Phases 23.4-23.5 (Enemy/NPC AI)** are Game Layer implementations, not Framework modules
+- Framework provides building blocks; Game Layer implements game-specific behaviors
+- `Position2D` struct enables framework-neutral pathfinding (no Unity Vector3 dependency)
+
+### Next Actions
+
+**Option A (Recommended):** Merge EPIC 23 PRs
+- Review and merge PR #79, #80, #81
+- Update STATUS.md with merged SHAs
+
+**Option B:** Continue with Game Layer Enemy/NPC AI
+**Option C:** Begin Inspector Tooling (Quest Editor, etc.)
+
+---
+
+**Last Updated:** 2026-10-25  
+**Next Session:** Choose between merging EPIC 23 PRs, Game Layer AI, or Inspector Tooling
